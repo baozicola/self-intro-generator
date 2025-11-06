@@ -3,23 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- v1.1.1 修改：版本号更新 -->
-    <title>自介生成器 (v1.1.1)</title>
+    <!-- Blokko v1.2.1 -->
+    <title>Blokko (v1.2.1)</title>
     
     <script>
         // Anti-FOUC (Flash of Unstyled Content) Script
         try {
-            if (localStorage.getItem('genV75Theme') === 'dark') {
+            if (localStorage.getItem('blokkoTheme') === 'dark') {
                 document.documentElement.classList.add('dark-mode');
             }
         } catch (e) {
             console.error('Failed to apply theme from localStorage', e);
         }
     </script>
-
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
 
     <style>
         /* CSS 变量 */
@@ -47,7 +45,7 @@
             /* Active Card Styles */
             --active-card-shadow: var(--g-card-shadow); --active-card-border: var(--g-card-border);
             --active-card-text-shadow: none; --active-card-font-family: var(--g-card-font-family);
-            --active-card-font-size: var(--g-card-font-size); --tag-bg-color: #eef1f5; --tag-text-color: #3c3c43;
+            --active-card-font-size: var(--g-card-font-size); 
         }
         html.dark-mode {
             --bg-editor: #1f2229; --bg-preview-pane: #121417; --bg-preview-page: #1f2229;
@@ -76,6 +74,7 @@
         .resizer:hover { background: var(--color-primary); }
         .preview-panel { flex-grow: 1; height: calc(100vh - var(--header-height)); overflow-y: auto; display: flex; justify-content: center; padding: 40px 20px; background: var(--bg-preview-pane); transition: background-color var(--transition-speed) ease; }
         .preview-wrapper { width: 100%; max-width: 600px; min-height: fit-content; background-color: var(--bg-preview-page); border-radius: 20px; box-shadow: 0 4px 16px var(--shadow-medium); padding: 20px; padding-bottom: 40px; transition: all var(--transition-speed) ease; background-size: cover; background-position: center; position: relative; overflow: hidden; font-family: var(--active-card-font-family); font-size: var(--active-card-font-size); }
+        .preview-wrapper.custom-width-mode { margin-left: auto; margin-right: auto; }
         .preview-wrapper::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; background-size: cover; background-position: center; background-image: var(--page-bg-image); transition: filter var(--transition-speed) ease; }
         .preview-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 20px; background-color: var(--page-overlay-color, #FFF); opacity: var(--page-overlay-opacity, 0.5); z-index: 1; pointer-events: none; transition: opacity var(--transition-speed) ease, background-color var(--transition-speed) ease; }
         .preview-header, .preview-blocks-container { position: relative; z-index: 2; word-wrap: break-word; overflow-wrap: break-word; width: 100%; box-sizing: border-box; }
@@ -88,7 +87,7 @@
         .btn-default { background-color: var(--bg-input); border: 1px solid var(--border-input); color: var(--text-secondary); } .btn-default:hover:not(:disabled) { background-color: var(--border-color); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         .btn:active:not(:disabled) { transform: scale(0.98); } .btn:disabled { background: #999; cursor: not-allowed; opacity: 0.6; }
         .btn-small { padding: 6px 10px; font-size: 0.9rem; }
-        .btn-icon { width: auto; padding: 6px 10px; font-size: 0.9rem; }
+        .btn-icon { width: auto; padding: 6px 10px; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; }
         .editor-section { width: 100%; background: var(--bg-section); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 25px; transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease; box-shadow: 0 2px 8px var(--shadow-light); }
         .editor-section legend { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .editor-section legend::after { content: " ▼"; font-size: 0.8rem; }
@@ -128,7 +127,7 @@
         #preview-bio { margin: 0; font-size: 0.9rem; line-height: 1.4; color: var(--text-primary); opacity: 0.8; transition: color var(--transition-speed) ease; white-space: pre-wrap; }
         #preview-subtitle:empty, #preview-bio:empty { display: none; }
         .tags-container { margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-        .tag-pill { display: inline-block; padding: 4px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 16px; background-color: var(--tag-bg-color, var(--bg-input)); color: var(--tag-text-color, var(--text-primary)); transition: all var(--transition-speed) ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .tag-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 16px; transition: all var(--transition-speed) ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         #editor-blocks-list .empty-placeholder { text-align: center; padding: 20px; color: var(--text-placeholder); font-style: italic; }
         .editor-block { background: var(--bg-editor); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px var(--shadow-light); transition: all var(--transition-speed) ease; opacity: 1; transform: scale(1); }
         .sortable-ghost { background: var(--bg-image-upload-hover) !important; border: 2px dashed var(--color-primary); box-shadow: none !important; opacity: 0.8 !important; }
@@ -173,22 +172,22 @@
         .thumbnail-item input[type="text"], .thumbnail-item textarea { font-size: 0.8rem; padding: 4px 6px; background: var(--bg-input); border: 1px solid var(--border-input); color: var(--text-primary); border-radius: 4px; }
         .thumbnail-item textarea { resize: none; height: 40px; }
         .preview-blocks-container { margin-top: 20px; display: flex; flex-direction: column; gap: 20px; width: 100%; box-sizing: border-box; }
+        .preview-blocks-container.locked-mode * { cursor: default !important; }
         #preview-blocks-container .empty-placeholder { text-align: center; padding: 50px 0; color: var(--text-placeholder); }
         .preview-block-wrapper.sortable-drag { opacity: 1 !important; }
         .preview-block-wrapper { cursor: grab; } .preview-block-wrapper:active { cursor: grabbing; }
         .preview-cards-single { display: flex; flex-direction: column; gap: 15px; width: 100%; }
         .preview-cards-dual { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%; }
         .preview-card { box-sizing: border-box; width: 100%; view-transition-name: var(--card-transition-name); }
-        .preview-card-inner { width: 100%; height: 100%; box-sizing: border-box; position: relative; overflow: hidden; color: var(--card-text-color, var(--g-card-text-color)); border-radius: var(--g-card-border-radius); box-shadow: var(--active-card-shadow, none); border: var(--active-card-border, none); font-weight: var(--card-font-weight, normal); text-shadow: var(--active-card-text-shadow, none); padding: 15px; word-wrap: break-word; transition: all var(--transition-short) ease, transform var(--transition-short) ease; -webkit-text-stroke: var(--g-card-text-stroke); line-height: var(--g-card-line-height); }
+        .preview-card-inner { width: 100%; height: 100%; box-sizing: border-box; position: relative; overflow: hidden; color: var(--card-text-color, var(--g-card-text-color)); border-radius: var(--g-card-border-radius); box-shadow: var(--active-card-shadow, none); border: var(--active-card-border, none); font-weight: var(--card-font-weight, normal); text-shadow: var(--active-card-text-shadow, none); padding: 15px; word-wrap: break-word; transition: all var(--transition-short) ease, transform var(--transition-short) ease; -webkit-text-stroke: var(--g-card-text-stroke); line-height: var(--g-card-line-height); background-clip: padding-box; }
         .preview-card-inner::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; background-size: cover; background-position: center; border-radius: inherit; background: var(--card-bg-final); transition: background var(--transition-speed) ease; }
         .preview-card-inner::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--card-overlay-color, transparent); opacity: var(--card-overlay-opacity, 0); border-radius: inherit; z-index: 1; pointer-events: none; transition: all var(--transition-short) ease; }
         .preview-card:hover .preview-card-inner { transform: scale(1.02); box-shadow: 0 6px 16px var(--shadow-medium); }
-        /* v1.1.1 修复: 增删动画 */
         .preview-card.adding { animation: fadeInScale 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .preview-card.removing { animation: fadeOutScale 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .preview-card-title, .preview-card-content { position: relative; z-index: 2; margin: 0; word-wrap: break-word; overflow-wrap: break-word; color: inherit; }
         .preview-card-title { font-size: 1.1em; font-weight: inherit; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-        .preview-card-title i { font-size: 1.1em; line-height: 1; }
+        .preview-card-title .iconify, .tag-pill .iconify { font-size: 1.1em; line-height: 1; vertical-align: middle; }
         .preview-card-content { font-size: 0.95em; line-height: inherit; white-space: pre-wrap; }
         .image-gallery { display: grid; gap: 15px; padding: 15px; border-radius: var(--g-card-border-radius); box-shadow: var(--active-card-shadow, none); border: var(--active-card-border, none); overflow: hidden; position: relative; background: var(--image-block-bg, var(--bg-card)); transition: all var(--transition-speed) ease; width: 100%; box-sizing: border-box; }
         .image-gallery.layout-1 { grid-template-columns: 1fr; }
@@ -232,10 +231,19 @@
         .toast-notification.success { border-left: 4px solid #2ecc71; }
         .toast-notification.error { border-left: 4px solid var(--color-danger); }
         .toast-notification.info { border-left: 4px solid var(--color-primary); }
-        #icon-picker-modal .modal-container { max-width: 600px; }
+        #icon-picker-modal .modal-container { max-width: 700px; }
         #icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 10px; max-height: 50vh; overflow-y: auto; padding: 10px; border: 1px solid var(--border-input); border-radius: 8px; background: var(--bg-input); }
         .icon-grid-item { display: flex; align-items: center; justify-content: center; height: 50px; font-size: 1.5rem; color: var(--text-primary); border-radius: 6px; cursor: pointer; transition: background-color var(--transition-short); }
         .icon-grid-item:hover { background-color: var(--border-color); }
+        #tag-manager-list { display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; padding: 10px; border: 1px solid var(--border-input); border-radius: 6px; background-color: var(--bg-input); margin-bottom: 15px; }
+        .tag-manager-item { display: flex; align-items: center; gap: 8px; background-color: var(--bg-section); padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); }
+        .tag-manager-item .tag-icon-btn { flex-shrink: 0; width: 32px; height: 32px; padding: 0; font-size: 1.2rem; }
+        .tag-manager-item .tag-text-input { flex-grow: 1; border: none; background: transparent; padding: 4px 6px; }
+        .tag-manager-item .tag-delete-btn { flex-shrink: 0; width: 32px; height: 32px; padding: 0; }
+        .empty-tag-list { text-align: center; color: var(--text-placeholder); padding: 20px 0; }
+        #custom-width-controls { display: none; margin-top: 10px; border: 1px solid var(--border-input); border-radius: 6px; padding: 10px; background: var(--bg-input); }
+        .width-presets { display: flex; gap: 8px; margin-bottom: 10px; }
+        #custom-width-input { max-width: 100px; }
         @keyframes toast-in { to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { to { opacity: 0; transform: translateX(100%); } }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -268,10 +276,11 @@
 <body>
 
     <header class="app-header">
-        <button id="mobile-edit-toggle" class="btn btn-default" style="width: auto; padding: 6px 12px;">编辑</button>
-        <div class="app-header-title">自介生成器 (v1.1.1)</div>
+        <button id="mobile-edit-toggle" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:pencil"></span> 编辑</button>
+        <div class="app-header-title">Blokko (v1.2.1)</div>
         <div class="header-actions-wrapper">
-            <button id="show-help-btn" class="btn btn-default" style="width: auto; padding: 6px 12px;">帮助</button>
+            <button id="lock-mode-toggle" class="btn btn-default" style="width: auto; padding: 6px 12px;" title="切换编辑/预览模式">编辑中</button>
+            <button id="show-help-btn" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:help-circle-outline"></span> 帮助</button>
             <div class="theme-switch-wrapper">
                 <span id="theme-label">明亮模式</span>
                 <button id="theme-toggle-btn" class="btn btn-default" style="width: auto; padding: 6px 12px;">切换</button>
@@ -288,14 +297,34 @@
                     <div class="form-group" style="display: flex; gap: 10px;"> <button id="import-btn" class="btn btn-secondary">导入配置</button> <button id="export-btn" class="btn btn-secondary">导出配置</button> <button id="export-template-btn" class="btn btn-secondary">存为模板</button></div>
                     <div class="form-group">
                         <div class="checkbox-group" style="margin-bottom: 10px;">
-                            <label><input type="checkbox" id="hd-export-toggle"> 超清导出</label>
+                            <label><input type="checkbox" id="hd-export-toggle"> 超清导出 (x3)</label>
                             <span id="export-size-preview" style="font-size: 0.8rem; color: var(--text-secondary);"></span>
                         </div>
-                        <button id="export-png-btn" class="btn btn-primary">导出为图片</button>
+                        <div class="checkbox-group" style="margin-bottom: 10px;">
+                            <label><input type="checkbox" id="custom-width-toggle"> 自定义宽度</label>
+                        </div>
+                        <div id="custom-width-controls">
+                            <label>预设:</label>
+                            <div class="width-presets">
+                                <button class="btn btn-default btn-small" data-width="600">方形 (600px)</button>
+                                <button class="btn btn-default btn-small" data-width="1080">高清 (1080px)</button>
+                                <button class="btn btn-default btn-small" data-width="1920">宽屏 (1920px)</button>
+                            </div>
+                            <label>手动输入:</label>
+                            <div class="input-group">
+                                <input type="number" id="custom-width-input" placeholder="例如 800">
+                                <span style="padding: 0 10px; background: var(--bg-section); border-left: 1px solid var(--border-input); line-height: 38px;">px</span>
+                            </div>
+                        </div>
+                        <button id="export-png-btn" class="btn btn-primary" style="margin-top:10px;">导出为图片</button>
                     </div>
+                    <hr class="separator">
                     <div class="form-group">
                         <label>预设主题:</label>
                         <div class="input-group simple"> <button data-preset="light" class="btn btn-default btn-small">明亮</button> <button data-preset="dark" class="btn btn-default btn-small">暗黑</button> <button data-preset="mint" class="btn btn-default btn-small">薄荷</button> <button data-preset="coffee" class="btn btn-default btn-small">咖啡</button> </div>
+                    </div>
+                    <div class="form-group">
+                        <button id="reset-btn" class="btn btn-danger">恢复默认模板</button>
                     </div>
                     <input type="file" id="config-file-input" accept=".json" style="display: none;">
                 </div>
@@ -311,8 +340,15 @@
                     <div class="form-group"><label>简介 (可选):</label><textarea data-state-key="personalInfo.bio" rows="3" data-preview-target="#preview-bio"></textarea></div>
                     <div class="form-group"><label>简介颜色:</label><div class="input-group"><input type="color" data-state-key="personalInfo.bioColor"><input type="text" class="color-hex-input" data-color-sync-key="personalInfo.bioColor"><button class="btn btn-default btn-small" data-reset-key="personalInfo.bioColor">重置</button></div></div>
                     <hr class="separator">
-                    <div class="form-group"><label>标签 (逗号分隔):</label><input type="text" data-state-key="personalInfo.tags"></div>
-                    <div class="form-group"><label>标签颜色:</label><div class="color-control-row"><div class="color-control-group"><label>背景</label><div class="input-group"><input type="color" data-state-key="personalInfo.tagBgColor"><input type="text" class="color-hex-input" data-color-sync-key="personalInfo.tagBgColor"><button class="btn btn-default btn-small" data-reset-key="personalInfo.tagBgColor">重置</button></div></div><div class="color-control-group"><label>文字</label><div class="input-group"><input type="color" data-state-key="personalInfo.tagTextColor"><input type="text" class="color-hex-input" data-color-sync-key="personalInfo.tagTextColor"><button class="btn btn-default btn-small" data-reset-key="personalInfo.tagTextColor">重置</button></div></div></div></div>
+                    <div class="form-group">
+                        <label>标签管理器:</label>
+                        <div id="tag-manager-list"></div>
+                        <div class="input-group simple" style="margin-top: 10px;">
+                            <input type="text" id="new-tag-text-input" placeholder="输入新标签文字...">
+                            <button id="add-new-tag-btn" class="btn btn-default btn-small">添加标签</button>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>标签样式:</label><div class="color-control-row"><div class="color-control-group"><label>背景</label><div class="input-group"><input type="color" data-state-key="personalInfo.tagBgColor"><input type="text" class="color-hex-input" data-color-sync-key="personalInfo.tagBgColor"><button class="btn btn-default btn-small" data-reset-key="personalInfo.tagBgColor">重置</button></div></div><div class="color-control-group"><label>文字</label><div class="input-group"><input type="color" data-state-key="personalInfo.tagTextColor"><input type="text" class="color-hex-input" data-color-sync-key="personalInfo.tagTextColor"><button class="btn btn-default btn-small" data-reset-key="personalInfo.tagTextColor">重置</button></div></div></div></div>
                     <hr class="separator">
                     <div class="form-group"><label>头像上传:</label><input type="file" id="avatar-upload" accept="image/*"></div>
                     <div class="form-group"><label>头像形状:</label><div class="radio-group"><label><input type="radio" name="avatarShape" value="50%" data-state-key="personalInfo.avatarShape">圆形</label><label><input type="radio" name="avatarShape" value="16px" data-state-key="personalInfo.avatarShape">圆角</label><label><input type="radio" name="avatarShape" value="0px" data-state-key="personalInfo.avatarShape">方形</label></div></div>
@@ -395,27 +431,45 @@
     <div class="modal-overlay" id="cropper-modal"><div class="modal-container"><h3 id="cropper-title">裁剪图片</h3><div class="crop-ratios radio-group"><label><input type="radio" name="crop-ratio" value="NaN" checked> 自由</label><label><input type="radio" name="crop-ratio" value="1"> 1:1</label><label><input type="radio" name="crop-ratio" value="1.3333"> 4:3</label><label><input type="radio" name="crop-ratio" value="1.7777"> 16:9</label></div><div class="cropper-img-container"><img id="cropper-image" src=""></div><div class="modal-actions"><button id="cropper-cancel-btn" class="btn btn-default">取消</button><button id="cropper-save-btn" class="btn btn-primary">确认</button></div></div></div>
     <div class="modal-overlay" id="download-modal"><div class="modal-container"><h3 id="download-modal-title">下载已准备好</h3><div id="download-modal-content"></div><div class="modal-actions" style="justify-content: center;"><button id="download-modal-close-btn" class="btn btn-default">关闭</button></div></div></div>
     
+    <!-- Blokko v1.2.1: 帮助弹窗文本已根据你的要求更新 -->
     <div class="modal-overlay" id="help-modal">
         <div class="modal-container" style="max-width: 700px;">
             <div class="tabs">
                 <button class="tab-btn active" data-tab="help-instructions">使用说明</button>
                 <button class="tab-btn" data-tab="help-changelog">更新日志</button>
+                <button class="tab-btn" data-tab="help-about">关于与致谢</button>
             </div>
             <div id="help-instructions" class="tab-content active" style="max-height: 60vh; overflow-y: auto; padding: 15px;">
-                <h4>欢迎使用自介生成器！</h4>
-                <p><strong>双击编辑：</strong> 预览区域的大部分文本内容（如昵称、简介、卡片标题和内容）都可以通过双击直接进行编辑。</p>
-                <p><strong>拖拽排序：</strong> 在编辑区，你可以拖动区块左侧的 ☰ 图标来对整个区块进行排序。在区块内部，也可以拖拽卡片进行排序。</p>
-                <p><strong>导入/导出：</strong> 使用“导出配置”按钮可以保存你所有的设计为一个 .json 文件，方便备份和分享。之后可以通过“导入配置”来恢复。</p>
-                <p><strong>存为模板：</strong> 使用“存为模板”可以只保存样式配置，方便快速复用设计风格。</p>
-                <p><strong>本地保存：</strong> 你的所有修改都会自动保存在当前浏览器中，刷新页面不会丢失进度（请勿使用无痕模式）。</p>
+                <h4>欢迎使用 Blokko！</h4>
+                <p><strong><span class="iconify" data-icon="mdi:cursor-default-click-outline" style="vertical-align: -0.2em;"></span> 双击编辑：</strong> 预览区域的大部分文本内容（如昵称、简介、卡片标题和内容）都可以通过双击直接进行编辑。</p>
+                <p><strong><span class="iconify" data-icon="mdi:drag" style="vertical-align: -0.2em;"></span> 拖拽排序：</strong> 在编辑区，你可以拖动区块或卡片左侧的 ☰ 图标来对它们进行排序。</p>
+                <p><strong><span class="iconify" data-icon="mdi:lock-open-variant-outline" style="vertical-align: -0.2em;"></span> 锁定模式：</strong> 点击右上角的 "编辑中" 按钮可切换到 "锁定中"，此模式下禁用拖拽，方便在手机上顺畅滑动浏览。</p>
+                <p><strong><span class="iconify" data-icon="mdi:import" style="vertical-align: -0.2em;"></span> 导入/导出：</strong> 使用“导出配置”按钮可以保存你所有的设计为一个 .json 文件，方便备份和分享。之后可以通过“导入配置”来恢复。</p>
+                <p><strong><span class="iconify" data-icon="mdi:content-save" style="vertical-align: -0.2em;"></span> 本地保存：</strong> 你的所有修改都会自动保存在当前浏览器中，刷新页面不会丢失进度（请勿使用无痕模式）。</p>
             </div>
             <div id="help-changelog" class="tab-content" style="max-height: 60vh; overflow-y: auto; padding: 15px;">
-                <h4>v1.1.1 (当前版本)</h4>
+                <h4>v1.2.1 (当前版本)</h4>
+                <ul>
+                    <li><b>【修复】</b> 彻底修复了页面背景图的蒙版在导出时失效的问题。</li>
+                    <li><b>【优化】</b> 锁定/预览模式按钮从图标改为更清晰的文字状态显示。</li>
+                </ul>
+                <h4>v1.2.0</h4>
+                <ul>
+                    <li><b>【更名】</b> 软件更名为 <b>Blokko</b>。</li>
+                    <li><b>【新增】</b> <b>图标系统完全升级！</b> 引入 Iconify 框架，支持数万个图标并提供实时搜索功能。</li>
+                    <li><b>【新增】</b> <b>标签系统重做！</b> 现在每个标签都可以独立设置图标了！编辑器升级为更直观的标签管理器。</li>
+                    <li><b>【新增】</b> <b>预览锁定模式</b>，解决移动端滑动与拖拽冲突问题。</li>
+                    <li><b>【新增】</b> <b>自定义导出宽度</b>功能，手机端也能自由控制导出图片的尺寸和比例。</li>
+                    <li><b>【新增】</b> <b>一键重置</b>功能，可快速恢复到初始默认模板。</li>
+                    <li><b>【修复】</b> 修复了移动端导出PNG时布局样式错乱的BUG。</li>
+                    <li><b>【修复】</b> 修复了卡片设置大圆角和边框时出现空隙的BUG。</li>
+                    <li><b>【优化】</b> 导入功能现已兼容旧版配置文件，可自动升级标签数据格式。</li>
+                </ul>
+				<h4>v1.1.1</h4>
                 <ul>
                     <li><b>【修复】</b> 修复了所有操作都无法自动保存到本地的严重BUG。</li>
                     <li><b>【修复】</b> 修复了图片区块独立不透明度功能失效的问题。</li>
                     <li><b>【修复】</b> 修正了卡片增/删交互动画的逻辑。</li>
-                    <li>以及 v1.1.0 的所有新功能...</li>
                 </ul>
                 <h4>v1.1.0</h4>
                 <ul>
@@ -433,6 +487,22 @@
                     <li>新增：全局字体设置，支持加载本地字体和上传字体文件。</li>
                 </ul>
             </div>
+            <div id="help-about" class="tab-content" style="max-height: 60vh; overflow-y: auto; padding: 15px;">
+                <h4>关于 Blokko</h4>
+                <p>Blokko是一个方便大家快速制作扩列/自荐/置顶图的小工具！</p>
+                <p><strong>作者：</strong> 四十七</p>
+                <p>如果你在使用中遇到BUG，可以通过链接私信我！</p>
+                <p><a href="https://weibo.com/u/5095783616" target="_blank" rel="noopener noreferrer"><strong>我的微博主页</strong></a></p>
+                <hr>
+                <h4>致谢</h4>
+                <p>本工具的实现离不开以下优秀的开源项目，在此表示诚挚的感谢：</p>
+                <ul>
+                    <li><strong>Iconify:</strong> 提供了海量、易于使用的图标资源。</li>
+                    <li><strong>html2canvas:</strong> 实现了将网页内容导出为图片的核心功能。</li>
+                    <li><strong>Cropper.js:</strong> 提供了强大的图片裁剪功能。</li>
+                    <li><strong>SortableJS:</strong> 提供了流畅的拖拽排序体验。</li>
+                </ul>
+            </div>
             <div class="modal-actions" style="justify-content: center; margin-top: 20px;">
                 <button id="help-modal-close-btn" class="btn btn-primary">关闭</button>
             </div>
@@ -443,7 +513,7 @@
         <div class="modal-container">
             <h3>选择图标</h3>
             <div class="form-group">
-                <input type="text" id="icon-search" placeholder="搜索图标..." class="form-control">
+                <input type="text" id="icon-search" placeholder="搜索图标 (例如: bilibili, music, arrow)..." class="form-control">
             </div>
             <div id="icon-grid"></div>
             <div class="modal-actions">
@@ -453,13 +523,13 @@
         </div>
     </div>
 
-
     <div id="loading-overlay"><div class="spinner"></div><span id="loading-text">正在处理...</span></div>
     <div class="toast-notification-container" id="toast-container"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -483,7 +553,7 @@
                 icons: [], 
 
                 init() {
-                    console.log("App 初始化 v1.1.1 ...");
+                    console.log("Blokko 初始化 v1.2.1 ...");
                     this.elements = this.queryElements();
                     this.presets = this.getPresets();
                     this.state = this.getDefaultState();
@@ -520,7 +590,11 @@
                             bio: "这是简介，双击可编辑", bioColor: lightTheme.pBioColor,
                             avatarDataUrl: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23cccccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E", 
                             avatarShape: '50%', avatarBorderSize: 4, avatarBorderColor: '#ffffff',
-                            tags: "标签1, 标签2", tagBgColor: lightTheme.pTagBgColor, tagTextColor: lightTheme.pTagTextColor
+                            tags: [
+                                { id: this.generateId('t'), icon: 'mdi:palette', text: '设计师' },
+                                { id: this.generateId('t'), icon: 'mdi:github', text: '代码爱好者' }
+                            ], 
+                            tagBgColor: lightTheme.pTagBgColor, tagTextColor: lightTheme.pTagTextColor
                         },
                         pageStyles: {
                             pageBgMode: 'gradient',
@@ -535,7 +609,7 @@
                         },
                         blocks: [
                             { id: this.generateId('b'), type: 'text', title: "单排卡片区块", settings: { layout: 'single' }, cards: [
-                                { id: this.generateId('c'), icon: 'bi-star-fill', title: "这是单排卡片", content: "双击这里进行编辑", opacity: 1.0, followGlobalOpacity: true }
+                                { id: this.generateId('c'), icon: 'mdi:star-circle', title: "这是单排卡片", content: "双击这里进行编辑", opacity: 1.0, followGlobalOpacity: true }
                             ]},
                             { id: this.generateId('b'), type: 'text', title: "双排卡片区块", settings: { layout: 'dual' }, cards: [
                                 { id: this.generateId('c'), icon: '', title: "这是双排卡片 1", content: "双击这里进行编辑", opacity: 1.0, followGlobalOpacity: true },
@@ -575,83 +649,91 @@
                             gCardBgColor: "#2c303a", gCardTextColor: "#f0f2f5", gCardOpacity: 0.95,
                             gCardBgGradientStart: "#2c303a", gCardBgGradientEnd: "#343946",
                             pNicknameColor: "#f0f2f5", pSubtitleColor: "#a0aec0", pBioColor: "#a0aec0",
-                            pTagBgColor: "#3e4451", pTagTextColor: "#e2e8f0",
-                        },
+                            pTagBgColor: "#3e4451"， pTagTextColor: "#e2e8f0"，
+                        }，
                         mint: {
-                            pageBgSolidColor: "#ccfbf1", pageBgGradientStart: "#ccfbf1", pageBgGradientEnd: "#a7f3d0",
-                            headerBgColor: "#f0fdfa", headerBgGradientStart: "#f0fdfa", headerBgGradientEnd: "#e6fcf5",
-                            headerTextColor: "#0f766e",
-                            gCardBgColor: "#ffffff", gCardTextColor: "#134e4a", gCardOpacity: 1.0,
-                            gCardBgGradientStart: "#ffffff", gCardBgGradientEnd: "#fafffd",
-                            pNicknameColor: "#064e3b", pSubtitleColor: "#115e59", pBioColor: "#134e4a",
-                            pTagBgColor: "#a7f3d0", pTagTextColor: "#065f46",
+                            pageBgSolidColor: "#ccfbf1"， pageBgGradientStart: "#ccfbf1"， pageBgGradientEnd: "#a7f3d0",
+                            headerBgColor: "#f0fdfa"， headerBgGradientStart: "#f0fdfa"， headerBgGradientEnd: "#e6fcf5",
+                            headerTextColor: "#0f766e"，
+                            gCardBgColor: "#ffffff"， gCardTextColor: "#134e4a"， gCardOpacity: 1.0，
+                            gCardBgGradientStart: "#ffffff"， gCardBgGradientEnd: "#fafffd"，
+                            pNicknameColor: "#064e3b"， pSubtitleColor: "#115e59"， pBioColor: "#134e4a"，
+                            pTagBgColor: "#a7f3d0"， pTagTextColor: "#065f46"，
                         },
                         coffee: {
-                            pageBgSolidColor: "#f3e8e2", pageBgGradientStart: "#f3e8e2", pageBgGradientEnd: "#e9d8cf",
-                            headerBgColor: "#fdf8f6", headerBgGradientStart: "#fdf8f6", headerBgGradientEnd: "#faf3ef",
-                            headerTextColor: "#432818",
-                            gCardBgColor: "#ffffff", gCardTextColor: "#5e4534", gCardOpacity: 1.0,
-                            gCardBgGradientStart: "#ffffff", gCardBgGradientEnd: "#fffbf8",
-                            pNicknameColor: "#432818", pSubtitleColor: "#6f4e37", pBioColor: "#5e4534",
-                            pTagBgColor: "#e3d5ca", pTagTextColor: "#432818",
+                            pageBgSolidColor: "#f3e8e2"， pageBgGradientStart: "#f3e8e2"， pageBgGradientEnd: "#e9d8cf"，
+                            headerBgColor: "#fdf8f6"， headerBgGradientStart: "#fdf8f6", headerBgGradientEnd: "#faf3ef",
+                            headerTextColor: "#432818"，
+                            gCardBgColor: "#ffffff"， gCardTextColor: "#5e4534", gCardOpacity: 1.0,
+                            gCardBgGradientStart: "#ffffff"， gCardBgGradientEnd: "#fffbf8",
+                            pNicknameColor: "#432818"， pSubtitleColor: "#6f4e37"， pBioColor: "#5e4534"，
+                            pTagBgColor: "#e3d5ca"， pTagTextColor: "#432818",
                         }
                     };
-                },
+                }，
 
                 queryElements() {
-                    const q = (selector) => document.querySelector(selector);
+                    const q = (selector) => document。querySelector(selector);
                     return {
-                        editorPanel: q('#editor-panel'),
-                        resizer: q('#resizer'),
-                        themeToggleBtn: q('#theme-toggle-btn'), themeLabel: q('#theme-label'),
-                        previewWrapper: q('#preview-wrapper'), previewOverlay: q('#preview-overlay'),
-                        undoBtn: q('#undo-btn'), redoBtn: q('#redo-btn'),
-                        importBtn: q('#import-btn'), exportBtn: q('#export-btn'),
-                        exportTemplateBtn: q('#export-template-btn'), 
-                        exportPngBtn: q('#export-png-btn'), configFileInput: q('#config-file-input'),
-                        hdExportToggle: q('#hd-export-toggle'), exportSizePreview: q('#export-size-preview'),
-                        previewHeader: q('#preview-header'), previewAvatar: q('#preview-avatar'),
-                        previewNickname: q('#preview-nickname'), previewSubtitle: q('#preview-subtitle'),
-                        previewBio: q('#preview-bio'), previewTagsContainer: q('#preview-tags-container'),
-                        pageBgUpload: q('#page-bg-upload'), clearPageBgBtn: q('#clear-page-bg-btn'),
-                        pageImageControls: q('#page-image-controls'),
-                        cropperModal: q('#cropper-modal'), cropperImage: q('#cropper-image'),
-                        cropperCancelBtn: q('#cropper-cancel-btn'), cropperSaveBtn: q('#cropper-save-btn'),
-                        downloadModal: q('#download-modal'), downloadModalTitle: q('#download-modal-title'),
-                        downloadModalContent: q('#download-modal-content'), downloadModalCloseBtn: q('#download-modal-close-btn'),
-                        addTextBlockBtn: q('#add-text-block-btn'), addImageBlockBtn: q('#add-image-block-btn'),
-                        addSeparatorBlockBtn: q('#add-separator-block-btn'),
-                        editorBlocksList: q('#editor-blocks-list'), previewBlocksContainer: q('#preview-blocks-container'),
-                        fontFamilySelect: q('#font-family-select'),
-                        fontSearchInput: q('#font-search-input'),
-                        loadingOverlay: q('#loading-overlay'), loadingText: q('#loading-text'),
-                        toastContainer: q('#toast-container'),
-                        mobileEditToggle: q('#mobile-edit-toggle'),
-                        body: document.body,
-                        showHelpBtn: q('#show-help-btn'),
-                        helpModal: q('#help-modal'),
-                        helpModalCloseBtn: q('#help-modal-close-btn'),
-                        iconPickerModal: q('#icon-picker-modal'),
-                        iconGrid: q('#icon-grid'),
-                        iconSearch: q('#icon-search'),
-                        removeIconBtn: q('#remove-icon-btn'),
-                        iconPickerCloseBtn: q('#icon-picker-close-btn'),
+                        editorPanel: q('#editor-panel')，
+                        resizer: q('#resizer')，
+                        themeToggleBtn: q('#theme-toggle-btn')， themeLabel: q('#theme-label')，
+                        previewWrapper: q('#preview-wrapper')， previewOverlay: q('#preview-overlay')，
+                        undoBtn: q('#undo-btn')， redoBtn: q('#redo-btn')，
+                        importBtn: q('#import-btn')， exportBtn: q('#export-btn')，
+                        exportTemplateBtn: q('#export-template-btn')， 
+                        exportPngBtn: q('#export-png-btn')， configFileInput: q('#config-file-input')，
+                        hdExportToggle: q('#hd-export-toggle')， exportSizePreview: q('#export-size-preview')，
+                        previewHeader: q('#preview-header')， previewAvatar: q('#preview-avatar')，
+                        previewNickname: q('#preview-nickname')， previewSubtitle: q('#preview-subtitle')，
+                        previewBio: q('#preview-bio')， previewTagsContainer: q('#preview-tags-container')，
+                        pageBgUpload: q('#page-bg-upload')， clearPageBgBtn: q('#clear-page-bg-btn')，
+                        pageImageControls: q('#page-image-controls')，
+                        cropperModal: q('#cropper-modal')， cropperImage: q('#cropper-image')，
+                        cropperCancelBtn: q('#cropper-cancel-btn')， cropperSaveBtn: q('#cropper-save-btn')，
+                        downloadModal: q('#download-modal')， downloadModalTitle: q('#download-modal-title')，
+                        downloadModalContent: q('#download-modal-content')， downloadModalCloseBtn: q('#download-modal-close-btn')，
+                        addTextBlockBtn: q('#add-text-block-btn')， addImageBlockBtn: q('#add-image-block-btn')，
+                        addSeparatorBlockBtn: q('#add-separator-block-btn')，
+                        editorBlocksList: q('#editor-blocks-list')， previewBlocksContainer: q('#preview-blocks-container')，
+                        fontFamilySelect: q('#font-family-select')，
+                        fontSearchInput: q('#font-search-input')，
+                        loadingOverlay: q('#loading-overlay')， loadingText: q('#loading-text')，
+                        toastContainer: q('#toast-container')，
+                        mobileEditToggle: q('#mobile-edit-toggle')，
+                        body: document。body，
+                        showHelpBtn: q('#show-help-btn')，
+                        helpModal: q('#help-modal')，
+                        helpModalCloseBtn: q('#help-modal-close-btn')，
+                        iconPickerModal: q('#icon-picker-modal')，
+                        iconGrid: q('#icon-grid')，
+                        iconSearch: q('#icon-search')，
+                        removeIconBtn: q('#remove-icon-btn')，
+                        iconPickerCloseBtn: q('#icon-picker-close-btn')，
+                        resetBtn: q('#reset-btn')，
+                        lockModeToggle: q('#lock-mode-toggle')，
+                        tagManagerList: q('#tag-manager-list')，
+                        newTagTextInput: q('#new-tag-text-input')，
+                        addNewTagBtn: q('#add-new-tag-btn')，
+                        customWidthToggle: q('#custom-width-toggle')，
+                        customWidthControls: q('#custom-width-controls')，
+                        customWidthInput: q('#custom-width-input')，
                     };
-                },
+                }，
 
                 bindCoreEvents() {
-                    this.elements.themeToggleBtn.addEventListener('click', () => this.toggleTheme());
-                    this.elements.undoBtn.addEventListener('click', () => this.undo());
-                    this.elements.redoBtn.addEventListener('click', () => this.redo());
-                    this.elements.importBtn.addEventListener('click', () => this.elements.configFileInput.click());
-                    this.elements.exportBtn.addEventListener('click', () => this.exportConfig(false)); 
-                    this.elements.exportTemplateBtn.addEventListener('click', () => this.exportConfig(true)); 
-                    this.elements.exportPngBtn.addEventListener('click', () => this.exportPNG());
-                    this.elements.hdExportToggle.addEventListener('change', () => this.updateExportSizePreview());
-                    this.elements.configFileInput.addEventListener('change', e => this.handleConfigFile(e));
-                    this.elements.downloadModalCloseBtn.addEventListener('click', () => this.hideDownloadModal());
-                    this.elements.cropperCancelBtn.addEventListener('click', () => this.hideCropper());
-                    this.elements.cropperSaveBtn.addEventListener('click', () => this.saveCrop());
+                    this。elements。themeToggleBtn。addEventListener('click'， () => this。toggleTheme());
+                    this。elements。undoBtn。addEventListener('click'， () => this。undo());
+                    this。elements。redoBtn。addEventListener('click'， () => this.redo());
+                    this。elements。importBtn。addEventListener('click'， () => this.elements.configFileInput.click());
+                    this。elements。exportBtn。addEventListener('click'， () => this。exportConfig(false)); 
+                    this。elements。exportTemplateBtn。addEventListener('click', () => this。exportConfig(true)); 
+                    this.elements。exportPngBtn。addEventListener('click'， () => this.exportPNG());
+                    this。elements。hdExportToggle。addEventListener('change'， () => this。updateExportSizePreview());
+                    this。elements。configFileInput。addEventListener('change'， e => this.handleConfigFile(e));
+                    this。elements。downloadModalCloseBtn。addEventListener('click'， () => this。hideDownloadModal());
+                    this。elements。cropperCancelBtn。addEventListener('click'， () => this.hideCropper());
+                    this。elements。cropperSaveBtn。addEventListener('click'， () => this.saveCrop());
                     this.elements.addTextBlockBtn.addEventListener('click', () => this.addBlock('text'));
                     this.elements.addImageBlockBtn.addEventListener('click', () => this.addBlock('image'));
                     this.elements.addSeparatorBlockBtn.addEventListener('click', () => this.addBlock('separator'));
@@ -721,7 +803,7 @@
                     
                     this.elements.iconPickerCloseBtn.addEventListener('click', () => this.hideIconPicker());
                     this.elements.removeIconBtn.addEventListener('click', () => this.selectIcon(null));
-                    this.elements.iconSearch.addEventListener('input', (e) => this.renderIconGrid(e.target.value));
+                    this.elements.iconSearch.addEventListener('input', this.debounce((e) => this.renderIconGrid(e.target.value), 300));
                     this.elements.iconGrid.addEventListener('click', (e) => {
                         const item = e.target.closest('.icon-grid-item');
                         if (item) {
@@ -729,6 +811,51 @@
                         }
                     });
 
+                    this.elements.resetBtn.addEventListener('click', () => this.resetToDefault());
+                    this.elements.lockModeToggle.addEventListener('click', () => this.toggleLockMode());
+                    
+                    this.elements.addNewTagBtn.addEventListener('click', () => this.addNewTag());
+                    this.elements.newTagTextInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            this.addNewTag();
+                        }
+                    });
+                    this.elements.tagManagerList.addEventListener('click', e => {
+                        const tagItem = e.target.closest('.tag-manager-item');
+                        if (!tagItem) return;
+                        const tagId = tagItem.dataset.tagId;
+                        if (e.target.closest('.tag-icon-btn')) {
+                            this.showIconPicker('tag', tagId);
+                        } else if (e.target.closest('.tag-delete-btn')) {
+                            this.deleteTag(tagId);
+                        }
+                    });
+                     this.elements.tagManagerList.addEventListener('input', e => {
+                        const tagItem = e.target.closest('.tag-manager-item');
+                        if (tagItem && e.target.classList.contains('tag-text-input')) {
+                           this.updateTag(tagItem.dataset.tagId, 'text', e.target.value, false);
+                        }
+                    });
+                    this.elements.tagManagerList.addEventListener('change', e => {
+                        const tagItem = e.target.closest('.tag-manager-item');
+                        if (tagItem && e.target.classList.contains('tag-text-input')) {
+                           this.updateTag(tagItem.dataset.tagId, 'text', e.target.value, true);
+                        }
+                    });
+
+                    this.elements.customWidthToggle.addEventListener('change', () => this.toggleCustomWidthControls());
+                    this.elements.customWidthInput.addEventListener('input', this.debounce(() => {
+                        const width = parseInt(this.elements.customWidthInput.value);
+                        if (width > 0) this.applyCustomWidth(width);
+                    }, 300));
+                    this.elements.customWidthControls.querySelector('.width-presets').addEventListener('click', e => {
+                        if (e.target.dataset.width) {
+                            const width = parseInt(e.target.dataset.width);
+                            this.elements.customWidthInput.value = width;
+                            this.applyCustomWidth(width);
+                        }
+                    });
                 },
                 
                 bindEditorEvents() {
@@ -835,7 +962,7 @@
                             else if (target.closest('.crop-image-btn')) this.cropImage(blockId, parseInt(target.closest('.thumbnail-item').dataset.index));
                             else if (target.closest('.select-icon-btn')) { 
                                 const cardId = target.closest('.editor-card').dataset.cardId;
-                                this.showIconPicker(blockId, cardId);
+                                this.showIconPicker('card', blockId, cardId);
                             }
                         }
                     });
@@ -879,17 +1006,8 @@
 
                 bindPreviewEvents(){
                      this.elements.previewWrapper.addEventListener('dblclick', e => {
-                            const target = e.target.closest('[data-state-key], [data-card-key]');
-                            if (target && !this.isEditingText) {
-                                this.isEditingText = true;
-                                target.contentEditable = true;
-                                target.focus();
-                                document.execCommand('selectAll', false, null);
-                            }
-                        });
-
-                        this.elements.previewTagsContainer.addEventListener('dblclick', e => {
-                            const target = e.target.closest('.tag-pill');
+                            if (this.elements.previewBlocksContainer.classList.contains('locked-mode')) return;
+                            const target = e.target.closest('[data-state-key], [data-card-key], [data-tag-id]');
                             if (target && !this.isEditingText) {
                                 this.isEditingText = true;
                                 target.contentEditable = true;
@@ -901,19 +1019,16 @@
                                     this.isEditingText = false;
                                     target.removeEventListener('blur', handleEditEnd);
                                     target.removeEventListener('keydown', handleKeydown);
-                                    
-                                    const newTagText = target.innerText.trim();
-                                    const tagIndex = parseInt(target.dataset.tagIndex);
-                                    
-                                    let tags = (this.state.personalInfo.tags || '').split(/[,，、]/).map(t => t.trim()).filter(Boolean);
-                                    if (newTagText) {
-                                        tags[tagIndex] = newTagText;
-                                    } else {
-                                        tags.splice(tagIndex, 1);
+
+                                    if(target.dataset.tagId){
+                                        const newText = target.innerText.trim();
+                                        if (newText) {
+                                            this.updateTag(target.dataset.tagId, 'text', newText, true);
+                                        } else {
+                                            this.deleteTag(target.dataset.tagId);
+                                        }
+                                        this.renderTagManager();
                                     }
-                                    
-                                    this.updateState('personalInfo.tags', tags.join(', '), true);
-                                    this.syncControl('personalInfo.tags');
                                 };
                                 
                                 const handleKeydown = (ev) => {
@@ -955,7 +1070,7 @@
 
                         this.elements.previewWrapper.addEventListener('blur', e => {
                             const target = e.target;
-                            if (target.contentEditable === 'true' && !target.classList.contains('tag-pill')) {
+                            if (target.contentEditable === 'true' && !target.dataset.tagId) {
                                 this.isEditingText = false;
                                 target.contentEditable = false;
                                 
@@ -966,13 +1081,13 @@
                                 const value = target.innerText;
 
                                 if (stateKey) {
-                                    this.updateState(stateKey, value, false); // No need to push history again
+                                    this.updateState(stateKey, value, false);
                                     this.syncControl(stateKey);
                                 } else if (cardKey) {
                                     const cardEl = target.closest('.preview-card');
                                     const blockEl = target.closest('.preview-block-wrapper');
                                     if (cardEl && blockEl) {
-                                        this.updateCard(blockEl.dataset.blockId, cardEl.dataset.cardId, cardKey, value, false); // No need to push history again
+                                        this.updateCard(blockEl.dataset.blockId, cardEl.dataset.cardId, cardKey, value, false);
                                         this.renderEditorCardById(blockEl.dataset.blockId, cardEl.dataset.cardId);
                                     }
                                 }
@@ -1026,6 +1141,7 @@
                     this.renderPageStyles();
                     this.renderEditorBlocks(isInitial);
                     this.renderPreviewBlocks();
+                    this.renderTagManager();
                 },
                 
                 renderPersonalInfo() {
@@ -1043,13 +1159,11 @@
                     this.elements.previewAvatar.style.borderWidth = `${info.avatarBorderSize}px`;
                     this.elements.previewAvatar.style.borderColor = info.avatarBorderColor;
                     
-                    this.elements.previewTagsContainer.innerHTML = (info.tags || '').split(/[,，、]/)
-                        .map(t => t.trim()).filter(Boolean)
-                        .map((t, index) => `<span class="tag-pill" data-tag-index="${index}">${this.escapeHTML(t)}</span>`).join('');
-                    
-                    const rootStyle = document.documentElement.style;
-                    rootStyle.setProperty('--tag-bg-color', info.tagBgColor);
-                    rootStyle.setProperty('--tag-text-color', info.tagTextColor);
+                    this.elements.previewTagsContainer.innerHTML = (info.tags || [])
+                        .map(tag => {
+                            const iconHTML = tag.icon ? `<span class="iconify" data-icon="${tag.icon}"></span>` : '';
+                            return `<span class="tag-pill" data-tag-id="${tag.id}" style="background-color:${info.tagBgColor}; color:${info.tagTextColor};">${iconHTML}<span>${this.escapeHTML(tag.text)}</span></span>`;
+                        }).join('');
                 },
 
                 renderPageStyles() {
@@ -1165,7 +1279,7 @@
                     cardEl.className = 'preview-card';
                     cardEl.dataset.cardId = card.id;
                     cardEl.style.setProperty('--card-transition-name', `card-${card.id}`);
-                    const iconHTML = card.icon ? `<i class="bi ${card.icon}"></i>` : '';
+                    const iconHTML = card.icon ? `<span class="iconify" data-icon="${card.icon}"></span>` : '';
                     cardEl.innerHTML = `<div class="preview-card-inner">
                             <h3 class="preview-card-title" data-card-key="title">${iconHTML}${this.escapeHTML(card.title || '')}</h3>
                             <p class="preview-card-content" data-card-key="content">${this.escapeHTML(card.content || '')}</p>
@@ -1177,10 +1291,10 @@
                 createEditorCardHTML(card) {
                     const s = (val, def) => val ?? def;
                     const followGlobalOpacity = card.followGlobalOpacity !== false;
-                    const iconBtnText = card.icon ? `<i class="bi ${card.icon}"></i> ${card.icon.substring(3)}` : '选择图标';
+                    const iconHTML = card.icon ? `<span class="iconify" data-icon="${card.icon}" style="font-size: 1.2em; vertical-align: middle; margin-right: 5px;"></span> ${card.icon}` : '选择图标';
                     return `<span class="card-drag-handle">☰</span><div class="editor-card-header"><button class="btn btn-danger btn-small card-delete-btn">删</button></div>
                         <div class="editor-card-content">
-                            <div class="form-group"><label>标题:</label><div class="input-group"><input type="text" data-card-key="title" value="${this.escapeHTML(s(card.title, ''))}" style="border-right: none;"><button class="btn btn-default select-icon-btn" style="width: auto; flex-shrink: 0; border-radius: 0 6px 6px 0; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${iconBtnText}</button></div></div>
+                            <div class="form-group"><label>标题:</label><div class="input-group"><input type="text" data-card-key="title" value="${this.escapeHTML(s(card.title, ''))}" style="border-right: none;"><button class="btn btn-default select-icon-btn" style="width: auto; flex-shrink: 0; border-radius: 0 6px 6px 0; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${iconHTML}</button></div></div>
                             <div class="form-group"><label>内容:</label><textarea data-card-key="content" rows="4">${this.escapeHTML(s(card.content, ''))}</textarea></div>
                             <hr class="separator"><div class="card-style-grid">
                                 <div class="form-group"><label>字号:</label><select data-card-key="fontSize"><option value="" ${s(card.fontSize, '') === '' ? 'selected' : ''}>默认</option><option value="0.9em" ${card.fontSize === '0.9em' ? 'selected' : ''}>小</option><option value="1em" ${card.fontSize === '1em' ? 'selected' : ''}>中</option><option value="1.1em" ${card.fontSize === '1.1em' ? 'selected' : ''}>大</option></select></div>
@@ -1260,7 +1374,12 @@
                     const mainKey = parts[0];
 
                     if (mainKey === 'personalInfo') {
-                        this.renderPersonalInfo();
+                        if (parts[1] === 'tags') {
+                            this.renderPersonalInfo();
+                            this.renderTagManager();
+                        } else {
+                            this.renderPersonalInfo();
+                        }
                     } else if (mainKey === 'pageStyles') {
                         this.renderPageStyles();
                     } else if (mainKey === 'globalCardStyles') {
@@ -1368,14 +1487,20 @@
                 },
 
                 loadFromLocal() { 
-                    const json = localStorage.getItem('genV75State'); 
+                    const json = localStorage.getItem('blokkoState'); 
                     if (!json) {
-                        this.showToast('欢迎使用！已为您加载默认模板。', 'info');
+                        this.showToast('欢迎使用 Blokko！已为您加载默认模板。', 'info');
                         return;
                     };
                     try { 
-                        const saved = JSON.parse(json);
+                        let saved = JSON.parse(json);
                         if (saved && saved.personalInfo) {
+                            if (typeof saved.personalInfo.tags === 'string') {
+                                saved.personalInfo.tags = saved.personalInfo.tags.split(/[,，、]/).map(t => t.trim()).filter(Boolean)
+                                    .map(text => ({ id: this.generateId('t'), icon: null, text }));
+                                this.showToast('旧版配置已加载，标签数据已自动转换。', 'info');
+                            }
+                            
                             const defaultState = this.getDefaultState();
                             this.state = this.mergeDeep(defaultState, saved);
 
@@ -1392,7 +1517,7 @@
                             }
                         }
                     } catch (e) { 
-                        localStorage.removeItem('genV75State'); 
+                        localStorage.removeItem('blokkoState'); 
                         this.showErrorModal('加载存档失败', '您的本地存档可能已损坏，已为您加载默认模板。错误信息: ' + e.message);
                         console.error("Failed to load state from localStorage:", e);
                     } 
@@ -1451,6 +1576,8 @@
                     document.querySelectorAll('[data-state-key]').forEach(input => {
                         try {
                             const stateKey = input.dataset.stateKey;
+                            if (stateKey === 'personalInfo.tags') return;
+                            
                             const value = stateKey.split('.').reduce((o, k) => o[k], this.state);
                             if (input.type === 'radio') {
                                 input.checked = (input.value == value);
@@ -1555,7 +1682,7 @@
                         this.applyCardStyles(el, card);
                         const titleEl = el.querySelector('.preview-card-title');
                         const contentEl = el.querySelector('.preview-card-content');
-                        const iconHTML = card.icon ? `<i class="bi ${card.icon}"></i>` : '';
+                        const iconHTML = card.icon ? `<span class="iconify" data-icon="${card.icon}"></span>` : '';
                         if(titleEl) titleEl.innerHTML = `${iconHTML}${this.escapeHTML(card.title || '')}`;
                         if(contentEl) contentEl.innerHTML = this.escapeHTML(card.content || '');
                     } 
@@ -1571,7 +1698,7 @@
                         cardEl.querySelector('[data-card-key="opacity"]').closest('.form-group').style.display = followGlobal ? 'none' : 'block';
                         const iconBtn = cardEl.querySelector('.select-icon-btn');
                         if (iconBtn) {
-                            iconBtn.innerHTML = card.icon ? `<i class="bi ${card.icon}"></i> ${card.icon.substring(3)}` : '选择图标';
+                           iconBtn.innerHTML = card.icon ? `<span class="iconify" data-icon="${card.icon}" style="font-size: 1.2em; vertical-align: middle; margin-right: 5px;"></span> ${card.icon}` : '选择图标';
                         }
                     } 
                 },
@@ -1585,7 +1712,7 @@
                 renderEditorImageThumbnails(blockId, container) { 
                     if(!container) return; 
                     const block = this.findBlock(blockId); 
-                    container.innerHTML = !block.images?.length ? '<div class="empty-placeholder">暂无图片</div>' : block.images.map((img, i) => `<div class="thumbnail-item" data-index="${i}"><div class="thumbnail-wrapper"><img src="${img.url}" loading="lazy"><div class="thumbnail-actions"><button class="btn btn-icon crop-image-btn" title="裁剪">✂️</button><button class="btn btn-icon btn-danger delete-image-btn" title="删除">❌</button></div></div><input type="text" data-image-key="title" placeholder="标题" value="${this.escapeHTML(img.title||'')}"><textarea data-image-key="description" placeholder="描述">${this.escapeHTML(img.description||'')}</textarea></div>`).join(''); 
+                    container.innerHTML = !block.images?.length ? '<div class="empty-placeholder">暂无图片</div>' : block.images.map((img, i) => `<div class="thumbnail-item" data-index="${i}"><div class="thumbnail-wrapper"><img src="${img.url}" loading="lazy"><div class="thumbnail-actions"><button class="btn btn-icon crop-image-btn" title="裁剪"><span class="iconify" data-icon="mdi:crop"></span></button><button class="btn btn-icon btn-danger delete-image-btn" title="删除"><span class="iconify" data-icon="mdi:delete"></span></button></div></div><input type="text" data-image-key="title" placeholder="标题" value="${this.escapeHTML(img.title||'')}"><textarea data-image-key="description" placeholder="描述">${this.escapeHTML(img.description||'')}</textarea></div>`).join(''); 
                 },
                 
                 pushHistory() {
@@ -1927,12 +2054,12 @@
                 
                 toggleTheme(){
                     const isDark = document.documentElement.classList.toggle('dark-mode'); 
-                    localStorage.setItem('genV75Theme', isDark ? 'dark' : 'light'); 
+                    localStorage.setItem('blokkoTheme', isDark ? 'dark' : 'light'); 
                     this.elements.themeLabel.textContent = isDark ? '暗黑模式' : '明亮模式'; 
                 },
                 
                 loadPreferences(){
-                    if (localStorage.getItem('genV75Theme') === 'dark') { 
+                    if (localStorage.getItem('blokkoTheme') === 'dark') { 
                         this.elements.themeLabel.textContent = '暗黑模式'; 
                     } 
                 },
@@ -1941,7 +2068,7 @@
                      try { 
                             const stateToSave = this.deepClone(this.state);
                             stateToSave.uploadedFonts = this.uploadedFonts;
-                            localStorage.setItem('genV75State', JSON.stringify(stateToSave)); 
+                            localStorage.setItem('blokkoState', JSON.stringify(stateToSave)); 
                         } catch (e) {
                             console.error("Save to localStorage failed:", e);
                             if (e.name === 'QuotaExceededError') {
@@ -1951,7 +2078,7 @@
                 },
                 
                 generateFilename(type){
-                    const nickname = (this.state.personalInfo.nickname || '').replace(/[^a-z0-9\u4e00-\u9fa5]/gi, '_').substring(0, 15) || 'SelfIntro';
+                    const nickname = (this.state.personalInfo.nickname || '').replace(/[^a-z0-9\u4e00-\u9fa5]/gi, '_').substring(0, 15) || 'Blokko';
                     const date = new Date();
                     const dateString = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`;
                     const randomString = Math.random().toString(36).substring(2, 8);
@@ -1965,7 +2092,7 @@
                             stateToSave.personalInfo.nickname = "你的昵称";
                             stateToSave.personalInfo.subtitle = "这是副标题";
                             stateToSave.personalInfo.bio = "这是简介";
-                            stateToSave.personalInfo.tags = "标签1, 标签2";
+                            stateToSave.personalInfo.tags = this.getDefaultState().personalInfo.tags;
                             stateToSave.personalInfo.avatarDataUrl = this.getDefaultState().personalInfo.avatarDataUrl;
                             stateToSave.pageStyles.pageBgImageDataUrl = null;
 
@@ -2008,9 +2135,15 @@
                         const reader = new FileReader(); 
                         reader.onload = async (re) => { 
                             try { 
-                                const importedState = JSON.parse(re.target.result); 
+                                let importedState = JSON.parse(re.target.result); 
                                 if (!importedState || !importedState.personalInfo || !importedState.blocks) throw new Error('Invalid file format'); 
                                 
+                                if (typeof importedState.personalInfo.tags === 'string') {
+                                    importedState.personalInfo.tags = importedState.personalInfo.tags.split(/[,，、]/).map(t => t.trim()).filter(Boolean)
+                                        .map(text => ({ id: this.generateId('t'), icon: null, text }));
+                                    this.showToast('旧版配置已导入并自动升级。', 'info');
+                                }
+
                                 this.state = this.mergeDeep(this.getDefaultState(), importedState);
                                 
                                 this.uploadedFonts = [];
@@ -2051,45 +2184,94 @@
                         e.target.value = ''; 
                 },
                 
-                async bakeOverlaysForExport(clone){
-                    const style = document.createElement('style');
-                        clone.appendChild(style);
+                // 找到 bakeOverlaysForExport 函数并替换为以下内容：
+async bakeOverlaysForExport(clone) {
+    const style = document.createElement('style');
+    clone.appendChild(style);
 
-                        const pageOverlay = clone.querySelector('#preview-overlay');
-                        const pageComputed = getComputedStyle(pageOverlay);
-                        if (parseFloat(pageComputed.opacity) > 0) {
-                            const overlayColor = pageComputed.backgroundColor;
-                            const currentBg = getComputedStyle(clone).backgroundImage;
-                            clone.style.backgroundImage = `linear-gradient(${overlayColor}, ${overlayColor}), ${currentBg}`;
-                            pageOverlay.style.display = 'none';
-                        }
-                        clone.querySelectorAll('.preview-card-inner').forEach(cardInner => {
-                            const before = getComputedStyle(cardInner, '::before');
-                            const after = getComputedStyle(cardInner, '::after');
-                            
-                            const bg = before.getPropertyValue('background');
-                            const overlayColor = after.getPropertyValue('background-color');
-                            const overlayOpacity = parseFloat(after.getPropertyValue('opacity'));
+    const pageWrapper = clone;
+    const pageOverlay = clone.querySelector('#preview-overlay');
+    const styles = this.state.pageStyles; // 从状态中获取数据
 
-                            if (overlayOpacity > 0 && overlayColor !== 'rgba(0, 0, 0, 0)') {
-                                cardInner.style.background = `linear-gradient(${overlayColor}, ${overlayColor}), ${bg}`;
-                            } else {
-                                cardInner.style.background = bg;
-                            }
-                        });
-                        style.innerHTML += `
-                            #${clone.id} .preview-card-inner::before, #${clone.id} .preview-card-inner::after {
-                                content: none !important;
-                                background: none !important;
-                            }
-                        `;
-                },
+    let finalPageBg = getComputedStyle(pageWrapper, '::before').getPropertyValue('background-image');
+    const basePageBgColor = getComputedStyle(pageWrapper).backgroundColor;
+
+    // 1. 处理页面背景遮罩
+    if (pageOverlay && styles.pageBgImageDataUrl) { // 仅当有背景图时才应用蒙版
+        const overlayOpacity = parseFloat(styles.pageOverlayOpacity);
+        
+        if (overlayOpacity > 0) {
+            // Blokko v1.2.1: 关键修复 - 使用 hexToRgba 转换颜色和状态中的不透明度
+            const finalOverlayColor = this.hexToRgba(styles.pageOverlayColor, overlayOpacity);
+            const overlayGradient = `linear-gradient(${finalOverlayColor}, ${finalOverlayColor})`;
+            
+            if (finalPageBg !== 'none') {
+                finalPageBg = `${overlayGradient}, ${finalPageBg}`;
+            } else {
+                // 如果没有图片，则只使用纯色/渐变背景，不需要蒙版叠加逻辑
+                finalPageBg = overlayGradient;
+            }
+        }
+        pageOverlay.style.display = 'none';
+    }
+    
+    pageWrapper.style.backgroundImage = finalPageBg;
+    // 确保如果背景图被移除，底色能正确显示
+    if(finalPageBg === 'none') {
+        pageWrapper.style.backgroundColor = basePageBgColor;
+    }
+
+
+    // 2. 处理卡片背景遮罩
+    clone.querySelectorAll('.preview-card-inner').forEach(cardInner => {
+        const computed = getComputedStyle(cardInner);
+        const beforeComputed = getComputedStyle(cardInner, '::before');
+        const afterComputed = getComputedStyle(cardInner, '::after');
+        
+        const backgroundStyle = beforeComputed.getPropertyValue('background');
+        const overlayOpacity = parseFloat(afterComputed.getPropertyValue('opacity'));
+        
+        // 只有当有背景图且不透明度大于0时，我们才需要烘焙蒙版
+        if (overlayOpacity > 0 && afterComputed.getPropertyValue('background-color') !== 'rgba(0, 0, 0, 0)') {
+            // 注意：卡片的颜色数据需要从 DOM 或状态中获取
+            // 默认从 style 变量中读取，通常是准确的 RGBA 值
+            const overlayColor = computed.getPropertyValue('--card-overlay-color'); 
+            
+            // 确保我们重新结合了透明度
+            const finalOverlayColor = this.hexToRgba(overlayColor, overlayOpacity);
+
+            cardInner.style.background = `linear-gradient(${finalOverlayColor}, ${finalOverlayColor}), ${backgroundStyle}`;
+        } else {
+            cardInner.style.background = backgroundStyle;
+        }
+        // 恢复边框和阴影
+        cardInner.style.border = computed.border;
+        cardInner.style.boxShadow = computed.boxShadow;
+    });
+
+    // 3. 强制清除伪元素
+    style.innerHTML += `
+        #${clone.id}::before,
+        #${clone.id} .preview-card-inner::before, 
+        #${clone.id} .preview-card-inner::after {
+            content: none !important;
+            background: none !important;
+            display: none !important;
+        }
+    `;
+},
                 
                 async exportPNG(){
                      this.showLoading('正在准备导出...');
                         const scale = this.elements.hdExportToggle.checked ? 3 : 2;
                         const originalElement = this.elements.previewWrapper;
                         let clone = null;
+                        
+                        const wasDrawerOpen = this.elements.editorPanel.classList.contains('is-open');
+                        if (wasDrawerOpen) {
+                            this.toggleEditorDrawer(false);
+                            await this.sleep(100);
+                        }
                         
                         try {
                             clone = originalElement.cloneNode(true);
@@ -2118,7 +2300,7 @@
                             const canvas = await html2canvas(clone, {
                                 scale: scale,
                                 useCORS: true,
-                                backgroundColor: getComputedStyle(originalElement).backgroundColor,
+                                backgroundColor: null,
                                 logging: false
                             });
 
@@ -2133,6 +2315,9 @@
                             if (clone && clone.parentNode) {
                                 clone.parentNode.removeChild(clone);
                             }
+                            if (wasDrawerOpen) {
+                                this.toggleEditorDrawer(true);
+                            }
                             this.hideLoading();
                         }
                 },
@@ -2142,12 +2327,8 @@
                         if (!el) return;
                         const width = el.clientWidth;
                         const height = el.clientHeight;
-                        const isHD = this.elements.hdExportToggle.checked;
-                        let text = `标准 (x2): ${width*2}x${height*2}px`;
-                        if(isHD) {
-                            text = `超清 (x3): ${width*3}x${height*3}px`;
-                        }
-                        this.elements.exportSizePreview.textContent = text;
+                        const scale = this.elements.hdExportToggle.checked ? 3 : 2;
+                        this.elements.exportSizePreview.textContent = `导出尺寸: ${width*scale}x${height*scale}px`;
                 },
                 
                 arrayBufferToBase64(buffer){
@@ -2218,12 +2399,19 @@
                         r.setProperty('--g-card-border-radius',`${g.radius}px`); 
                         r.setProperty('--g-card-text-align',g.textAlign); 
                         r.setProperty('--g-card-line-height',g.lineHeight); 
-                        r.setProperty('--active-card-shadow', g.shadowEnabled ? 'var(--g-card-shadow)' : 'none'); 
-                        r.setProperty('--active-card-border', 'var(--g-card-border)');
                         r.setProperty('--active-card-font-family',g.fontFamily?`"${g.fontFamily}",sans-serif`:''); 
                         r.setProperty('--active-card-font-size',g.fontSize);
                         r.setProperty('--g-card-text-stroke', g.textStrokeWidth > 0 ? `${g.textStrokeWidth}px ${g.textStrokeColor}` : '0px transparent');
-                        r.setProperty('--g-card-border', g.borderWidth > 0 ? `${g.borderWidth}px ${g.borderStyle} ${g.borderColor}` : 'none');
+                        
+                        const regularShadow = g.shadowEnabled ? 'var(--g-card-shadow)' : 'none';
+                        if (g.borderStyle === 'solid' && g.borderWidth > 0) {
+                            const borderShadow = `0 0 0 ${g.borderWidth}px ${g.borderColor}`;
+                            r.setProperty('--active-card-shadow', `${borderShadow}, ${regularShadow}`);
+                            r.setProperty('--active-card-border', 'none');
+                        } else {
+                            r.setProperty('--active-card-border', g.borderWidth > 0 ? `${g.borderWidth}px ${g.borderStyle} ${g.borderColor}` : 'none');
+                            r.setProperty('--active-card-shadow', regularShadow);
+                        }
                 },
                 
                 initAllSortables(){
@@ -2263,23 +2451,135 @@
                     const isOpen = this.elements.editorPanel.classList.toggle('is-open', forceState);
                     this.elements.body.classList.toggle('editor-open', isOpen);
                 },
-                
-                loadIcons(){
-                     this.icons = ["alarm-fill", "archive-fill", "arrow-right-circle-fill", "at", "award-fill", "bag-check-fill", "bank", "bar-chart-fill", "basket-fill", "bell-fill", "bicycle", "book-fill", "bookmark-star-fill", "briefcase-fill", "brightness-high-fill", "broadcast", "brush-fill", "bug-fill", "building", "calculator-fill", "calendar-check-fill", "camera-fill", "cart-fill", "chat-dots-fill", "check-circle-fill", "clock-fill", "cloud-fill", "code-slash", "collection-fill", "compass-fill", "controller", "cpu-fill", "credit-card-fill", "cup-fill", "cursor-fill", "diagram-3-fill", "discord", "display-fill", "dribbble", "droplet-fill", "earbuds", "envelope-fill", "exclamation-triangle-fill", "eye-fill", "facebook", "file-earmark-music-fill", "film", "flag-fill", "folder-fill", "forward-fill", "funnel-fill", "gear-fill", "gem", "geo-alt-fill", "gift-fill", "github", "globe", "google", "graph-up", "grid-fill", "hammer", "hand-thumbs-up-fill", "hash", "headphones", "heart-fill", "house-door-fill", "image-fill", "inbox-fill", "info-circle-fill", "instagram", "joystick", "key-fill", "keyboard-fill", "laptop-fill", "lightbulb-fill", "lightning-fill", "linkedin", "list-check", "lock-fill", "mailbox", "map-fill", "mic-fill", "moon-fill", "mouse-fill", "music-note-beamed", "newspaper", "palette-fill", "patch-check-fill", "pause-circle-fill", "paypal", "pen-fill", "pencil-fill", "percent", "person-fill", "phone-fill", "pie-chart-fill", "pin-map-fill", "play-circle-fill", "plug-fill", "plus-circle-fill", "power", "printer-fill", "puzzle-fill", "question-circle-fill", "quote", "receipt", "reddit", "rocket-takeoff-fill", "rss-fill", "save-fill", "scissors", "sd-card-fill", "search", "send-fill", "server", "share-fill", "shield-lock-fill", "shop", "skype", "slack", "snapchat", "speaker-fill", "speedometer2", "spotify", "star-fill", "steam", "stickies-fill", "stopwatch-fill", "subtract", "sun-fill", "tags-fill", "telegram", "telephone-fill", "terminal-fill", "tiktok", "tools", "trash-fill", "trophy-fill", "truck", "twitch", "twitter", "unlock-fill", "upload", "usb-drive-fill", "vector-pen", "vimeo", "volume-up-fill", "wallet-fill", "whatsapp", "wifi", "windows", "wordpress", "wrench", "youtube", "zoom-in"];
-                     this.renderIconGrid();
+
+                resetToDefault() {
+                    if (window.confirm('警告：此操作将清空您所有的内容和样式设置，并恢复到初始模板。此过程不可撤销，确定要继续吗？')) {
+                        localStorage.removeItem('blokkoState');
+                        this.state = this.getDefaultState();
+                        this.history = [this.deepClone(this.state)];
+                        this.historyIndex = 0;
+                        this.updateUndoRedoButtons();
+                        this.renderAll(true);
+                        this.syncAllControls();
+                        this.showToast('已恢复为默认模板', 'success');
+                    }
+                },
+
+                toggleLockMode() {
+                    const isLocked = this.elements.previewBlocksContainer.classList.toggle('locked-mode');
+                    const button = this.elements.lockModeToggle;
+                    if (isLocked) {
+                        button.textContent = '锁定中';
+                        button.title = '预览模式 (点击切换为编辑模式)';
+                        Sortable.get(this.elements.previewBlocksContainer).option('disabled', true);
+                    } else {
+                        button.textContent = '编辑中';
+                        button.title = '编辑模式 (点击切换为预览模式)';
+                        Sortable.get(this.elements.previewBlocksContainer).option('disabled', false);
+                    }
                 },
                 
-                renderIconGrid(searchTerm = ''){
-                     const filtered = searchTerm
-                            ? this.icons.filter(name => name.includes(searchTerm.toLowerCase()))
-                            : this.icons;
-                     this.elements.iconGrid.innerHTML = filtered.map(name => 
-                            `<div class="icon-grid-item" data-icon="bi-${name}" title="${name}"><i class="bi bi-${name}"></i></div>`
+                renderTagManager() {
+                    const tags = this.state.personalInfo.tags || [];
+                    if (!tags.length) {
+                        this.elements.tagManagerList.innerHTML = `<div class="empty-tag-list">暂无标签</div>`;
+                        return;
+                    }
+                    this.elements.tagManagerList.innerHTML = tags.map(tag => {
+                        const iconHTML = tag.icon ? `<span class="iconify" data-icon="${tag.icon}"></span>` : '无';
+                        return `<div class="tag-manager-item" data-tag-id="${tag.id}">
+                            <button class="btn btn-default btn-icon tag-icon-btn">${iconHTML}</button>
+                            <input type="text" class="tag-text-input" value="${this。escapeHTML(tag.text)}">
+                            <button class="btn btn-danger btn-icon tag-delete-btn"><span class="iconify" data-icon="mdi:delete"></span></button>
+                        </div>`;
+                    }).join('');
+                },
+                
+                addNewTag() {
+                    const text = this.elements.newTagTextInput.value.trim();
+                    if (!text) return;
+                    this.pushHistory();
+                    this.state.personalInfo.tags.push({ id: this.generateId('t'), icon: null, text });
+                    this.debouncedSaveToLocal();
+                    this.renderPersonalInfo();
+                    this.renderTagManager();
+                    this.elements.newTagTextInput.value = '';
+                    this.elements.newTagTextInput.focus();
+                },
+
+                deleteTag(tagId) {
+                    this.pushHistory();
+                    this.state.personalInfo.tags = this.state.personalInfo.tags.filter(t => t.id !== tagId);
+                    this.debouncedSaveToLocal();
+                    this.renderPersonalInfo();
+                    this.renderTagManager();
+                },
+                
+                updateTag(tagId, key, value, pushHistory) {
+                    const tagIndex = this.state.personalInfo.tags.findIndex(t => t.id === tagId);
+                    if (tagIndex > -1) {
+                        this.updateState(`personalInfo.tags.${tagIndex}.${key}`, value, pushHistory);
+                    }
+                },
+
+                toggleCustomWidthControls() {
+                    const isEnabled = this.elements.customWidthToggle.checked;
+                    this.elements.customWidthControls.style.display = isEnabled ? 'block' : 'none';
+                    if (!isEnabled) {
+                        this.elements.previewWrapper.style.width = '';
+                        this.elements.previewWrapper.style.maxWidth = '600px';
+                        this.elements.previewWrapper.classList.remove('custom-width-mode');
+                        this.updateExportSizePreview();
+                    } else {
+                        const width = parseInt(this.elements.customWidthInput.value) || 600;
+                        this.applyCustomWidth(width);
+                    }
+                },
+
+                applyCustomWidth(width) {
+                    if (width > 0) {
+                        this.elements.previewWrapper.style.maxWidth = 'none';
+                        this.elements.previewWrapper.style.width = `${width}px`;
+                        this.elements.previewWrapper.classList.add('custom-width-mode');
+                        this.updateExportSizePreview();
+                    }
+                },
+
+                async loadIcons(){
+                     this.showLoading('正在加载图标库...');
+                     try {
+                         await this.sleep(100);
+                         this.showToast('图标库加载完成', 'info');
+                     } catch(e) {
+                         this.showErrorModal('图标库加载失败', '无法连接到 Iconify API，请检查网络连接。');
+                     } finally {
+                        this.hideLoading();
+                     }
+                },
+                
+                async renderIconGrid(searchTerm = ''){
+                     this.elements.iconGrid.innerHTML = `<div class="spinner" style="margin: 40px auto;"></div>`;
+                     if (!searchTerm) {
+                         this.elements.iconGrid.innerHTML = '<p style="text-align: center; color: var(--text-placeholder);">请输入关键词搜索图标</p>';
+                         return;
+                     }
+                     try {
+                        const response = await fetch(`https://api.iconify.design/search?query=${encodeURIComponent(searchTerm)}&limit=99`);
+                        const data = await response.json();
+                        if (data.icons.length === 0) {
+                            this.elements.iconGrid.innerHTML = '<p style="text-align: center; color: var(--text-placeholder);">未找到匹配的图标</p>';
+                            return;
+                        }
+                        this.elements.iconGrid.innerHTML = data.icons.map(name => 
+                            `<div class="icon-grid-item" data-icon="${name}" title="${name}"><span class="iconify" data-icon="${name}"></span></div>`
                         ).join('');
+                     } catch(e) {
+                        this.elements.iconGrid.innerHTML = '<p style="text-align: center; color: var(--color-danger);">搜索失败，请检查网络。</p>';
+                     }
                 },
                 
-                showIconPicker(blockId, cardId){
-                     this.currentIconTarget = { blockId, cardId };
+                showIconPicker(type, id, cardId = null){
+                     this.currentIconTarget = { type, id, cardId };
                      this.elements.iconPickerModal.classList.add('visible');
                      this.elements.iconSearch.focus();
                 },
@@ -2288,13 +2588,17 @@
                      this.elements.iconPickerModal.classList.remove('visible');
                      this.currentIconTarget = null;
                      this.elements.iconSearch.value = '';
-                     this.renderIconGrid();
+                     this.elements.iconGrid.innerHTML = '';
                 },
                 
                 selectIcon(iconClass){
                     if (this.currentIconTarget) {
-                        const { blockId, cardId } = this.currentIconTarget;
-                        this.updateCard(blockId, cardId, 'icon', iconClass, true);
+                        const { type, id, cardId } = this.currentIconTarget;
+                        if (type === 'card') {
+                            this.updateCard(id, cardId, 'icon', iconClass, true);
+                        } else if (type === 'tag') {
+                            this.updateTag(id, 'icon', iconClass, true);
+                        }
                     }
                     this.hideIconPicker();
                 },
