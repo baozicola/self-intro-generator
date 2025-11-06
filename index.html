@@ -406,10 +406,8 @@
                 <p><strong>双击编辑：</strong> 预览区域的大部分文本内容（如昵称、简介、卡片标题和内容）都可以通过双击直接进行编辑。</p>
                 <p><strong>拖拽排序：</strong> 在编辑区，你可以拖动区块左侧的 ☰ 图标来对整个区块进行排序。在区块内部，也可以拖拽卡片进行排序。</p>
                 <p><strong>导入/导出：</strong> 使用“导出配置”按钮可以保存你所有的设计为一个 .json 文件，方便备份和分享。之后可以通过“导入配置”来恢复。</p>
-                <p><strong>存为模板：</strong> 使用“存为模板”可以只保存样式配置，方便快速分享设计风格（不会导出图片和文字内容，文字和图片请使用导出配置）。</p>
+                <p><strong>存为模板：</strong> 使用“存为模板”可以只保存样式配置，方便快速复用设计风格。</p>
                 <p><strong>本地保存：</strong> 你的所有修改都会自动保存在当前浏览器中，刷新页面不会丢失进度（请勿使用无痕模式）。</p>
-                <p><strong>字体使用：</strong> 支持了自定义字体功能，现在可以自行上传字体文件来更换字体啦（本地字体功能暂只支持电脑端的Edge和Chrome浏览器）。</p>
-                <p><strong>渐变调节：</strong> 支持了简易的渐变调节功能，现在可以通过滑条调节渐变角度了。</p>
             </div>
             <div id="help-changelog" class="tab-content" style="max-height: 60vh; overflow-y: auto; padding: 15px;">
                 <h4>v1.1.1 (当前版本)</h4>
@@ -417,7 +415,6 @@
                     <li><b>【修复】</b> 修复了所有操作都无法自动保存到本地的严重BUG。</li>
                     <li><b>【修复】</b> 修复了图片区块独立不透明度功能失效的问题。</li>
                     <li><b>【修复】</b> 修正了卡片增/删交互动画的逻辑。</li>
-                    <li><b>【修复】</b> 制作人不动脑子就同步代码导致软件失效的问题。</li>
                     <li>以及 v1.1.0 的所有新功能...</li>
                 </ul>
                 <h4>v1.1.0</h4>
@@ -465,34 +462,34 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded'， () => {
+        document.addEventListener('DOMContentLoaded', () => {
             const App = {
-                state: {}，
-                history: []，
+                state: {},
+                history: [],
                 historyIndex: -1,
                 isRestoringState: false,
                 isEditingText: false,
                 cropper: null,
-                currentCropTarget: null，
+                currentCropTarget: null,
                 currentIconTarget: null, 
                 sortableBlocksEditor: null,
                 sortableBlocksPreview: null,
                 cardSortables: {},
                 imageSortables: {},
                 debouncedSaveToLocal: null,
-                localFonts: []，
+                localFonts: [],
                 uploadedFonts: [],
                 presets: {},
                 icons: [], 
 
                 init() {
-                    console。log("App 初始化 v1.1.1 ...");
-                    this。elements = this.queryElements();
+                    console.log("App 初始化 v1.1.1 ...");
+                    this.elements = this.queryElements();
                     this.presets = this.getPresets();
                     this.state = this.getDefaultState();
-                    this.debouncedSaveToLocal = this。debounce(this.saveToLocal, 500);
+                    this.debouncedSaveToLocal = this.debounce(this.saveToLocal, 500);
                     
-                    this。bindCoreEvents();
+                    this.bindCoreEvents();
                     this.bindEditorEvents();
                     this.bindPreviewEvents();
                     this.initResizer();
@@ -502,7 +499,7 @@
                     
                     this.history = [this.deepClone(this.state)];
                     this.historyIndex = 0;
-                    this。updateUndoRedoButtons();
+                    this.updateUndoRedoButtons();
                     
                     this.syncAllControls();
                     this.renderAll(true); 
@@ -604,77 +601,77 @@
                 queryElements() {
                     const q = (selector) => document.querySelector(selector);
                     return {
-                        editorPanel: q('#editor-panel')，
-                        resizer: q('#resizer')，
-                        themeToggleBtn: q('#theme-toggle-btn')， themeLabel: q('#theme-label'),
-                        previewWrapper: q('#preview-wrapper')， previewOverlay: q('#preview-overlay'),
+                        editorPanel: q('#editor-panel'),
+                        resizer: q('#resizer'),
+                        themeToggleBtn: q('#theme-toggle-btn'), themeLabel: q('#theme-label'),
+                        previewWrapper: q('#preview-wrapper'), previewOverlay: q('#preview-overlay'),
                         undoBtn: q('#undo-btn'), redoBtn: q('#redo-btn'),
                         importBtn: q('#import-btn'), exportBtn: q('#export-btn'),
                         exportTemplateBtn: q('#export-template-btn'), 
-                        exportPngBtn: q('#export-png-btn')， configFileInput: q('#config-file-input'),
-                        hdExportToggle: q('#hd-export-toggle')， exportSizePreview: q('#export-size-preview'),
-                        previewHeader: q('#preview-header')， previewAvatar: q('#preview-avatar'),
-                        previewNickname: q('#preview-nickname')， previewSubtitle: q('#preview-subtitle'),
+                        exportPngBtn: q('#export-png-btn'), configFileInput: q('#config-file-input'),
+                        hdExportToggle: q('#hd-export-toggle'), exportSizePreview: q('#export-size-preview'),
+                        previewHeader: q('#preview-header'), previewAvatar: q('#preview-avatar'),
+                        previewNickname: q('#preview-nickname'), previewSubtitle: q('#preview-subtitle'),
                         previewBio: q('#preview-bio'), previewTagsContainer: q('#preview-tags-container'),
                         pageBgUpload: q('#page-bg-upload'), clearPageBgBtn: q('#clear-page-bg-btn'),
                         pageImageControls: q('#page-image-controls'),
-                        cropperModal: q('#cropper-modal')， cropperImage: q('#cropper-image'),
-                        cropperCancelBtn: q('#cropper-cancel-btn')， cropperSaveBtn: q('#cropper-save-btn')，
-                        downloadModal: q('#download-modal'), downloadModalTitle: q('#download-modal-title')，
+                        cropperModal: q('#cropper-modal'), cropperImage: q('#cropper-image'),
+                        cropperCancelBtn: q('#cropper-cancel-btn'), cropperSaveBtn: q('#cropper-save-btn'),
+                        downloadModal: q('#download-modal'), downloadModalTitle: q('#download-modal-title'),
                         downloadModalContent: q('#download-modal-content'), downloadModalCloseBtn: q('#download-modal-close-btn'),
-                        addTextBlockBtn: q('#add-text-block-btn')， addImageBlockBtn: q('#add-image-block-btn'),
+                        addTextBlockBtn: q('#add-text-block-btn'), addImageBlockBtn: q('#add-image-block-btn'),
                         addSeparatorBlockBtn: q('#add-separator-block-btn'),
-                        editorBlocksList: q('#editor-blocks-list')， previewBlocksContainer: q('#preview-blocks-container'),
-                        fontFamilySelect: q('#font-family-select')，
-                        fontSearchInput: q('#font-search-input')，
-                        loadingOverlay: q('#loading-overlay')， loadingText: q('#loading-text'),
-                        toastContainer: q('#toast-container')，
-                        mobileEditToggle: q('#mobile-edit-toggle')，
-                        body: document。body，
-                        showHelpBtn: q('#show-help-btn')，
-                        helpModal: q('#help-modal')，
-                        helpModalCloseBtn: q('#help-modal-close-btn')，
-                        iconPickerModal: q('#icon-picker-modal')，
-                        iconGrid: q('#icon-grid')，
-                        iconSearch: q('#icon-search')，
-                        removeIconBtn: q('#remove-icon-btn')，
-                        iconPickerCloseBtn: q('#icon-picker-close-btn')，
+                        editorBlocksList: q('#editor-blocks-list'), previewBlocksContainer: q('#preview-blocks-container'),
+                        fontFamilySelect: q('#font-family-select'),
+                        fontSearchInput: q('#font-search-input'),
+                        loadingOverlay: q('#loading-overlay'), loadingText: q('#loading-text'),
+                        toastContainer: q('#toast-container'),
+                        mobileEditToggle: q('#mobile-edit-toggle'),
+                        body: document.body,
+                        showHelpBtn: q('#show-help-btn'),
+                        helpModal: q('#help-modal'),
+                        helpModalCloseBtn: q('#help-modal-close-btn'),
+                        iconPickerModal: q('#icon-picker-modal'),
+                        iconGrid: q('#icon-grid'),
+                        iconSearch: q('#icon-search'),
+                        removeIconBtn: q('#remove-icon-btn'),
+                        iconPickerCloseBtn: q('#icon-picker-close-btn'),
                     };
                 },
 
                 bindCoreEvents() {
-                    this.elements.themeToggleBtn.addEventListener('click'， () => this。toggleTheme());
-                    this。elements.undoBtn.addEventListener('click'， () => this.undo());
-                    this。elements。redoBtn。addEventListener('click'， () => this。redo());
-                    this.elements.importBtn.addEventListener('click', () => this。elements.configFileInput.click());
-                    this.elements.exportBtn.addEventListener('click'， () => this。exportConfig(false)); 
-                    this。elements。exportTemplateBtn。addEventListener('click'， () => this.exportConfig(true)); 
-                    this.elements。exportPngBtn。addEventListener('click', () => this.exportPNG());
-                    this。elements.hdExportToggle.addEventListener('change'， () => this.updateExportSizePreview());
-                    this。elements.configFileInput。addEventListener('change'， e => this.handleConfigFile(e));
-                    this.elements。downloadModalCloseBtn。addEventListener('click', () => this.hideDownloadModal());
-                    this。elements。cropperCancelBtn。addEventListener('click'， () => this。hideCropper());
-                    this。elements。cropperSaveBtn。addEventListener('click'， () => this.saveCrop());
-                    this。elements.addTextBlockBtn。addEventListener('click'， () => this。addBlock('text'));
-                    this。elements。addImageBlockBtn。addEventListener('click', () => this.addBlock('image'));
-                    this。elements。addSeparatorBlockBtn.addEventListener('click'， () => this.addBlock('separator'));
-                    document。getElementById('avatar-upload')。addEventListener('change'， e => this.handleImageUpload(e， 'avatar'));
-                    this。elements.pageBgUpload。addEventListener('change', e => this.handleImageUpload(e, 'pageBg'));
-                    this。elements。clearPageBgBtn.addEventListener('click', () => {
-                        this。updateState('pageStyles.pageBgImageDataUrl'， null, true)
-                        this.showToast('背景图已清除'， 'info');
+                    this.elements.themeToggleBtn.addEventListener('click', () => this.toggleTheme());
+                    this.elements.undoBtn.addEventListener('click', () => this.undo());
+                    this.elements.redoBtn.addEventListener('click', () => this.redo());
+                    this.elements.importBtn.addEventListener('click', () => this.elements.configFileInput.click());
+                    this.elements.exportBtn.addEventListener('click', () => this.exportConfig(false)); 
+                    this.elements.exportTemplateBtn.addEventListener('click', () => this.exportConfig(true)); 
+                    this.elements.exportPngBtn.addEventListener('click', () => this.exportPNG());
+                    this.elements.hdExportToggle.addEventListener('change', () => this.updateExportSizePreview());
+                    this.elements.configFileInput.addEventListener('change', e => this.handleConfigFile(e));
+                    this.elements.downloadModalCloseBtn.addEventListener('click', () => this.hideDownloadModal());
+                    this.elements.cropperCancelBtn.addEventListener('click', () => this.hideCropper());
+                    this.elements.cropperSaveBtn.addEventListener('click', () => this.saveCrop());
+                    this.elements.addTextBlockBtn.addEventListener('click', () => this.addBlock('text'));
+                    this.elements.addImageBlockBtn.addEventListener('click', () => this.addBlock('image'));
+                    this.elements.addSeparatorBlockBtn.addEventListener('click', () => this.addBlock('separator'));
+                    document.getElementById('avatar-upload').addEventListener('change', e => this.handleImageUpload(e, 'avatar'));
+                    this.elements.pageBgUpload.addEventListener('change', e => this.handleImageUpload(e, 'pageBg'));
+                    this.elements.clearPageBgBtn.addEventListener('click', () => {
+                        this.updateState('pageStyles.pageBgImageDataUrl', null, true)
+                        this.showToast('背景图已清除', 'info');
                     });
-                    document。getElementById('load-local-fonts-btn')。addEventListener('click'， () => this。loadLocalFonts());
+                    document.getElementById('load-local-fonts-btn').addEventListener('click', () => this.loadLocalFonts());
                     document.getElementById('upload-font-btn').addEventListener('click', () => document.getElementById('font-upload-input').click());
-                    document.getElementById('font-upload-input')。addEventListener('change'， e => this.handleFontUpload(e));
-                    document.querySelectorAll('input[name="crop-ratio"]')。forEach(i => i.addEventListener('change', () => this.updateCropAspectRatio()));
+                    document.getElementById('font-upload-input').addEventListener('change', e => this.handleFontUpload(e));
+                    document.querySelectorAll('input[name="crop-ratio"]').forEach(i => i.addEventListener('change', () => this.updateCropAspectRatio()));
                     
-                    this.elements.fontSearchInput.addEventListener('input'， e => this.populateFontList(e.target.value));
+                    this.elements.fontSearchInput.addEventListener('input', e => this.populateFontList(e.target.value));
 
-                    document。querySelectorAll('[data-preset]').forEach(btn => {
+                    document.querySelectorAll('[data-preset]').forEach(btn => {
                         btn.addEventListener('click', (e) => {
-                            const presetName = e。currentTarget.dataset.preset;
-                            if(this。presets[presetName]) {
+                            const presetName = e.currentTarget.dataset.preset;
+                            if(this.presets[presetName]) {
                                 this.applyPreset(this.presets[presetName]);
                             }
                         });
@@ -705,7 +702,7 @@
                                 this.updateState('globalCardStyles.bgMode', newMode, true);
                             } else if (sectionEl.id === 'page-styles-section') {
                                 if (button.dataset.tab.startsWith('page-bg')) {
-                                    this.updateState('pageStyles.pageBgMode', newMode， true);
+                                    this.updateState('pageStyles.pageBgMode', newMode, true);
                                 } else if (button.dataset.tab.startsWith('header-bg')) {
                                     this.updateState('pageStyles.headerBgMode', newMode, true);
                                 }
@@ -716,40 +713,40 @@
                     this.elements.mobileEditToggle.addEventListener('click', () => this.toggleEditorDrawer());
                     this.elements.body.addEventListener('click', (e) => {
                         if (e.target === this.elements.body && this.elements.body.classList.contains('editor-open')) {
-                            this。toggleEditorDrawer(false);
+                            this.toggleEditorDrawer(false);
                         }
                     });
                     this.elements.showHelpBtn.addEventListener('click', () => this.elements.helpModal.classList.add('visible'));
                     this.elements.helpModalCloseBtn.addEventListener('click', () => this.elements.helpModal.classList.remove('visible'));
                     
-                    this。elements.iconPickerCloseBtn.addEventListener('click'， () => this.hideIconPicker());
-                    this。elements。removeIconBtn。addEventListener('click'， () => this.selectIcon(null));
+                    this.elements.iconPickerCloseBtn.addEventListener('click', () => this.hideIconPicker());
+                    this.elements.removeIconBtn.addEventListener('click', () => this.selectIcon(null));
                     this.elements.iconSearch.addEventListener('input', (e) => this.renderIconGrid(e.target.value));
                     this.elements.iconGrid.addEventListener('click', (e) => {
-                        const item = e.target。closest('.icon-grid-item');
+                        const item = e.target.closest('.icon-grid-item');
                         if (item) {
                             this.selectIcon(item.dataset.icon);
                         }
                     });
 
-                }，
+                },
                 
                 bindEditorEvents() {
-                    this。elements。editorPanel.addEventListener('input'， e => {
-                        if (this。isRestoringState) return;
+                    this.elements.editorPanel.addEventListener('input', e => {
+                        if (this.isRestoringState) return;
                         const target = e.target;
                         const stateKey = target.dataset.stateKey;
 
                         if (stateKey) {
                             const value = target.type === 'checkbox' ? target.checked : target.value;
-                            this。updateState(stateKey， value, false);
+                            this.updateState(stateKey, value, false);
                             if (target.type === 'color' && target.nextElementSibling?.dataset.colorSyncKey === stateKey) {
                                 target.nextElementSibling.value = value;
                             }
                             if (stateKey === 'globalCardStyles.radius') {
-                                document.getElementById('gCardRadiusValue')。textContent = target.value;
+                                document.getElementById('gCardRadiusValue').textContent = target.value;
                             }
-                            if (target.输入 === 'range' && stateKey。endsWith('Angle')) {
+                            if (target.type === 'range' && stateKey.endsWith('Angle')) {
                                 target.previousElementSibling.querySelector('.angle-value').textContent = value;
                             }
                             return;
@@ -1133,7 +1130,7 @@
                                    `;
                     } else if (block.type === 'separator') {
                         const s = block.settings;
-                        content = `<div class="form-group"><label>样式:</label><div class="radio-group"><label><input type="radio" name="sep-style-${block.id}" data-setting-key="style" value="solid" ${s.style==='solid'?'checked':''}>实线</label><label><input type="radio" name="sep-style-${block.id}" data-setting-key="style" value="dashed" ${s.style==='dashed'?'checked':''}>虚线</label></div></div><div class="color-control-row"><div class="color-control-group"><label>颜色:</label><div class="input-group"><input type="color" data-setting-key="color" value="${s。color}"><input type="text" class="color-hex-input" data-color-sync-key="color" value="${s.color}"></div></div><div class="color-control-group"><label>粗细(px):</label><input type="range" data-setting-key="thickness" min="1" max="10" value="${s.thickness}"></div></div><div class="form-group"><label>垂直间距(px):</label><input type="range" data-setting-key="margin" min="0" max="50" value="${s.margin}"></div>`;
+                        content = `<div class="form-group"><label>样式:</label><div class="radio-group"><label><input type="radio" name="sep-style-${block.id}" data-setting-key="style" value="solid" ${s.style==='solid'?'checked':''}>实线</label><label><input type="radio" name="sep-style-${block.id}" data-setting-key="style" value="dashed" ${s.style==='dashed'?'checked':''}>虚线</label></div></div><div class="color-control-row"><div class="color-control-group"><label>颜色:</label><div class="input-group"><input type="color" data-setting-key="color" value="${s.color}"><input type="text" class="color-hex-input" data-color-sync-key="color" value="${s.color}"></div></div><div class="color-control-group"><label>粗细(px):</label><input type="range" data-setting-key="thickness" min="1" max="10" value="${s.thickness}"></div></div><div class="form-group"><label>垂直间距(px):</label><input type="range" data-setting-key="margin" min="0" max="50" value="${s.margin}"></div>`;
                     }
 
                     const collapsedClass = isInitial ? 'collapsed' : '';
@@ -1144,12 +1141,12 @@
                     if (block.type === 'text') {
                         const layoutClass = block.settings.layout === 'dual' ? 'preview-cards-dual' : 'preview-cards-single';
                         return `<div class="${layoutClass}">${(block.cards || []).map(card => this.createPreviewCardHTML(card)).join('')}</div>`;
-                    } else if (block.输入 === 'image') {
+                    } else if (block.type === 'image') {
                         const galleryHTML = (block.images || []).map(img => `<figure><img src="${img.url}" alt="${this.escapeHTML(img.title || '')}" loading="lazy">${(img.title || img.description) ? `<figcaption>${img.title ? `<strong>${this.escapeHTML(img.title)}</strong>` : ''}${this.escapeHTML(img.description || '')}</figcaption>` : ''}</figure>`).join('');
                         const { bgStyle, finalOpacity } = this.getImageBlockBgStyle(block);
                         const galleryEl = document.createElement('div');
-                        galleryEl.className = `image-gallery layout-${block。设置.layout || '2'}`;
-                        galleryEl。style。setProperty('--image-block-bg'， bgStyle);
+                        galleryEl.className = `image-gallery layout-${block.settings.layout || '2'}`;
+                        galleryEl.style.setProperty('--image-block-bg', bgStyle);
                         if (parseFloat(finalOpacity) === 0) {
                             galleryEl.style.boxShadow = 'none';
                             galleryEl.style.border = 'none';
@@ -1158,63 +1155,63 @@
                         return galleryEl.outerHTML;
                     } else if (block.type === 'separator') {
                          const s = block.settings;
-                         return `<div class="separator-preview" style="margin: ${s。margin}px 0;"><div class="separator-preview-line" style="border-top: ${s。thickness}px ${s.style} ${s.color};"></div></div>`;
+                         return `<div class="separator-preview" style="margin: ${s.margin}px 0;"><div class="separator-preview-line" style="border-top: ${s.thickness}px ${s.style} ${s.color};"></div></div>`;
                     }
                     return '';
                 },
 
                 createPreviewCardHTML(card) {
-                    const cardEl = document。createElement('div');
-                    cardEl。className = 'preview-card';
-                    cardEl。dataset。cardId = card.id;
-                    cardEl。style。setProperty('--card-transition-name'， `card-${card.id}`);
-                    const iconHTML = card。icon ? `<i class="bi ${card.icon}"></i>` : '';
+                    const cardEl = document.createElement('div');
+                    cardEl.className = 'preview-card';
+                    cardEl.dataset.cardId = card.id;
+                    cardEl.style.setProperty('--card-transition-name', `card-${card.id}`);
+                    const iconHTML = card.icon ? `<i class="bi ${card.icon}"></i>` : '';
                     cardEl.innerHTML = `<div class="preview-card-inner">
-                            <h3 class="preview-card-title" data-card-key="title">${iconHTML}${this。escapeHTML(card。title || '')}</h3>
-                            <p class="preview-card-content" data-card-key="content">${this。escapeHTML(card。content || '')}</p>
+                            <h3 class="preview-card-title" data-card-key="title">${iconHTML}${this.escapeHTML(card.title || '')}</h3>
+                            <p class="preview-card-content" data-card-key="content">${this.escapeHTML(card.content || '')}</p>
                         </div>`;
-                    this。applyCardStyles(cardEl， card);
-                    return cardEl。outerHTML;
-                }，
+                    this.applyCardStyles(cardEl, card);
+                    return cardEl.outerHTML;
+                },
 
                 createEditorCardHTML(card) {
-                    const s = (val， def) => val ?? def;
-                    const followGlobalOpacity = card。followGlobalOpacity !== false;
-                    const iconBtnText = card。icon ? `<i class="bi ${card.icon}"></i> ${card。icon。substring(3)}` : '选择图标';
+                    const s = (val, def) => val ?? def;
+                    const followGlobalOpacity = card.followGlobalOpacity !== false;
+                    const iconBtnText = card.icon ? `<i class="bi ${card.icon}"></i> ${card.icon.substring(3)}` : '选择图标';
                     return `<span class="card-drag-handle">☰</span><div class="editor-card-header"><button class="btn btn-danger btn-small card-delete-btn">删</button></div>
                         <div class="editor-card-content">
-                            <div class="form-group"><label>标题:</label><div class="input-group"><input type="text" data-card-key="title" value="${this。escapeHTML(s(card。title， ''))}" style="border-right: none;"><button class="btn btn-default select-icon-btn" style="width: auto; flex-shrink: 0; border-radius: 0 6px 6px 0; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${iconBtnText}</button></div></div>
-                            <div class="form-group"><label>内容:</label><textarea data-card-key="content" rows="4">${this。escapeHTML(s(card。content， ''))}</textarea></div>
+                            <div class="form-group"><label>标题:</label><div class="input-group"><input type="text" data-card-key="title" value="${this.escapeHTML(s(card.title, ''))}" style="border-right: none;"><button class="btn btn-default select-icon-btn" style="width: auto; flex-shrink: 0; border-radius: 0 6px 6px 0; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${iconBtnText}</button></div></div>
+                            <div class="form-group"><label>内容:</label><textarea data-card-key="content" rows="4">${this.escapeHTML(s(card.content, ''))}</textarea></div>
                             <hr class="separator"><div class="card-style-grid">
-                                <div class="form-group"><label>字号:</label><select data-card-key="fontSize"><option value="" ${s(card。fontSize， '') === '' ? 'selected' : ''}>默认</option><option value="0.9em" ${card。fontSize === '0.9em' ? 'selected' : ''}>小</option><option value="1em" ${card。fontSize === '1em' ? 'selected' : ''}>中</option><option value="1.1em" ${card。fontSize === '1.1em' ? 'selected' : ''}>大</option></select></div>
-                                <div class="form-group"><label>对齐:</label><div class="radio-group"><label><input type="radio" name="card-${card。id}-align" value="" data-card-key="textAlign" ${s(card。textAlign， '') === '' ? 'checked':''}>默认</label><label><input type="radio" name="card-${card。id}-align" value="left" data-card-key="textAlign" ${card。textAlign === 'left' ?'checked':''}>左</label><label><input type="radio" name="card-${card。id}-align" value="center" data-card-key="textAlign" ${card。textAlign === 'center' ?'checked':''}>中</label><label><input type="radio" name="card-${card。id}-align" value="right" data-card-key="textAlign" ${card.textAlign === 'right' ?'checked':''}>右</label></div></div>
-                                <div class="form-group"><label>字重:</label><select data-card-key="fontWeight"><option value="" ${s(card。fontWeight， '')===''?'selected':''}>默认</option><option value="normal" ${card。fontWeight==='normal'?'selected':''}>常规</option><option value="bold" ${card。fontWeight==='bold'?'selected':''}>粗体</option></select></div>
-                                <div class="form-group checkbox-group"><label><input type="checkbox" data-card-key="textShadowEnabled" ${s(card。textShadowEnabled， false) ? 'checked':''}>文字阴影</label></div>
+                                <div class="form-group"><label>字号:</label><select data-card-key="fontSize"><option value="" ${s(card.fontSize, '') === '' ? 'selected' : ''}>默认</option><option value="0.9em" ${card.fontSize === '0.9em' ? 'selected' : ''}>小</option><option value="1em" ${card.fontSize === '1em' ? 'selected' : ''}>中</option><option value="1.1em" ${card.fontSize === '1.1em' ? 'selected' : ''}>大</option></select></div>
+                                <div class="form-group"><label>对齐:</label><div class="radio-group"><label><input type="radio" name="card-${card.id}-align" value="" data-card-key="textAlign" ${s(card.textAlign, '') === '' ? 'checked':''}>默认</label><label><input type="radio" name="card-${card.id}-align" value="left" data-card-key="textAlign" ${card.textAlign === 'left' ?'checked':''}>左</label><label><input type="radio" name="card-${card.id}-align" value="center" data-card-key="textAlign" ${card.textAlign === 'center' ?'checked':''}>中</label><label><input type="radio" name="card-${card.id}-align" value="right" data-card-key="textAlign" ${card.textAlign === 'right' ?'checked':''}>右</label></div></div>
+                                <div class="form-group"><label>字重:</label><select data-card-key="fontWeight"><option value="" ${s(card.fontWeight, '')===''?'selected':''}>默认</option><option value="normal" ${card.fontWeight==='normal'?'selected':''}>常规</option><option value="bold" ${card.fontWeight==='bold'?'selected':''}>粗体</option></select></div>
+                                <div class="form-group checkbox-group"><label><input type="checkbox" data-card-key="textShadowEnabled" ${s(card.textShadowEnabled, false) ? 'checked':''}>文字阴影</label></div>
                             </div>
                             <hr class="separator"><div class="form-group"><label>背景图:</label><div class="input-group simple"><input type="file" class="card-bg-upload" accept="image/*"><button class="btn btn-default btn-small card-clear-bg-btn">清除</button></div></div>
-                            <div class="card-overlay-controls" style="${card。bgImageDataUrl?'':'display:none;'}"><label>图片蒙版:</label><div class="color-control-row"><div class="color-control-group"><label>颜色:</label><div class="input-group"><input type="color" data-card-key="overlayColor" value="${s(card。overlayColor， '#ffffff')}"><input class="color-hex-input" type="text" data-card-key="overlayColor" value="${s(card。overlayColor， '#ffffff')}"></div></div><div class="color-control-group"><label>不透明度:</label><input type="range" data-card-key="overlayOpacity" min="0" max="1" step="0.05" value="${s(card。overlayOpacity，0。5)}"></div></div></div>
+                            <div class="card-overlay-controls" style="${card.bgImageDataUrl?'':'display:none;'}"><label>图片蒙版:</label><div class="color-control-row"><div class="color-control-group"><label>颜色:</label><div class="input-group"><input type="color" data-card-key="overlayColor" value="${s(card.overlayColor, '#ffffff')}"><input class="color-hex-input" type="text" data-card-key="overlayColor" value="${s(card.overlayColor, '#ffffff')}"></div></div><div class="color-control-group"><label>不透明度:</label><input type="range" data-card-key="overlayOpacity" min="0" max="1" step="0.05" value="${s(card.overlayOpacity,0.5)}"></div></div></div>
                             <hr class="separator">
                             <div class="color-control-row">
-                                <div class="color-control-group"><label>背景色:</label><div class="input-group"><input type="color" data-card-key="bgColor" value="${s(card。bgColor， '')}"><input class="color-hex-input" type="text" data-card-key="bgColor" value="${s(card。bgColor， '')}" placeholder="全局默认"></div></div>
-                                <div class="color-control-group"><label>文字颜色:</label><div class="input-group"><input type="color" data-card-key="textColor" value="${s(card。textColor， '')}"><input class="color-hex-input" type="text" data-card-key="textColor" value="${s(card。textColor， '')}" placeholder="全局默认"></div></div>
+                                <div class="color-control-group"><label>背景色:</label><div class="input-group"><input type="color" data-card-key="bgColor" value="${s(card.bgColor, '')}"><input class="color-hex-input" type="text" data-card-key="bgColor" value="${s(card.bgColor, '')}" placeholder="全局默认"></div></div>
+                                <div class="color-control-group"><label>文字颜色:</label><div class="input-group"><input type="color" data-card-key="textColor" value="${s(card.textColor, '')}"><input class="color-hex-input" type="text" data-card-key="textColor" value="${s(card.textColor, '')}" placeholder="全局默认"></div></div>
                             </div>
                             <div class="form-group checkbox-group"><label><input type="checkbox" data-card-key="followGlobalOpacity" ${followGlobalOpacity ? 'checked' : ''}>跟随全局不透明度</label></div>
-                            <div class="form-group" style="${followGlobalOpacity ? 'display:none;' : 'display:block;'}"><label>独立不透明度:</label><input type="range" data-card-key="opacity" min="0" max="1" step="0.05" value="${s(card。opacity， 1.0)}"></div>
+                            <div class="form-group" style="${followGlobalOpacity ? 'display:none;' : 'display:block;'}"><label>独立不透明度:</label><input type="range" data-card-key="opacity" min="0" max="1" step="0.05" value="${s(card.opacity, 1.0)}"></div>
                         </div>`;
                 },
 
-                applyCardStyles(cardEl， cardData) {
-                    const g = this。state。globalCardStyles;
+                applyCardStyles(cardEl, cardData) {
+                    const g = this.state.globalCardStyles;
                     const use = (key, val) => (val === undefined || val === null || val === '') ? g[key] : val;
                     
                     const followGlobalOpacity = cardData.followGlobalOpacity !== false;
                     const finalOpacity = followGlobalOpacity ? g.opacity : (cardData.opacity ?? 1.0);
                     
-                    const innerEl = cardEl。querySelector('.preview-card-inner');
+                    const innerEl = cardEl.querySelector('.preview-card-inner');
                     if (!innerEl) return;
                     
                     if (parseFloat(finalOpacity) === 0) {
-                        innerEl。style。setProperty('--card-bg-final'， 'transparent');
+                        innerEl.style.setProperty('--card-bg-final', 'transparent');
                         innerEl.style.boxShadow = 'none';
                         innerEl.style.border = 'none';
                     } else {
@@ -1223,10 +1220,10 @@
                         if (cardData.bgImageDataUrl) {
                             finalBg = `url(${cardData.bgImageDataUrl})`;
                         } else if (cardData.bgColor) {
-                            finalBg = this.hexToRgba(cardData。bgColor， finalOpacity);
+                            finalBg = this.hexToRgba(cardData.bgColor, finalOpacity);
                         } else {
                             if (g.bgMode === 'gradient') {
-                                finalBg = `linear-gradient(${g。bgGradientAngle}deg, ${this.hexToRgba(g.bgGradientStart, finalOpacity)}, ${this.hexToRgba(g.bgGradientEnd, finalOpacity)})`;
+                                finalBg = `linear-gradient(${g.bgGradientAngle}deg, ${this.hexToRgba(g.bgGradientStart, finalOpacity)}, ${this.hexToRgba(g.bgGradientEnd, finalOpacity)})`;
                             } else {
                                 finalBg = this.hexToRgba(g.bgColor, finalOpacity);
                             }
@@ -1355,14 +1352,14 @@
                     if (useGlobalStyle) {
                         finalOpacity = g.opacity;
                          if (g.bgMode === 'gradient') {
-                            bgStyle = `linear-gradient(${g。bgGradientAngle}deg, ${this.hexToRgba(g.bgGradientStart, finalOpacity)}, ${this.hexToRgba(g.bgGradientEnd, finalOpacity)})`;
+                            bgStyle = `linear-gradient(${g.bgGradientAngle}deg, ${this.hexToRgba(g.bgGradientStart, finalOpacity)}, ${this.hexToRgba(g.bgGradientEnd, finalOpacity)})`;
                         } else {
-                            bgStyle = this.hexToRgba(g。bgColor, finalOpacity);
+                            bgStyle = this.hexToRgba(g.bgColor, finalOpacity);
                         }
                     } else {
                         const followGlobalOpacity = s.followGlobalOpacity !== false;
                         finalOpacity = followGlobalOpacity ? g.opacity : (s.bgOpacity ?? 1.0);
-                        bgStyle = this.hexToRgba(s。bgColor, finalOpacity);
+                        bgStyle = this.hexToRgba(s.bgColor, finalOpacity);
                     }
                     
                     if(parseFloat(finalOpacity) === 0) bgStyle = 'transparent';
@@ -1373,35 +1370,35 @@
                 loadFromLocal() { 
                     const json = localStorage.getItem('genV75State'); 
                     if (!json) {
-                        this.showToast('欢迎使用！已为您加载默认模板。'， 'info');
+                        this.showToast('欢迎使用！已为您加载默认模板。', 'info');
                         return;
                     };
                     try { 
-                        const saved = JSON。parse(json);
+                        const saved = JSON.parse(json);
                         if (saved && saved.personalInfo) {
                             const defaultState = this.getDefaultState();
                             this.state = this.mergeDeep(defaultState, saved);
 
-                            if (saved。uploadedFonts) {
-                                this。uploadedFonts = saved。uploadedFonts;
-                                this。uploadedFonts.forEach(font => {
+                            if (saved.uploadedFonts) {
+                                this.uploadedFonts = saved.uploadedFonts;
+                                this.uploadedFonts.forEach(font => {
                                     if (font.data) {
                                         try {
                                            const fontFace = new FontFace(font.family, this.base64ToArrayBuffer(font.data));
-                                           fontFace。load()。then(f => document.fonts.add(f)).catch(console.error);
-                                        } catch(e) { console。error("Error loading font:"， e)}
+                                           fontFace.load().then(f => document.fonts.add(f)).catch(console.error);
+                                        } catch(e) { console.error("Error loading font:", e)}
                                     }
                                 });
                             }
                         }
                     } catch (e) { 
                         localStorage.removeItem('genV75State'); 
-                        this.showErrorModal('加载存档失败', '您的本地存档可能已损坏，已为您加载默认模板。错误信息: ' + e。message);
+                        this.showErrorModal('加载存档失败', '您的本地存档可能已损坏，已为您加载默认模板。错误信息: ' + e.message);
                         console.error("Failed to load state from localStorage:", e);
                     } 
-                }，
+                },
                 
-                mergeDeep(target， source) {
+                mergeDeep(target, source) {
                     const isObject = (obj) => obj && typeof obj === 'object';
                     let output = { ...target };
                     if (isObject(target) && isObject(source)) {
@@ -1656,26 +1653,26 @@
                     this.handleImageUpload(event, 'cardBg', { blockId, cardId });
                 },
                 
-                async handleImageGalleryUpload(blockId， 文件){
+                async handleImageGalleryUpload(blockId, files){
                      const block = this.findBlock(blockId); 
-                        if (!block || !文件。length) return; 
-                        this.showLoading(`正在上传 ${files。length} 张图片...`);
+                        if (!block || !files.length) return; 
+                        this.showLoading(`正在上传 ${files.length} 张图片...`);
                         try {
                             this.pushHistory(); 
-                            const newImages = await Promise。全部(Array.from(files)。map(f => this.readFileAsDataURL(f).键，然后(this.compressImage)));
-                            block。images.push(...newImages.map(url => ({ url, title: '', description: '' })));
+                            const newImages = await Promise.all(Array.from(files).map(f => this.readFileAsDataURL(f).then(this.compressImage)));
+                            block.images.push(...newImages.map(url => ({ url, title: '', description: '' })));
                             this.debouncedSaveToLocal();
                             this.renderEditorBlockById(blockId); 
                             this.renderPreviewBlockById(blockId); 
                         } catch (err) {
-                            this.showErrorModal('图片上传失败'， err.message);
+                            this.showErrorModal('图片上传失败', err.message);
                         } finally {
                             this.hideLoading();
                         }
-                }，
+                },
                 
-                deleteImage(blockId， index) { 
-                    this。pushHistory(); 
+                deleteImage(blockId, index) { 
+                    this.pushHistory(); 
                     const block = this.findBlock(blockId); 
                     block.images.splice(index, 1);
                     this.debouncedSaveToLocal();
@@ -1685,79 +1682,79 @@
                 
                 cropImage(blockId, index){
                     const url = this.findBlock(blockId)?.images[index]?.url; 
-                    if (url) this。showCropper(url， { 输入: 'imageBlock'， blockId， index }); 
+                    if (url) this.showCropper(url, { type: 'imageBlock', blockId, index }); 
                 },
                 
                 showCropper(imageSrc, target){
-                     this。currentCropTarget = target; 
-                        this。elements.cropperModal.classList。add('visible'); 
-                        this。elements.cropperImage.src = imageSrc; 
+                     this.currentCropTarget = target; 
+                        this.elements.cropperModal.classList.add('visible'); 
+                        this.elements.cropperImage.src = imageSrc; 
                         if (this.cropper) this.cropper.destroy(); 
                         this.cropper = new Cropper(this.elements.cropperImage, { aspectRatio: NaN, viewMode: 1, background: false }); 
-                }，
+                },
                 
                 hideCropper(){
                      this.elements.cropperModal.classList.remove('visible'); 
                         if (this.cropper) { 
-                            this。cropper。destroy(); 
+                            this.cropper.destroy(); 
                             this.cropper = null; 
                         } 
                 },
                 
                 async saveCrop(){
                      if (!this.cropper || !this.currentCropTarget) return;
-                        this。showLoading('正在压缩裁剪后的图片...');
+                        this.showLoading('正在压缩裁剪后的图片...');
                         try {
-                            const dataUrl = this。cropper.getCroppedCanvas()?.toDataURL();
+                            const dataUrl = this.cropper.getCroppedCanvas()?.toDataURL();
                             if (!dataUrl) {
-                                this.showErrorModal('裁剪失败'， '无法获取裁剪后的图片数据。');
+                                this.showErrorModal('裁剪失败', '无法获取裁剪后的图片数据。');
                                 return;
                             }
 
-                            const { 输入, blockId, index， cardId } = this.currentCropTarget;
+                            const { type, blockId, index, cardId } = this.currentCropTarget;
                             let maxWidth = 1024; // Default for image blocks
                             if (type === 'pageBg') maxWidth = 1920;
-                            if (输入 === 'avatar' || 输入 === 'cardBg') maxWidth = 400;
+                            if (type === 'avatar' || type === 'cardBg') maxWidth = 400;
                             
-                            const finalDataUrl = await this.compressImage(dataUrl, 0.85， maxWidth);
+                            const finalDataUrl = await this.compressImage(dataUrl, 0.85, maxWidth);
 
-                            this。pushHistory();
+                            this.pushHistory();
                             if (type === 'avatar') {
                                 this.updateState('personalInfo.avatarDataUrl', finalDataUrl, false);
-                            } else if (输入 === 'pageBg') {
-                                this。updateState('pageStyles.pageBgImageDataUrl'， finalDataUrl， false);
+                            } else if (type === 'pageBg') {
+                                this.updateState('pageStyles.pageBgImageDataUrl', finalDataUrl, false);
                             } else if (type === 'imageBlock') {
-                                this.updateImageData(blockId， index, 'url', finalDataUrl, false);
+                                this.updateImageData(blockId, index, 'url', finalDataUrl, false);
                             } else if (type === 'cardBg') {
                                 this.updateCard(blockId, cardId, 'bgImageDataUrl', finalDataUrl, false);
                             }
-                            this。hideCropper();
+                            this.hideCropper();
                         } catch (err) {
-                            console。error('Save crop failed:'， err);
-                            this.showErrorModal('保存裁剪失败'， '处理图片时发生错误。');
+                            console.error('Save crop failed:', err);
+                            this.showErrorModal('保存裁剪失败', '处理图片时发生错误。');
                         } finally {
                             this.hideLoading();
                         }
-                }，
+                },
                 
                 updateCropAspectRatio(){
                      if(this.cropper) this.cropper.setAspectRatio(parseFloat(document.querySelector('input[name="crop-ratio"]:checked').value)); 
                 },
                 
                 async loadLocalFonts(){
-                     if (!window。queryLocalFonts) {
-                            this.showErrorModal('功能不支持'， '您的浏览器不支持访问本地字体。请尝试使用“上传字体”功能。');
+                     if (!window.queryLocalFonts) {
+                            this.showErrorModal('功能不支持', '您的浏览器不支持访问本地字体。请尝试使用“上传字体”功能。');
                             return;
                         }
                         try {
-                            this。showLoading('正在加载本地字体...');
-                            const fonts = await window。queryLocalFonts();
-                            this。localFonts = fonts。map(font => ({ family: font.family, fullName: font.fullName， type: 'local' }));
-                            this。populateFontList();
+                            this.showLoading('正在加载本地字体...');
+                            const fonts = await window.queryLocalFonts();
+                            this.localFonts = fonts.map(font => ({ family: font.family, fullName: font.fullName, type: 'local' }));
+                            this.populateFontList();
                             this.showToast(`加载了 ${this.localFonts.length} 个本地字体`, 'success');
                         } catch (err) {
-                            console.error('无法访问本地字体:'， err);
-                            this。showErrorModal('加载本地字体失败'， '这是一个实验性的浏览器功能，可能因安全设置或浏览器版本而不稳定。如果持续失败，建议使用“上传字体”功能。');
+                            console.error('无法访问本地字体:', err);
+                            this.showErrorModal('加载本地字体失败', '这是一个实验性的浏览器功能，可能因安全设置或浏览器版本而不稳定。如果持续失败，建议使用“上传字体”功能。');
                         } finally {
                             this.hideLoading();
                         }
@@ -1770,74 +1767,74 @@
                         try {
                             const fontData = await this.readFileAsArrayBuffer(file);
                             const fontName = file.name.replace(/\.[^/.]+$/, "");
-                            if (this。uploadedFonts.some(f => f.family === fontName) || this.localFonts.some(f => f.family === fontName)) {
-                                this.showErrorModal('字体已存在'， `字体 "${fontName}" 已存在!`);
+                            if (this.uploadedFonts.some(f => f.family === fontName) || this.localFonts.some(f => f.family === fontName)) {
+                                this.showErrorModal('字体已存在', `字体 "${fontName}" 已存在!`);
                                 return;
                             }
                             const fontFace = new FontFace(fontName, fontData.slice(0));
                             await fontFace.load();
                             document.fonts.add(fontFace);
                             
-                            const fontDataBase64 = await this。arrayBufferToBase64(fontData);
+                            const fontDataBase64 = await this.arrayBufferToBase64(fontData);
                             this.uploadedFonts.push({ family: fontName, fullName: `${fontName} (上传)`, data: fontDataBase64, type: 'uploaded' });
                             this.populateFontList();
                             this.updateState('globalCardStyles.fontFamily', fontName, true);
                             this.showToast(`字体 "${fontName}" 上传成功`, 'success');
                         } catch (error) {
-                            console。error('字体上传失败:'， error);
-                            this。showErrorModal('字体上传失败'， '字体文件无效或加载失败。');
+                            console.error('字体上传失败:', error);
+                            this.showErrorModal('字体上传失败', '字体文件无效或加载失败。');
                         } finally {
                             event.target.value = '';
                             this.hideLoading();
                         }
-                }，
+                },
                 
                 populateFontList(searchTerm = ''){
                      const select = this.elements.fontFamilySelect;
-                        const currentFont = this。state。globalCardStyles.fontFamily;
+                        const currentFont = this.state.globalCardStyles.fontFamily;
                         select.innerHTML = '';
 
                         const allFonts = [...this.uploadedFonts, ...this.localFonts];
-                        const categories = { cjk: [], sans: []， serif: []， uploaded: []， other: [] };
+                        const categories = { cjk: [], sans: [], serif: [], uploaded: [], other: [] };
                         
                         const filteredFonts = searchTerm
                             ? allFonts.filter(font => 
-                                font。family。toLowerCase()。includes(searchTerm。toLowerCase()) || 
-                                font。fullName。toLowerCase()。includes(searchTerm。toLowerCase()))
+                                font.family.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                font.fullName.toLowerCase().includes(searchTerm.toLowerCase()))
                             : allFonts;
 
                         filteredFonts.forEach(font => {
                             const category = this.getFontCategory(font);
-                            if (!categories[category]。some(f => f.family === font.family)) {
-                                 categories[category]。push(font);
+                            if (!categories[category].some(f => f.family === font.family)) {
+                                 categories[category].push(font);
                             }
                         });
 
                         const requiredFonts = this.getAllRequiredFonts();
                         requiredFonts.forEach(reqFont => {
-                            if (!allFonts.some(f => f。family === reqFont)) {
+                            if (!allFonts.some(f => f.family === reqFont)) {
                                const placeholderFont = { family: reqFont, fullName: `${reqFont} (需要重新上传)`, type: 'uploaded', missing: true };
-                               if (!categories。uploaded。some(f => f。family === reqFont)) {
-                                   categories。uploaded。push(placeholderFont);
+                               if (!categories.uploaded.some(f => f.family === reqFont)) {
+                                   categories.uploaded.push(placeholderFont);
                                }
                             }
                         });
 
-                        const createOptgroup = (label， fonts) => {
-                            if (fonts。length === 0) return '';
+                        const createOptgroup = (label, fonts) => {
+                            if (fonts.length === 0) return '';
                             const options = fonts
-                                。sort((a， b) => a。fullName.localeCompare(b.fullName))
-                                。map(f => `<option value="${this.escapeHTML(f.family)}" ${f.missing?'disabled':''}>${this.escapeHTML(f.fullName)}</option>`)
-                                。join('');
+                                .sort((a, b) => a.fullName.localeCompare(b.fullName))
+                                .map(f => `<option value="${this.escapeHTML(f.family)}" ${f.missing?'disabled':''}>${this.escapeHTML(f.fullName)}</option>`)
+                                .join('');
                             return `<optgroup label="${label}">${options}</optgroup>`;
                         };
 
                         let html = '<option value="">系统默认</option>';
-                        html += createOptgroup('已上传字体'， categories.uploaded);
-                        html += createOptgroup('中文 / CJK'， categories.cjk);
-                        html += createOptgroup('无衬线 (Sans-serif)'， categories.sans);
-                        html += createOptgroup('衬线 (Serif)'， categories.serif);
-                        html += createOptgroup('其他'， categories.other);
+                        html += createOptgroup('已上传字体', categories.uploaded);
+                        html += createOptgroup('中文 / CJK', categories.cjk);
+                        html += createOptgroup('无衬线 (Sans-serif)', categories.sans);
+                        html += createOptgroup('衬线 (Serif)', categories.serif);
+                        html += createOptgroup('其他', categories.other);
 
                         select.innerHTML = html;
                         select.value = currentFont;
@@ -1845,50 +1842,50 @@
                 
                 getFontCategory(font){
                      if (font.type === 'uploaded') return 'uploaded';
-                        const name = (font.family + font。fullName)。toLowerCase();
-                        if (/(hei|song|ming|gothic|kai|fang|yuan|deng|黑|宋|明|ゴシック|楷|圓)/.test(name) || /[\u4e00-\u9fa5]/。test(name)) {
+                        const name = (font.family + font.fullName).toLowerCase();
+                        if (/(hei|song|ming|gothic|kai|fang|yuan|deng|黑|宋|明|ゴシック|楷|圓)/.test(name) || /[\u4e00-\u9fa5]/.test(name)) {
                             return 'cjk';
                         }
-                        if (name。includes('serif')) return 'serif';
+                        if (name.includes('serif')) return 'serif';
                         if (name.includes('sans')) return 'sans';
                         return 'other';
                 },
                 
                 getAllRequiredFonts(){
                      const fonts = new Set();
-                        if (this。state。globalCardStyles.fontFamily) {
-                            fonts.add(this。state.globalCardStyles.fontFamily);
+                        if (this.state.globalCardStyles.fontFamily) {
+                            fonts.add(this.state.globalCardStyles.fontFamily);
                         }
                         return Array.from(fonts);
                 },
                 
                 applyPreset(preset){
-                     this。pushHistory(); 
+                     this.pushHistory(); 
                         
                         this.state.pageStyles.pageBgSolidColor = preset.pageBgSolidColor; 
                         this.state.pageStyles.pageBgGradientStart = preset.pageBgGradientStart;
                         this.state.pageStyles.pageBgGradientEnd = preset.pageBgGradientEnd;
 
-                        this。state。pageStyles。headerBgColor = preset。headerBgColor;
+                        this.state.pageStyles.headerBgColor = preset.headerBgColor;
                         this.state.pageStyles.headerBgGradientStart = preset.headerBgGradientStart;
                         this.state.pageStyles.headerBgGradientEnd = preset.headerBgGradientEnd;
-                        this.state.pageStyles。headerTextColor = preset.headerTextColor; 
+                        this.state.pageStyles.headerTextColor = preset.headerTextColor; 
                         
                         this.state.globalCardStyles.bgColor = preset.gCardBgColor; 
-                        this.state.globalCardStyles。bgGradientStart = preset.gCardBgGradientStart;
-                        this.state。globalCardStyles。bgGradientEnd = preset.gCardBgGradientEnd;
-                        this。state.globalCardStyles.textColor = preset.gCardTextColor; 
-                        this。state.globalCardStyles.opacity = preset.gCardOpacity; 
+                        this.state.globalCardStyles.bgGradientStart = preset.gCardBgGradientStart;
+                        this.state.globalCardStyles.bgGradientEnd = preset.gCardBgGradientEnd;
+                        this.state.globalCardStyles.textColor = preset.gCardTextColor; 
+                        this.state.globalCardStyles.opacity = preset.gCardOpacity; 
                         
-                        this。state。personalInfo.nicknameColor = preset.pNicknameColor;
-                        this。state。personalInfo.subtitleColor = preset。pSubtitleColor;
-                        this。state.personalInfo。bioColor = preset。pBioColor;
-                        this。state.personalInfo.tagBgColor = preset.pTagBgColor;
+                        this.state.personalInfo.nicknameColor = preset.pNicknameColor;
+                        this.state.personalInfo.subtitleColor = preset.pSubtitleColor;
+                        this.state.personalInfo.bioColor = preset.pBioColor;
+                        this.state.personalInfo.tagBgColor = preset.pTagBgColor;
                         this.state.personalInfo.tagTextColor = preset.pTagTextColor;
                         
-                        this.state.pageStyles。pageBgMode = 'gradient';
-                        this。state。pageStyles.headerBgMode = 'gradient';
-                        this。state。globalCardStyles.bgMode = 'solid';
+                        this.state.pageStyles.pageBgMode = 'gradient';
+                        this.state.pageStyles.headerBgMode = 'gradient';
+                        this.state.globalCardStyles.bgMode = 'solid';
 
                         this.debouncedSaveToLocal();
                         this.renderAll(); 
@@ -1898,10 +1895,10 @@
                 
                 readFileAsDataURL(file){return new Promise((resolve, reject) => {
                         const reader = new FileReader();
-                        reader。onload = () => resolve(reader.result);
+                        reader.onload = () => resolve(reader.result);
                         reader.onerror = reject;
                         reader.readAsDataURL(file);
-                    })}，
+                    })},
                 
                 readFileAsArrayBuffer(file){return new Promise((resolve, reject) => {
                         const reader = new FileReader();
@@ -2052,7 +2049,7 @@
                         }; 
                         reader.readAsText(file); 
                         e.target.value = ''; 
-                }，
+                },
                 
                 async bakeOverlaysForExport(clone){
                     const style = document.createElement('style');
@@ -2060,28 +2057,28 @@
 
                         const pageOverlay = clone.querySelector('#preview-overlay');
                         const pageComputed = getComputedStyle(pageOverlay);
-                        if (parseFloat(pageComputed。opacity) > 0) {
+                        if (parseFloat(pageComputed.opacity) > 0) {
                             const overlayColor = pageComputed.backgroundColor;
                             const currentBg = getComputedStyle(clone).backgroundImage;
                             clone.style.backgroundImage = `linear-gradient(${overlayColor}, ${overlayColor}), ${currentBg}`;
                             pageOverlay.style.display = 'none';
                         }
-                        clone。querySelectorAll('.preview-card-inner')。forEach(cardInner => {
+                        clone.querySelectorAll('.preview-card-inner').forEach(cardInner => {
                             const before = getComputedStyle(cardInner, '::before');
                             const after = getComputedStyle(cardInner, '::after');
                             
                             const bg = before.getPropertyValue('background');
                             const overlayColor = after.getPropertyValue('background-color');
-                            const overlayOpacity = parseFloat(after。getPropertyValue('opacity'));
+                            const overlayOpacity = parseFloat(after.getPropertyValue('opacity'));
 
                             if (overlayOpacity > 0 && overlayColor !== 'rgba(0, 0, 0, 0)') {
-                                cardInner。style.background = `linear-gradient(${overlayColor}, ${overlayColor}), ${bg}`;
+                                cardInner.style.background = `linear-gradient(${overlayColor}, ${overlayColor}), ${bg}`;
                             } else {
-                                cardInner。style。background = bg;
+                                cardInner.style.background = bg;
                             }
                         });
-                        style。innerHTML += `
-                            #${clone。id} .preview-card-inner::before, #${clone.id} .preview-card-inner::after {
+                        style.innerHTML += `
+                            #${clone.id} .preview-card-inner::before, #${clone.id} .preview-card-inner::after {
                                 content: none !important;
                                 background: none !important;
                             }
@@ -2090,7 +2087,7 @@
                 
                 async exportPNG(){
                      this.showLoading('正在准备导出...');
-                        const scale = this.elements.hdExportToggle。checked ? 3 : 2;
+                        const scale = this.elements.hdExportToggle.checked ? 3 : 2;
                         const originalElement = this.elements.previewWrapper;
                         let clone = null;
                         
@@ -2133,15 +2130,15 @@
                             console.error("PNG export failed:", err);
                             this.showErrorModal('导出失败', `生成图片时发生错误: ${err.message}.`);
                         } finally {
-                            if (clone && clone。parentNode) {
+                            if (clone && clone.parentNode) {
                                 clone.parentNode.removeChild(clone);
                             }
                             this.hideLoading();
                         }
-                }，
+                },
                 
                 updateExportSizePreview(){
-                     const el = this.elements。previewWrapper;
+                     const el = this.elements.previewWrapper;
                         if (!el) return;
                         const width = el.clientWidth;
                         const height = el.clientHeight;
@@ -2154,8 +2151,8 @@
                 },
                 
                 arrayBufferToBase64(buffer){
-                    return new Promise((resolve， reject) => {
-                            const blob = new Blob([buffer]， {输入: 'application/octet-stream'});
+                    return new Promise((resolve, reject) => {
+                            const blob = new Blob([buffer], {type: 'application/octet-stream'});
                             const reader = new FileReader();
                             reader.onload = e => resolve(e.target.result);
                             reader.onerror = e => reject(e);
@@ -2165,7 +2162,7 @@
                 
                 base64ToArrayBuffer(base64){
                     const binaryString = atob(base64.split(',')[1]);
-                        const len = binaryString。length;
+                        const len = binaryString.length;
                         const bytes = new Uint8Array(len);
                         for (let i = 0; i < len; i++) {
                             bytes[i] = binaryString.charCodeAt(i);
@@ -2174,12 +2171,12 @@
                 },
                 
                 showDownloadModal(url, filename, title){
-                    this。elements。downloadModalTitle.textContent = title; 
-                        const content = this.elements。downloadModalContent; 
-                        content。innerHTML = `<a href="${url}" download="${filename}">点击下载: ${filename}</a>`; 
+                    this.elements.downloadModalTitle.textContent = title; 
+                        const content = this.elements.downloadModalContent; 
+                        content.innerHTML = `<a href="${url}" download="${filename}">点击下载: ${filename}</a>`; 
                         if (url.startsWith('data:image')) content.insertAdjacentHTML('afterbegin', `<img src="${url}">`); 
                         this.elements.downloadModal.classList.add('visible'); 
-                }，
+                },
                 
                 hideDownloadModal(){ this.elements.downloadModal.classList.remove('visible'); },
                 
@@ -2189,8 +2186,8 @@
                         const modal = document.createElement('div');
                         modal.className = 'error-modal';
                         modal.innerHTML = `<h3>${title}</h3><p>${message}</p><button class="btn btn-primary" onclick="this.closest('.error-modal').remove()">确定</button>`;
-                        document。body。appendChild(modal);
-                }，
+                        document.body.appendChild(modal);
+                },
                 
                 showLoading(text = '正在处理...'){
                     this.elements.loadingText.textContent = text;
@@ -2198,7 +2195,7 @@
                 },
                 
                 hideLoading(){
-                    this。elements。loadingOverlay。classList。remove('visible');
+                    this.elements.loadingOverlay.classList.remove('visible');
                 },
                 
                 showToast(message, type = 'info'){
@@ -2278,56 +2275,56 @@
                             : this.icons;
                      this.elements.iconGrid.innerHTML = filtered.map(name => 
                             `<div class="icon-grid-item" data-icon="bi-${name}" title="${name}"><i class="bi bi-${name}"></i></div>`
-                        )。join('');
-                }，
+                        ).join('');
+                },
                 
-                showIconPicker(blockId， cardId){
-                     this。currentIconTarget = { blockId， cardId };
-                     this。elements。iconPickerModal。classList。add('visible');
-                     this。elements。iconSearch。focus();
-                }，
+                showIconPicker(blockId, cardId){
+                     this.currentIconTarget = { blockId, cardId };
+                     this.elements.iconPickerModal.classList.add('visible');
+                     this.elements.iconSearch.focus();
+                },
                 
                 hideIconPicker(){
-                     this。elements。iconPickerModal。classList。remove('visible');
-                     this。currentIconTarget = null;
-                     this。elements。iconSearch。value = '';
-                     this。renderIconGrid();
-                }，
+                     this.elements.iconPickerModal.classList.remove('visible');
+                     this.currentIconTarget = null;
+                     this.elements.iconSearch.value = '';
+                     this.renderIconGrid();
+                },
                 
                 selectIcon(iconClass){
-                    if (this。currentIconTarget) {
-                        const { blockId， cardId } = this。currentIconTarget;
-                        this。updateCard(blockId， cardId， 'icon'， iconClass， true);
+                    if (this.currentIconTarget) {
+                        const { blockId, cardId } = this.currentIconTarget;
+                        this.updateCard(blockId, cardId, 'icon', iconClass, true);
                     }
-                    this。hideIconPicker();
-                }，
+                    this.hideIconPicker();
+                },
                 
-                hexToRgba(hex， alpha=1){
+                hexToRgba(hex, alpha=1){
                     if(!hex || parseFloat(alpha) === 0) return 'transparent';
-                    if (hex。startsWith('rgba')) {
-                        return hex。替换(/, ?\d?\.?\d+\)$/， `, ${alpha})`);
+                    if (hex.startsWith('rgba')) {
+                        return hex.replace(/, ?\d?\.?\d+\)$/, `, ${alpha})`);
                     }
-                    const match = hex。match(/\w\w/g);
+                    const match = hex.match(/\w\w/g);
                     if (!match) return `rgba(0,0,0,${alpha})`;
-                    const [r， g, b] = match。map(x => parseInt(x， 16)); 
-                    return `rgba(${r}，${g}，${b}，${alpha})`;
-                }，
+                    const [r, g, b] = match.map(x => parseInt(x, 16)); 
+                    return `rgba(${r},${g},${b},${alpha})`;
+                },
                 
-                debounce(func， wait){
+                debounce(func, wait){
                      let timeout; 
-                     return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => func。apply(this， args)， wait); }; 
-                }，
+                     return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), wait); }; 
+                },
                 
-                generateId(p){ return `${p}-${Date。当前()}-${Math。random()。toString(36)。substr(2, 9)}` }，
+                generateId(p){ return `${p}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` },
                 
-                deepClone(obj){ return JSON。parse(JSON。stringify(obj)) }，
+                deepClone(obj){ return JSON.parse(JSON.stringify(obj)) },
                 
-                escapeHTML(str){ return (str || '')。替换(/[&<>"']/g， m => ({'&':'&amp;'，'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]) },
+                escapeHTML(str){ return (str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]) },
                 
-                sleep(ms){ return new Promise(resolve => setTimeout(resolve， ms)) },
+                sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)) },
             };
 
-            App。init();
+            App.init();
         });
     </script>
 </body>
