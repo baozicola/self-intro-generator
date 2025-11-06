@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Blokko v1.2.1 -->
-    <title>Blokko (v1.2.1)</title>
+    <!-- Blokko v1.2.2: 最终BUG修复 -->
+    <title>Blokko (v1.2.2)</title>
     
     <script>
         // Anti-FOUC (Flash of Unstyled Content) Script
@@ -73,6 +73,8 @@
         .resizer { width: 5px; height: calc(100vh - var(--header-height)); background: var(--border-color); cursor: col-resize; z-index: 50; flex-shrink: 0;}
         .resizer:hover { background: var(--color-primary); }
         .preview-panel { flex-grow: 1; height: calc(100vh - var(--header-height)); overflow-y: auto; display: flex; justify-content: center; padding: 40px 20px; background: var(--bg-preview-pane); transition: background-color var(--transition-speed) ease; }
+        /* Blokko v1.2.2: 自定义宽度导出布局修复 */
+        body.export-mode .preview-panel, .preview-panel.custom-width-preview-mode { justify-content: flex-start; }
         .preview-wrapper { width: 100%; max-width: 600px; min-height: fit-content; background-color: var(--bg-preview-page); border-radius: 20px; box-shadow: 0 4px 16px var(--shadow-medium); padding: 20px; padding-bottom: 40px; transition: all var(--transition-speed) ease; background-size: cover; background-position: center; position: relative; overflow: hidden; font-family: var(--active-card-font-family); font-size: var(--active-card-font-size); }
         .preview-wrapper.custom-width-mode { margin-left: auto; margin-right: auto; }
         .preview-wrapper::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; background-size: cover; background-position: center; background-image: var(--page-bg-image); transition: filter var(--transition-speed) ease; }
@@ -196,8 +198,9 @@
         .image-gallery figure { margin: 0; position: relative; z-index: 1; display: flex; flex-direction: column; transition: transform 0.3s ease; }
         .image-gallery img { width: 100%; display: block; border-radius: 8px; height: auto; max-width: 100%; transition: transform 0.3s ease; }
         .image-gallery img:hover { transform: scale(1.05); }
+        /* Blokko v1.2.2: 图片区块文字颜色修复 */
         .image-gallery figcaption { text-align: center; margin-top: 8px; font-size: 0.85rem; color: var(--text-secondary); overflow-wrap: break-word; }
-        .image-gallery figcaption strong { display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+        .image-gallery figcaption strong { display: block; font-weight: 600; color: var(--g-card-text-color, var(--text-primary)); margin-bottom: 3px; }
         .separator-preview { display: flex; align-items: center; justify-content: center; }
         .separator-preview-line { flex-grow: 1; height: 1px; }
         .font-controls { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; align-items: stretch; }
@@ -277,7 +280,7 @@
 
     <header class="app-header">
         <button id="mobile-edit-toggle" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:pencil"></span> 编辑</button>
-        <div class="app-header-title">Blokko (v1.2.1)</div>
+        <div class="app-header-title">Blokko (v1.2.2)</div>
         <div class="header-actions-wrapper">
             <button id="lock-mode-toggle" class="btn btn-default" style="width: auto; padding: 6px 12px;" title="切换编辑/预览模式">编辑中</button>
             <button id="show-help-btn" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:help-circle-outline"></span> 帮助</button>
@@ -425,13 +428,12 @@
         </aside>
 
         <div class="resizer" id="resizer"></div>
-        <main class="preview-panel"> <div class="preview-wrapper" id="preview-wrapper"> <div class="preview-overlay" id="preview-overlay"></div> <header class="preview-header" id="preview-header"> <img id="preview-avatar" src="" alt="Avatar"> <h1 id="preview-nickname" data-state-key="personalInfo.nickname"></h1><h2 id="preview-subtitle" data-state-key="personalInfo.subtitle"></h2><p id="preview-bio" data-state-key="personalInfo.bio"></p> <div class="tags-container" id="preview-tags-container"></div> </header> <main class="preview-blocks-container" id="preview-blocks-container"></main> </div> </main>
+        <main class="preview-panel" id="preview-panel"> <div class="preview-wrapper" id="preview-wrapper"> <div class="preview-overlay" id="preview-overlay"></div> <header class="preview-header" id="preview-header"> <img id="preview-avatar" src="" alt="Avatar"> <h1 id="preview-nickname" data-state-key="personalInfo.nickname"></h1><h2 id="preview-subtitle" data-state-key="personalInfo.subtitle"></h2><p id="preview-bio" data-state-key="personalInfo.bio"></p> <div class="tags-container" id="preview-tags-container"></div> </header> <main class="preview-blocks-container" id="preview-blocks-container"></main> </div> </main>
     </div>
 
     <div class="modal-overlay" id="cropper-modal"><div class="modal-container"><h3 id="cropper-title">裁剪图片</h3><div class="crop-ratios radio-group"><label><input type="radio" name="crop-ratio" value="NaN" checked> 自由</label><label><input type="radio" name="crop-ratio" value="1"> 1:1</label><label><input type="radio" name="crop-ratio" value="1.3333"> 4:3</label><label><input type="radio" name="crop-ratio" value="1.7777"> 16:9</label></div><div class="cropper-img-container"><img id="cropper-image" src=""></div><div class="modal-actions"><button id="cropper-cancel-btn" class="btn btn-default">取消</button><button id="cropper-save-btn" class="btn btn-primary">确认</button></div></div></div>
     <div class="modal-overlay" id="download-modal"><div class="modal-container"><h3 id="download-modal-title">下载已准备好</h3><div id="download-modal-content"></div><div class="modal-actions" style="justify-content: center;"><button id="download-modal-close-btn" class="btn btn-default">关闭</button></div></div></div>
     
-    <!-- Blokko v1.2.1: 帮助弹窗文本已根据你的要求更新 -->
     <div class="modal-overlay" id="help-modal">
         <div class="modal-container" style="max-width: 700px;">
             <div class="tabs">
@@ -448,9 +450,12 @@
                 <p><strong><span class="iconify" data-icon="mdi:content-save" style="vertical-align: -0.2em;"></span> 本地保存：</strong> 你的所有修改都会自动保存在当前浏览器中，刷新页面不会丢失进度（请勿使用无痕模式）。</p>
             </div>
             <div id="help-changelog" class="tab-content" style="max-height: 60vh; overflow-y: auto; padding: 15px;">
-                <h4>v1.2.1 (当前版本)</h4>
+                <h4>v1.2.2 (当前版本)</h4>
                 <ul>
+                    <li><b>【修复】</b> 修复了区块无法正常添加和删除的严重BUG。</li>
+                    <li><b>【修复】</b> 修复了自定义导出宽度在移动端受限的问题。</li>
                     <li><b>【修复】</b> 彻底修复了页面背景图的蒙版在导出时失效的问题。</li>
+                    <li><b>【优化】</b> 图片区块的标题和描述颜色现在会跟随全局文字颜色。</li>
                     <li><b>【优化】</b> 锁定/预览模式按钮从图标改为更清晰的文字状态显示。</li>
                 </ul>
                 <h4>v1.2.0</h4>
@@ -553,7 +558,7 @@
                 icons: [], 
 
                 init() {
-                    console.log("Blokko 初始化 v1.2.1 ...");
+                    console.log("Blokko 初始化 v1.2.2 ...");
                     this.elements = this.queryElements();
                     this.presets = this.getPresets();
                     this.state = this.getDefaultState();
@@ -676,6 +681,7 @@
                     const q = (selector) => document.querySelector(selector);
                     return {
                         editorPanel: q('#editor-panel'),
+                        previewPanel: q('#preview-panel'),
                         resizer: q('#resizer'),
                         themeToggleBtn: q('#theme-toggle-btn'), themeLabel: q('#theme-label'),
                         previewWrapper: q('#preview-wrapper'), previewOverlay: q('#preview-overlay'),
@@ -2184,142 +2190,122 @@
                         e.target.value = ''; 
                 },
                 
-                // 找到 bakeOverlaysForExport 函数并替换为以下内容：
-async bakeOverlaysForExport(clone) {
-    const style = document.createElement('style');
-    clone.appendChild(style);
+                async bakeOverlaysForExport(clone) {
+                    const style = document.createElement('style');
+                    clone.appendChild(style);
 
-    const pageWrapper = clone;
-    const pageOverlay = clone.querySelector('#preview-overlay');
-    const styles = this.state.pageStyles; // 从状态中获取数据
+                    const pageWrapper = clone;
+                    const pageOverlay = clone.querySelector('#preview-overlay');
+                    const styles = this.state.pageStyles;
 
-    let finalPageBg = getComputedStyle(pageWrapper, '::before').getPropertyValue('background-image');
-    const basePageBgColor = getComputedStyle(pageWrapper).backgroundColor;
+                    let finalPageBg = getComputedStyle(pageWrapper, '::before').getPropertyValue('background-image');
+                    const basePageBg = getComputedStyle(pageWrapper).background;
 
-    // 1. 处理页面背景遮罩
-    if (pageOverlay && styles.pageBgImageDataUrl) { // 仅当有背景图时才应用蒙版
-        const overlayOpacity = parseFloat(styles.pageOverlayOpacity);
-        
-        if (overlayOpacity > 0) {
-            // Blokko v1.2.1: 关键修复 - 使用 hexToRgba 转换颜色和状态中的不透明度
-            const finalOverlayColor = this.hexToRgba(styles.pageOverlayColor, overlayOpacity);
-            const overlayGradient = `linear-gradient(${finalOverlayColor}, ${finalOverlayColor})`;
-            
-            if (finalPageBg !== 'none') {
-                finalPageBg = `${overlayGradient}, ${finalPageBg}`;
-            } else {
-                // 如果没有图片，则只使用纯色/渐变背景，不需要蒙版叠加逻辑
-                finalPageBg = overlayGradient;
-            }
-        }
-        pageOverlay.style.display = 'none';
-    }
-    
-    pageWrapper.style.backgroundImage = finalPageBg;
-    // 确保如果背景图被移除，底色能正确显示
-    if(finalPageBg === 'none') {
-        pageWrapper.style.backgroundColor = basePageBgColor;
-    }
+                    if (pageOverlay && styles.pageBgImageDataUrl) {
+                        const overlayOpacity = parseFloat(styles.pageOverlayOpacity);
+                        if (overlayOpacity > 0) {
+                            const finalOverlayColor = this.hexToRgba(styles.pageOverlayColor, overlayOpacity);
+                            const overlayGradient = `linear-gradient(${finalOverlayColor}, ${finalOverlayColor})`;
+                            finalPageBg = finalPageBg !== 'none' ? `${overlayGradient}, ${finalPageBg}` : overlayGradient;
+                        }
+                        pageOverlay.style.display = 'none';
+                    }
+                    pageWrapper.style.background = finalPageBg !== 'none' ? finalPageBg : basePageBg;
+                    
+                    clone.querySelectorAll('.preview-card-inner').forEach(cardInner => {
+                        const computed = getComputedStyle(cardInner);
+                        const beforeComputed = getComputedStyle(cardInner, '::before');
+                        const afterComputed = getComputedStyle(cardInner, '::after');
+                        
+                        let backgroundStyle = beforeComputed.getPropertyValue('background');
+                        const overlayOpacity = parseFloat(afterComputed.getPropertyValue('opacity'));
+                        const bgImage = beforeComputed.getPropertyValue('background-image');
 
+                        if (overlayOpacity > 0 && bgImage !== 'none') {
+                            const overlayColor = afterComputed.getPropertyValue('background-color');
+                             if(overlayColor !== 'rgba(0, 0, 0, 0)') {
+                                const overlayGradient = `linear-gradient(${overlayColor}, ${overlayColor})`;
+                                backgroundStyle = `${overlayGradient}, ${backgroundStyle}`;
+                            }
+                        }
+                        cardInner.style.background = backgroundStyle;
+                        cardInner.style.border = computed.border;
+                        cardInner.style.boxShadow = computed.boxShadow;
+                    });
 
-    // 2. 处理卡片背景遮罩
-    clone.querySelectorAll('.preview-card-inner').forEach(cardInner => {
-        const computed = getComputedStyle(cardInner);
-        const beforeComputed = getComputedStyle(cardInner, '::before');
-        const afterComputed = getComputedStyle(cardInner, '::after');
-        
-        const backgroundStyle = beforeComputed.getPropertyValue('background');
-        const overlayOpacity = parseFloat(afterComputed.getPropertyValue('opacity'));
-        
-        // 只有当有背景图且不透明度大于0时，我们才需要烘焙蒙版
-        if (overlayOpacity > 0 && afterComputed.getPropertyValue('background-color') !== 'rgba(0, 0, 0, 0)') {
-            // 注意：卡片的颜色数据需要从 DOM 或状态中获取
-            // 默认从 style 变量中读取，通常是准确的 RGBA 值
-            const overlayColor = computed.getPropertyValue('--card-overlay-color'); 
-            
-            // 确保我们重新结合了透明度
-            const finalOverlayColor = this.hexToRgba(overlayColor, overlayOpacity);
-
-            cardInner.style.background = `linear-gradient(${finalOverlayColor}, ${finalOverlayColor}), ${backgroundStyle}`;
-        } else {
-            cardInner.style.background = backgroundStyle;
-        }
-        // 恢复边框和阴影
-        cardInner.style.border = computed.border;
-        cardInner.style.boxShadow = computed.boxShadow;
-    });
-
-    // 3. 强制清除伪元素
-    style.innerHTML += `
-        #${clone.id}::before,
-        #${clone.id} .preview-card-inner::before, 
-        #${clone.id} .preview-card-inner::after {
-            content: none !important;
-            background: none !important;
-            display: none !important;
-        }
-    `;
-},
+                    style.innerHTML += `
+                        #${clone.id}::before,
+                        #${clone.id} .preview-card-inner::before, 
+                        #${clone.id} .preview-card-inner::after {
+                            content: none !important;
+                            background: none !important;
+                            display: none !important;
+                        }
+                    `;
+                },
                 
                 async exportPNG(){
-                     this.showLoading('正在准备导出...');
-                        const scale = this.elements.hdExportToggle.checked ? 3 : 2;
-                        const originalElement = this.elements.previewWrapper;
-                        let clone = null;
+                    this.showLoading('正在准备导出...');
+                    const scale = this.elements.hdExportToggle.checked ? 3 : 2;
+                    const originalElement = this.elements.previewWrapper;
+                    let clone = null;
+                    
+                    const wasDrawerOpen = this.elements.editorPanel.classList.contains('is-open');
+                    if (wasDrawerOpen) {
+                        this.toggleEditorDrawer(false);
+                        await this.sleep(100);
+                    }
+                    
+                    document.body.classList.add('export-mode');
+
+                    try {
+                        clone = originalElement.cloneNode(true);
+                        clone.id = `export-clone-${Date.now()}`;
                         
-                        const wasDrawerOpen = this.elements.editorPanel.classList.contains('is-open');
+                        const style = document.createElement('style');
+                        style.innerHTML = `
+                            #${clone.id}, #${clone.id} * { transition: none !important; animation: none !important; }
+                            #${clone.id} .preview-card:hover .preview-card-inner { transform: none !important; box-shadow: var(--active-card-shadow, none) !important; }
+                        `;
+                        clone.appendChild(style);
+
+                        clone.style.position = 'absolute';
+                        clone.style.left = '0px';
+                        clone.style.top = '0px';
+                        clone.style.width = `${originalElement.offsetWidth}px`;
+
+                        document.body.appendChild(clone);
+                        await this.sleep(100);
+
+                        this.showLoading('正在处理样式 (烘焙)...');
+                        await this.bakeOverlaysForExport(clone);
+                        await this.sleep(100);
+
+                        this.showLoading('正在渲染图片...');
+                        const canvas = await html2canvas(clone, {
+                            scale: scale,
+                            useCORS: true,
+                            backgroundColor: null,
+                            logging: false
+                        });
+
+                        const dataUrl = canvas.toDataURL('image/png');
+                        const filename = this.generateFilename('Image') + '.png';
+                        this.showDownloadModal(dataUrl, filename, '图片已生成');
+
+                    } catch (err) {
+                        console.error("PNG export failed:", err);
+                        this.showErrorModal('导出失败', `生成图片时发生错误: ${err.message}.`);
+                    } finally {
+                        if (clone && clone.parentNode) {
+                            clone.parentNode.removeChild(clone);
+                        }
                         if (wasDrawerOpen) {
-                            this.toggleEditorDrawer(false);
-                            await this.sleep(100);
+                            this.toggleEditorDrawer(true);
                         }
-                        
-                        try {
-                            clone = originalElement.cloneNode(true);
-                            clone.id = `export-clone-${Date.now()}`;
-                            
-                            const style = document.createElement('style');
-                            style.innerHTML = `
-                                #${clone.id}, #${clone.id} * { transition: none !important; animation: none !important; }
-                                #${clone.id} .preview-card:hover .preview-card-inner { transform: none !important; box-shadow: var(--active-card-shadow, none) !important; }
-                            `;
-                            clone.appendChild(style);
-
-                            clone.style.position = 'absolute';
-                            clone.style.left = '-9999px';
-                            clone.style.top = '0px';
-                            clone.style.width = `${originalElement.offsetWidth}px`;
-
-                            document.body.appendChild(clone);
-                            await this.sleep(100);
-
-                            this.showLoading('正在处理样式 (烘焙)...');
-                            await this.bakeOverlaysForExport(clone);
-                            await this.sleep(100);
-
-                            this.showLoading('正在渲染图片...');
-                            const canvas = await html2canvas(clone, {
-                                scale: scale,
-                                useCORS: true,
-                                backgroundColor: null,
-                                logging: false
-                            });
-
-                            const dataUrl = canvas.toDataURL('image/png');
-                            const filename = this.generateFilename('Image') + '.png';
-                            this.showDownloadModal(dataUrl, filename, '图片已生成');
-
-                        } catch (err) {
-                            console.error("PNG export failed:", err);
-                            this.showErrorModal('导出失败', `生成图片时发生错误: ${err.message}.`);
-                        } finally {
-                            if (clone && clone.parentNode) {
-                                clone.parentNode.removeChild(clone);
-                            }
-                            if (wasDrawerOpen) {
-                                this.toggleEditorDrawer(true);
-                            }
-                            this.hideLoading();
-                        }
+                        document.body.classList.remove('export-mode');
+                        this.hideLoading();
+                    }
                 },
                 
                 updateExportSizePreview(){
@@ -2451,7 +2437,7 @@ async bakeOverlaysForExport(clone) {
                     const isOpen = this.elements.editorPanel.classList.toggle('is-open', forceState);
                     this.elements.body.classList.toggle('editor-open', isOpen);
                 },
-
+                
                 resetToDefault() {
                     if (window.confirm('警告：此操作将清空您所有的内容和样式设置，并恢复到初始模板。此过程不可撤销，确定要继续吗？')) {
                         localStorage.removeItem('blokkoState');
@@ -2466,16 +2452,19 @@ async bakeOverlaysForExport(clone) {
                 },
 
                 toggleLockMode() {
-                    const isLocked = this.elements.previewBlocksContainer.classList.toggle('locked-mode');
+                    const sortableInstance = Sortable.get(this.elements.previewBlocksContainer);
+                    const isLocked = !sortableInstance.options.disabled;
+                    sortableInstance.option('disabled', isLocked);
+                    
+                    this.elements.previewBlocksContainer.classList.toggle('locked-mode', isLocked);
                     const button = this.elements.lockModeToggle;
+                    
                     if (isLocked) {
                         button.textContent = '锁定中';
                         button.title = '预览模式 (点击切换为编辑模式)';
-                        Sortable.get(this.elements.previewBlocksContainer).option('disabled', true);
                     } else {
                         button.textContent = '编辑中';
                         button.title = '编辑模式 (点击切换为预览模式)';
-                        Sortable.get(this.elements.previewBlocksContainer).option('disabled', false);
                     }
                 },
                 
@@ -2525,6 +2514,8 @@ async bakeOverlaysForExport(clone) {
                 toggleCustomWidthControls() {
                     const isEnabled = this.elements.customWidthToggle.checked;
                     this.elements.customWidthControls.style.display = isEnabled ? 'block' : 'none';
+                    this.elements.previewPanel.classList.toggle('custom-width-preview-mode', isEnabled);
+
                     if (!isEnabled) {
                         this.elements.previewWrapper.style.width = '';
                         this.elements.previewWrapper.style.maxWidth = '600px';
@@ -2541,7 +2532,8 @@ async bakeOverlaysForExport(clone) {
                         this.elements.previewWrapper.style.maxWidth = 'none';
                         this.elements.previewWrapper.style.width = `${width}px`;
                         this.elements.previewWrapper.classList.add('custom-width-mode');
-                        this.updateExportSizePreview();
+                        // Give it a moment for the DOM to update before calculating size
+                        setTimeout(() => this.updateExportSizePreview(), 50);
                     }
                 },
 
@@ -2626,6 +2618,60 @@ async bakeOverlaysForExport(clone) {
                 escapeHTML(str){ return (str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]) },
                 
                 sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)) },
+
+                // Blokko v1.2.2: 区块添加/删除功能修复
+                async addBlock(type) {
+                    this.pushHistory();
+                    
+                    const sortable = Sortable.get(this.elements.previewBlocksContainer);
+                    const wasDisabled = sortable.options.disabled;
+                    if (wasDisabled) sortable.option('disabled', false);
+
+                    let newBlock;
+                    const defaultState = this.getDefaultState();
+                    switch(type) {
+                        case 'text':
+                            newBlock = defaultState.blocks.find(b => b.type === 'text');
+                            newBlock.id = this.generateId('b');
+                            newBlock.cards[0].id = this.generateId('c');
+                            break;
+                        case 'image':
+                            newBlock = defaultState.blocks.find(b => b.type === 'image');
+                            newBlock.id = this.generateId('b');
+                            break;
+                        case 'separator':
+                            newBlock = defaultState.blocks.find(b => b.type === 'separator');
+                            newBlock.id = this.generateId('b');
+                            break;
+                    }
+                    this.state.blocks.push(this.deepClone(newBlock));
+                    this.debouncedSaveToLocal();
+
+                    this.renderAll();
+                    await this.sleep(10); // 等待 DOM 更新
+                    this.initAllSortables(); // 重新初始化所有拖拽实例
+                    if (wasDisabled) sortable.option('disabled', true);
+                    
+                    const newEditorBlock = this.elements.editorBlocksList.querySelector(`[data-block-id="${newBlock.id}"]`);
+                    if(newEditorBlock) newEditorBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                },
+
+                async deleteBlock(blockId) {
+                    this.pushHistory();
+                    
+                    const sortable = Sortable.get(this.elements.previewBlocksContainer);
+                    const wasDisabled = sortable.options.disabled;
+                    if (wasDisabled) sortable.option('disabled', false);
+
+                    this.state.blocks = this.state.blocks.filter(b => b.id !== blockId);
+                    this.debouncedSaveToLocal();
+
+                    this.renderAll();
+                    await this.sleep(10);
+                    this.initAllSortables();
+                    if (wasDisabled) sortable.option('disabled', true);
+                    this.showToast('区块已删除', 'info');
+                },
             };
 
             App.init();
