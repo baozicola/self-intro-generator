@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Blokko v1.3.0: 新增自定义宽度、背景纹理、三列布局、留白块等功能，并修复多项BUG -->
-    <title>Blokko (v1.3.0)</title>
+    <!-- Blokko v1.3.1: -->
+    <title>Blokko-个人简介生成器！ (v1.3.1)</title>
     
     <script>
         // Anti-FOUC (Flash of Unstyled Content) Script
@@ -18,6 +18,12 @@
     </script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+
+    <!-- v1.3.1: Add Recommended Fonts via reliable CDN -->
+    <link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Sans+SC:400,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:400,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.loli.net/css?family=ZCOOL+KuaiLe&display=swap">
+    <link rel="stylesheet" href="https://fonts.loli.net/css?family=ZCOOL+XiaoWei&display=swap">
 
     <style>
         /* CSS 变量 */
@@ -250,6 +256,15 @@
         .tag-manager-item .tag-delete-btn { flex-shrink: 0; width: 32px; height: 32px; padding: 0; }
         .empty-tag-list { text-align: center; color: var(--text-placeholder); padding: 20px 0; }
         .inset-controls { border: 1px solid var(--border-input); border-radius: 6px; padding: 15px; margin-top: 10px; background: var(--bg-input); }
+        /* Styles for Help Modal */
+        #help-modal .tab-content { max-height: 60vh; overflow-y: auto; padding: 15px; }
+        #help-thanks .thanks-item { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+        #help-thanks .thanks-item:last-child { border-bottom: none; }
+        #help-thanks h4 { margin-top: 0; margin-bottom: 8px; }
+        #help-thanks p { margin: 4px 0; }
+        #help-thanks details { margin-top: 10px; }
+        #help-thanks summary { cursor: pointer; font-weight: 600; color: var(--text-action); }
+        #help-thanks pre { white-space: pre-wrap; word-wrap: break-word; background: var(--bg-input); padding: 10px; border-radius: 6px; font-size: 0.8rem; max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); }
         @keyframes toast-in { to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { to { opacity: 0; transform: translateX(100%); } }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -284,7 +299,7 @@
 
     <header class="app-header">
         <button id="mobile-edit-toggle" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:pencil"></span> 编辑</button>
-        <div class="app-header-title">Blokko (v1.3.0)</div>
+        <div class="app-header-title">Blokko (v1.3.1)</div>
         <div class="header-actions-wrapper">
             <button id="lock-mode-toggle" class="btn btn-default" style="width: auto; padding: 6px 12px;" title="切换编辑/预览模式">编辑中</button>
             <button id="show-help-btn" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:help-circle-outline"></span> 帮助</button>
@@ -310,7 +325,6 @@
                             <label><input type="checkbox" id="custom-width-toggle"> 自定义宽度</label>
                             <input type="number" id="custom-width-input" value="1200" style="width: 80px; padding: 4px 8px;" disabled>
                         </div>
-                        <!-- NEW: Rounded Corner Export -->
                         <div class="checkbox-group" style="margin-bottom: 10px;">
                             <label><input type="checkbox" id="export-rounded-corners-toggle"> 导出为圆角图片</label>
                             <input type="number" id="export-corner-radius-input" value="20" style="width: 60px; padding: 4px 8px;" disabled>
@@ -455,54 +469,132 @@
             <div class="tabs">
                 <button class="tab-btn active" data-tab="help-instructions">使用说明</button>
                 <button class="tab-btn" data-tab="help-changelog">更新日志</button>
-                <button class="tab-btn" data-tab="help-about">关于与致谢</button>
+                <button class="tab-btn" data-tab="help-thanks">感谢信息</button>
+                <button class="tab-btn" data-tab="help-about">关于</button>
             </div>
-            <div id="help-instructions" class="tab-content active" style="max-height: 60vh; overflow-y: auto; padding: 15px;">
+            <div id="help-instructions" class="tab-content active">
                 <h4>欢迎使用 Blokko！</h4>
                 <p><strong><span class="iconify" data-icon="mdi:cursor-default-click-outline" style="vertical-align: -0.2em;"></span> 双击编辑：</strong> 预览区域的大部分文本内容（如昵称、简介、卡片标题和内容）都可以通过双击直接进行编辑。</p>
                 <p><strong><span class="iconify" data-icon="mdi:drag" style="vertical-align: -0.2em;"></span> 拖拽排序：</strong> 在编辑区，你可以拖动区块或卡片左侧的 ☰ 图标来对它们进行排序。</p>
                 <p><strong><span class="iconify" data-icon="mdi:lock-open-variant-outline" style="vertical-align: -0.2em;"></span> 锁定模式：</strong> 点击右上角的 "编辑中" 按钮可切换到 "锁定中"，此模式下禁用拖拽，方便在手机上顺畅滑动浏览。</p>
                 <p><strong><span class="iconify" data-icon="mdi:import" style="vertical-align: -0.2em;"></span> 导入/导出：</strong> 使用“导出配置”按钮可以保存你所有的设计为一个 .json 文件，方便备份和分享。之后可以通过“导入配置”来恢复。</p>
                 <p><strong><span class="iconify" data-icon="mdi:content-save" style="vertical-align: -0.2em;"></span> 本地保存：</strong> 你的所有修改都会自动保存在当前浏览器中，刷新页面不会丢失进度（请勿使用无痕模式）。</p>
-                <p><strong><span class="iconify" data-icon="mdi:shield-account-outline" style="vertical-align: -0.2em;"></span> 关于您上传的内容</strong></p>
-                <p>Blokko 是一个创作工具，相信您会用它来制作出色的内容！</p>
+                <p><strong><span class="iconify" data-icon="mdi:shield-account-outline" style="vertical-align: -0.2em;"></span> 注意！关于您上传的内容！</strong></p>
+                <p>Blokko 是一个完全免费的本地创作工具，相信您会用它来制作出色的内容！</p>
                 <p>但还请注意，当您使用“上传字体”、“加载本地字体”或“上传图片/图标”功能时，您需要对这些素材负责。<strong>请确保您上传和使用的任何字体 (ttf, woff等)、图片或图标文件，都已获得了原版权方的合法授权。</strong></p>
-                <p>因使用未授权素材而产生的任何版权问题，将需要由您自行承担，<strong>因此我们鼓励您使用开源的无版权可商用字体/图片/图标文件。</strong></p>
+                <p>因使用未授权素材而产生的任何版权问题，将需要由您自行承担，<strong>因此我鼓励您使用开源的无版权可商用字体/图片/图标文件。</strong></p>
 		   </div>
-            <div id="help-changelog" class="tab-content" style="max-height: 60vh; overflow-y: auto; padding: 15px;">
-                <h4>v1.3.0 (当前版本)</h4>
+            <div id="help-changelog" class="tab-content">
+                <h4>v1.3.1 (当前版本)</h4>
                 <ul>
-                    <li><b>【新增】</b> <b>自定义导出宽度！</b> 现在可以自由设定导出图片的宽度，并自动计算高度。</li>
-                    <li><b>【新增】</b> <b>背景纹理！</b> 新增了背景纹理功能，可与背景色、背景图叠加，并支持调节颜色、透明度和密度。</li>
-                    <li><b>【新增】</b> 新增“三排卡片”布局。</li>
-                    <li><b>【新增】</b> 新增“留白块”，用于精确控制垂直间距。</li>
-                    <li><b>【新增】</b> 图片区块的文字现在支持独立的颜色和字号设置。</li>
-                    <li><b>【修复】</b> 修复了在预览区双击编辑文本时，只能输入一个字符的严重BUG。</li>
-                    <li><b>【修复】</b> 修复了导出图片时，页面背景图无法正确显示，只显示不透明遮罩颜色的BUG。</li>
-                    <li><b>【修复】</b> 修复了调整图片区块设置时，图片会重复播放动画的问题。</li>
-                    <li><b>【修复】</b> 修复了手机端编辑卡片时，页面会横向溢出的问题。</li>
-                    <li><b>【优化】</b> 文本区块的布局控件位置调整，避免与区块标题互相挤压。</li>
-                    <li><b>【优化】</b> 新增的文本卡片默认不再附带图标。</li>
-                    <li><b>【调整】</b> 出于署名合规原则，图标库搜索源已调整为一组无需署名的开源图标库（如MDI, Font Awesome, Lucide等），并增加了上传内容说明。</li>
+                    <li><b>【新增】</b> 内置4款推荐字体（思源黑体、思源宋体、站酷快乐体、站酷小薇体），通过国内CDN加速，无需手动上传。</li>
+                    <li><b>【优化】</b> 帮助弹窗重构为四个独立分页：使用说明、更新日志、感谢信息、关于。</li>
+                    <li><b>【优化】</b> “感谢信息”页进行合规性增强，为每个开源项目提供独立的许可证原文（可折叠查看）。</li>
+                    <li><b>【优化】</b> 更新版本号至 v1.3.1。</li>
+                </ul>
+                <hr class="separator">
+                <h4>v1.3.0</h4>
+                <ul>
+                    <li><b>【新增】</b> 自定义导出宽度、背景纹理、三列布局、留白块等功能。</li>
+                    <li><b>【修复】</b> 修复了双击编辑只能输入一个字符、导出图片背景图丢失等多项BUG。</li>
+                    <li><b>【优化】</b> 调整了部分UI，并将图标库来源调整为无需署名的开源图标库。</li>
                 </ul>
             </div>
-            <!-- FEATURE: Icon Library Change - Update acknowledgements -->
-            <div id="help-about" class="tab-content" style="max-height: 60vh; overflow-y: auto; padding: 15px;">
+            <div id="help-thanks" class="tab-content">
+                <p>本工具的实现离不开以下优秀的开源项目，在此表示诚挚的感谢：</p>
+                <div class="thanks-item">
+                    <h4>开源字体</h4>
+                    <p>本项目集成的推荐字体均基于 <strong>SIL Open Font License 1.1</strong> 协议，可免费商用。</p>
+                    <ul>
+                        <li><a href="https://github.com/adobe-fonts/source-han-sans" target="_blank" rel="noopener noreferrer"><strong>思源黑体 (Source Han Sans)</strong></a> - 由 Adobe 与 Google 联合开发。</li>
+                        <li><a href="https://github.com/adobe-fonts/source-han-serif" target="_blank" rel="noopener noreferrer"><strong>思源宋体 (Source Han Serif)</strong></a> - 由 Adobe 与 Google 联合开发。</li>
+                        <li><a href="https://www.zcool.com.cn/work/ZMTg5Njc2NTI=.html" target="_blank" rel="noopener noreferrer"><strong>站酷快乐体 (ZCOOL KuaiLe)</strong></a> - 由 站酷 (ZCOOL) 设计师团队创作。</li>
+                        <li><a href="https://www.zcool.com.cn/work/ZMTg5ODY0NDQ=.html" target="_blank" rel="noopener noreferrer"><strong>站酷小薇体 (ZCOOL XiaoWei)</strong></a> - 由 站酷 (ZCOOL) 设计师团队创作。</li>
+                    </ul>
+                    <details>
+                        <summary>查看 SIL Open Font License 1.1 许可证原文</summary>
+                        <pre><code>Copyright (c) 2005-2020, SIL International (http://www.sil.org/) with Reserved Font Names "SIL".
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at: http://scripts.sil.org/OFL
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide development of collaborative font projects, to support the font creation efforts of academic and linguistic communities, and to provide a framework in which fonts may be shared and improved in partnership with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and redistributed freely as long as they are not sold by themselves. The fonts, including any derivative works, can be bundled, embedded, redistributed and/or sold with any software provided that any reserved names are not used by derivative works. The fonts and derivatives, however, cannot be released under any other type of license. The requirement for fonts to remain under this license does not apply to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright Holder(s) under this license and clearly marked as such. This may include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting, or substituting — in part or in whole — any of the components of the Original Version, by changing formats or by porting the Font Software to a new environment.
+
+"Author" refers to any designer, engineer, programmer, technical writer or other person who contributed to the Font Software.
+
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining a copy of the Font Software, to use, study, copy, merge, embed, modify, redistribute, and sell modified and unmodified copies of the Font Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components, in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled, redistributed and/or sold with any software, provided that each copy contains the above copyright notice and this license. These can be included either as stand-alone text files, human-readable headers or in the appropriate machine-readable metadata fields within text or binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font Name(s) unless explicit written permission is granted by the corresponding Copyright Holder. This restriction only applies to the primary font name as presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font Software shall not be used to promote, endorse or advertise any Modified Version, except to acknowledge the contribution(s) of the Copyright Holder(s) and the Author(s) or with their explicit written permission.
+
+5) The Font Software, modified or unmodified, in part or in whole, must be distributed entirely under this license, and must not be distributed under any other license. The requirement for fonts to remain under this license does not apply to any document created using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE FONT SOFTWARE OR THE USE OR OTHER DEALINGS IN THE FONT SOFTWARE.
+</code></pre>
+                    </details>
+                </div>
+                <div class="thanks-item">
+                    <h4>核心功能库</h4>
+                    <p>以下项目均基于 <strong>MIT License</strong> 协议，特此感谢。</p>
+                    <ul>
+                        <li><a href="https://html2canvas.hertzen.com/" target="_blank" rel="noopener noreferrer"><strong>html2canvas</strong></a> - 实现了将网页内容导出为图片的核心功能。</li>
+                        <li><a href="https://fengyuanchen.github.io/cropperjs/" target="_blank" rel="noopener noreferrer"><strong>Cropper.js</strong></a> - 提供了强大的图片裁剪功能。</li>
+                        <li><a href="https://sortablejs.github.io/Sortable/" target="_blank" rel="noopener noreferrer"><strong>SortableJS</strong></a> - 提供了流畅的拖拽排序体验。</li>
+                    </ul>
+                    <details>
+                        <summary>查看 MIT License 许可证原文</summary>
+                        <pre><code>The MIT License (MIT)
+
+Copyright (c) &lt;year&gt; &lt;copyright holders&gt;
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</code></pre>
+                    </details>
+                </div>
+                <div class="thanks-item">
+                    <h4>资源与服务</h4>
+                    <ul>
+                        <li><a href="https://iconify.design/" target="_blank" rel="noopener noreferrer"><strong>Iconify</strong></a>: 提供了统一的图标检索和加载功能。本项目使用的图标库（如MDI, Tabler, Lucide等）均基于对商业友好的开源协议发布。</li>
+                        <li><a href="https://heropatterns.com/" target="_blank" rel="noopener noreferrer"><strong>Hero Patterns</strong></a>: 提供了精美、可定制的SVG背景纹理 (MIT License)。</li>
+                    </ul>
+                </div>
+            </div>
+            <div id="help-about" class="tab-content">
                 <h4>关于 Blokko</h4>
                 <p>Blokko是一个方便大家快速制作扩列/自荐/置顶图的小工具！</p>
                 <p><strong>作者：</strong> 四十七</p>
                 <p>如果你在使用中遇到BUG，可以通过链接私信我！</p>
                 <p><a href="https://weibo.com/u/5095783616" target="_blank" rel="noopener noreferrer"><strong>我的微博主页</strong></a></p>
-                <hr>
-                <h4>致谢</h4>
-                <p>本工具的实现离不开以下优秀的开源项目，在此表示诚挚的感谢：</p>
-                <ul>
-                    <li><strong>图标资源:</strong> 本项目使用了来自 <strong>Material Design Icons</strong>, <strong>Tabler Icons</strong>, <strong>Lucide</strong>, <strong>Feather Icons</strong>, <strong>Phosphor Icons</strong>, 以及 <strong>Font Awesome (Free)</strong> 的图标。这些图标均基于对商业友好的开源协议（如 MIT, Apache 2.0 等）发布。图标的检索和加载功能由 <a href="https://iconify.design/" target="_blank" rel="noopener noreferrer">Iconify</a> 项目提供技术支持。</li>
-                    <li><strong>Hero Patterns:</strong> 提供了精美、可定制的SVG背景纹理。</li>
-                    <li><strong>html2canvas:</strong> 实现了将网页内容导出为图片的核心功能。</li>
-                    <li><strong>Cropper.js:</strong> 提供了强大的图片裁剪功能。</li>
-                    <li><strong>SortableJS:</strong> 提供了流畅的拖拽排序体验。</li>
-                </ul>
             </div>
             <div class="modal-actions" style="justify-content: center; margin-top: 20px;">
                 <button id="help-modal-close-btn" class="btn btn-primary">关闭</button>
@@ -514,12 +606,10 @@
         <div class="modal-container">
             <h3>选择图标</h3>
             <div class="form-group">
-                <!-- FEATURE: Icon Library Change - Update placeholder text -->
                 <input type="text" id="icon-search" placeholder="搜索图标 (例如: bilibili, music, home, user)..." class="form-control">
             </div>
             <div id="icon-grid"></div>
             <div class="modal-actions">
-                <!-- NEW: Custom Icon Upload -->
                 <button id="upload-icon-btn" class="btn btn-secondary">上传图标 (.svg)</button>
                 <input type="file" id="icon-upload-input" accept=".svg" style="display: none;">
                 <button id="remove-icon-btn" class="btn btn-danger">移除图标</button>
@@ -590,7 +680,7 @@
                 icons: [], 
 
                 init() {
-                    console.log("Blokko 初始化 v1.3.0 ...");
+                    console.log("Blokko 初始化 v1.3.1 ...");
                     this.elements = this.queryElements();
                     this.presets = this.getPresets();
                     this.state = this.getDefaultState();
@@ -622,7 +712,6 @@
                 getDefaultState() {
                     const lightTheme = this.getPresets().light;
                     return {
-                        // NEW: Custom Icon Upload
                         customIcons: [],
                         personalInfo: { 
                             nickname: "你的昵称", nicknameColor: lightTheme.pNicknameColor,
@@ -727,7 +816,7 @@
                         exportTemplateBtn: q('#export-template-btn'), 
                         exportPngBtn: q('#export-png-btn'), configFileInput: q('#config-file-input'),
                         hdExportToggle: q('#hd-export-toggle'), customWidthToggle: q('#custom-width-toggle'), customWidthInput: q('#custom-width-input'), exportSizePreview: q('#export-size-preview'),
-                        exportRoundedCornersToggle: q('#export-rounded-corners-toggle'), exportCornerRadiusInput: q('#export-corner-radius-input'), // NEW: Rounded Corner Export
+                        exportRoundedCornersToggle: q('#export-rounded-corners-toggle'), exportCornerRadiusInput: q('#export-corner-radius-input'),
                         previewHeader: q('#preview-header'), previewAvatar: q('#preview-avatar'),
                         previewNickname: q('#preview-nickname'), previewSubtitle: q('#preview-subtitle'),
                         previewBio: q('#preview-bio'), previewTagsContainer: q('#preview-tags-container'),
@@ -754,7 +843,7 @@
                         iconSearch: q('#icon-search'),
                         removeIconBtn: q('#remove-icon-btn'),
                         iconPickerCloseBtn: q('#icon-picker-close-btn'),
-                        uploadIconBtn: q('#upload-icon-btn'), iconUploadInput: q('#icon-upload-input'), // NEW: Custom Icon Upload
+                        uploadIconBtn: q('#upload-icon-btn'), iconUploadInput: q('#icon-upload-input'),
                         resetBtn: q('#reset-btn'),
                         lockModeToggle: q('#lock-mode-toggle'),
                         tagManagerList: q('#tag-manager-list'),
@@ -823,7 +912,8 @@
                             parent.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
                             button.classList.add('active');
                             parent.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                            parent.querySelector(`#${button.dataset.tab}`).classList.add('active');
+                            const targetTab = parent.querySelector(`#${button.dataset.tab}`);
+                            if (targetTab) targetTab.classList.add('active');
                             
                             const sectionEl = button.closest('.editor-section');
                             if (!sectionEl) return;
@@ -864,8 +954,7 @@
                             }
                         }
                     });
-
-                    // NEW: Custom Icon Upload
+                    
                     this.elements.uploadIconBtn.addEventListener('click', () => this.elements.iconUploadInput.click());
                     this.elements.iconUploadInput.addEventListener('change', e => this.handleIconUpload(e));
 
@@ -901,7 +990,7 @@
                            this.updateTag(tagItem.dataset.tagId, 'text', e.target.value, true);
                         }
                     });
-                    // Bind events for custom export width
+
                     this.elements.hdExportToggle.addEventListener('change', () => {
                         if (this.elements.hdExportToggle.checked) {
                             this.elements.customWidthToggle.checked = false;
@@ -921,13 +1010,11 @@
                         this.updateExportSizePreview();
                     });
                     this.elements.customWidthInput.addEventListener('input', () => this.updateExportSizePreview());
-
-                    // NEW: Rounded Corner Export
+                    
                     this.elements.exportRoundedCornersToggle.addEventListener('change', (e) => {
                         this.elements.exportCornerRadiusInput.disabled = !e.target.checked;
                     });
 
-                    // Bind events for texture picker
                     this.elements.showTexturePickerBtn.addEventListener('click', () => this.elements.texturePickerModal.classList.add('visible'));
                     this.elements.texturePickerCloseBtn.addEventListener('click', () => this.elements.texturePickerModal.classList.remove('visible'));
                     this.elements.removeTextureBtn.addEventListener('click', () => this.selectTexture(null));
@@ -1136,8 +1223,7 @@
                             target.addEventListener('keydown', handleKeydown);
                         }
                     });
-
-                    // BUG FIX: Double-click editing issue
+                    
                     this.elements.previewWrapper.addEventListener('input', e => {
                         const target = e.target;
                         if (target.contentEditable === 'true') {
@@ -1242,8 +1328,7 @@
                             return `<span class="tag-pill" data-tag-id="${tag.id}" style="background-color:${info.tagBgColor}; color:${info.tagTextColor};">${iconHTML}<span>${this.escapeHTML(tag.text)}</span></span>`;
                         }).join('');
                 },
-
-                // FIX: Layering - Reworked this function completely for correct layer order and consistency.
+                
                 renderPageStyles() {
                     const styles = this.state.pageStyles;
                     const wrapper = this.elements.previewWrapper;
@@ -1253,7 +1338,6 @@
                     let bgPositions = [];
                     let bgColor = 'transparent';
 
-                    // Layer 1: Texture (top-most)
                     if (styles.pageBgPattern) {
                         const pattern = HeroPatterns.find(p => p.name === styles.pageBgPattern);
                         if(pattern) {
@@ -1265,7 +1349,6 @@
                         }
                     }
 
-                    // Layer 2: Overlay (only if there's a background image)
                     if (styles.pageBgImageDataUrl) {
                         const overlayOpacity = parseFloat(styles.pageOverlayOpacity);
                         if (overlayOpacity > 0) {
@@ -1276,43 +1359,37 @@
                         }
                     }
                     
-                    // Layer 3: Main Background Image
                     if (styles.pageBgImageDataUrl) {
                         bgLayers.push(`url(${styles.pageBgImageDataUrl})`);
                         bgSizes.push('cover');
                         bgPositions.push('center');
                     }
-
-                    // Layer 4: Color/Gradient (bottom-most)
+                    
                     if (styles.pageBgMode === 'gradient') {
                         bgLayers.push(`linear-gradient(${styles.pageBgGradientAngle}deg, ${styles.pageBgGradientStart}, ${styles.pageBgGradientEnd})`);
                         bgSizes.push('cover');
                         bgPositions.push('center');
-                    } else { // solid color acts as the base
+                    } else {
                         bgColor = styles.pageBgSolidColor;
                     }
 
-                    // Apply the baked styles
                     wrapper.style.backgroundColor = bgColor;
                     wrapper.style.backgroundImage = bgLayers.join(', ');
                     wrapper.style.backgroundSize = bgSizes.join(', ');
                     wrapper.style.backgroundPosition = bgPositions.join(', ');
 
-                    // Header styles
                     if (styles.headerBgMode === 'gradient') {
                         const gradient = `linear-gradient(${styles.headerBgGradientAngle}deg, ${this.hexToRgba(styles.headerBgGradientStart, styles.headerOpacity)}, ${this.hexToRgba(styles.headerBgGradientEnd, styles.headerOpacity)})`;
                         this.elements.previewHeader.style.background = gradient;
-                    } else { // solid
+                    } else {
                         this.elements.previewHeader.style.background = this.hexToRgba(styles.headerBgColor, styles.headerOpacity);
                     }
                     this.elements.previewHeader.style.color = styles.headerTextColor;
 
-                    // Text colors
                     this.elements.previewNickname.style.color = this.state.personalInfo.nicknameColor;
                     this.elements.previewSubtitle.style.color = this.state.personalInfo.subtitleColor;
                     this.elements.previewBio.style.color = this.state.personalInfo.bioColor;
                     
-                    // Toggle visibility of controls
                     this.elements.pageImageControls.style.display = styles.pageBgImageDataUrl ? 'block' : 'none';
                     this.elements.pageTextureControls.style.display = styles.pageBgPattern ? 'block' : 'none';
                 },
@@ -1657,7 +1734,6 @@
                             galleryEl.style.boxShadow = 'none';
                             galleryEl.style.border = 'none';
                         } else {
-                            // Re-apply default shadow/border if opacity is back > 0
                             galleryEl.style.boxShadow = 'var(--active-card-shadow, none)';
                             galleryEl.style.border = 'var(--active-card-border, none)';
                         }
@@ -1792,48 +1868,31 @@
                 },
                 
                 findBlock(blockId) { return this.state.blocks.find(b => b.id === blockId); },
-                
                 findBlockIndex(blockId) { return this.state.blocks.findIndex(b => b.id === blockId); },
-                
                 updateBlockTitle(blockId, title, pushHistory) { 
                     const blockIndex = this.findBlockIndex(blockId);
-                    if (blockIndex > -1) {
-                        this.updateState(`blocks.${blockIndex}.title`, title, pushHistory);
-                    }
+                    if (blockIndex > -1) this.updateState(`blocks.${blockIndex}.title`, title, pushHistory);
                 },
-                
                 updateBlockSettings(blockId, key, value, pushHistory) {
                     const blockIndex = this.findBlockIndex(blockId);
-                    if (blockIndex > -1) {
-                        this.updateState(`blocks.${blockIndex}.settings.${key}`, value, pushHistory);
-                    }
+                    if (blockIndex > -1) this.updateState(`blocks.${blockIndex}.settings.${key}`, value, pushHistory);
                 },
-                
                 updateCard(blockId, cardId, key, value, pushHistory) {
                     const blockIndex = this.findBlockIndex(blockId);
                     if (blockIndex > -1) {
                         const cardIndex = this.state.blocks[blockIndex].cards.findIndex(c => c.id === cardId);
-                        if (cardIndex > -1) {
-                            this.updateState(`blocks.${blockIndex}.cards.${cardIndex}.${key}`, value, pushHistory);
-                        }
+                        if (cardIndex > -1) this.updateState(`blocks.${blockIndex}.cards.${cardIndex}.${key}`, value, pushHistory);
                     }
                 },
-                
                 updateImageData(blockId, index, key, value, pushHistory) {
                     const blockIndex = this.findBlockIndex(blockId);
-                    if(blockIndex > -1) {
-                        this.updateState(`blocks.${blockIndex}.images.${index}.${key}`, value, pushHistory);
-                    }
+                    if(blockIndex > -1) this.updateState(`blocks.${blockIndex}.images.${index}.${key}`, value, pushHistory);
                 },
-                
                 renderPreviewBlockById(blockId) {
                     const wrapper = this.elements.previewBlocksContainer.querySelector(`.preview-block-wrapper[data-block-id="${blockId}"]`);
                     const block = this.findBlock(blockId);
-                    if (block && wrapper) {
-                        wrapper.innerHTML = this.createPreviewBlockHTML(block);
-                    }
+                    if (block && wrapper) wrapper.innerHTML = this.createPreviewBlockHTML(block);
                 },
-
                 renderEditorBlockById(blockId) { 
                     const el = this.elements.editorBlocksList.querySelector(`.editor-block[data-block-id="${blockId}"]`); 
                     const block = this.findBlock(blockId); 
@@ -1851,7 +1910,6 @@
                         this.initSortablesForBlock(blockId);
                     } 
                 },
-                
                 renderPreviewCardById(blockId, cardId) { 
                     const el = this.elements.previewBlocksContainer.querySelector(`.preview-card[data-card-id="${cardId}"]`); 
                     const block = this.findBlock(blockId); 
@@ -1865,7 +1923,6 @@
                         if(contentEl) contentEl.innerHTML = this.escapeHTML(card.content || '');
                     } 
                 },
-                
                 renderEditorCardById(blockId, cardId) { 
                     const cardEl = this.elements.editorBlocksList.querySelector(`.editor-card[data-card-id="${cardId}"]`); 
                     const block = this.findBlock(blockId); 
@@ -1880,13 +1937,11 @@
                         }
                     } 
                 },
-                
                 renderEditorCards(blockId, container) { 
                     if(!container) return; 
                     const block = this.findBlock(blockId); 
                     container.innerHTML = !block.cards?.length ? '<div class="empty-placeholder">暂无卡片</div>' : block.cards.map(c => `<div class="editor-card" data-card-id="${c.id}">${this.createEditorCardHTML(c)}</div>`).join(''); 
                 },
-                
                 renderEditorImageThumbnails(blockId, container) { 
                     if(!container) return; 
                     const block = this.findBlock(blockId); 
@@ -1903,7 +1958,6 @@
                         this.historyIndex = this.history.length - 1;
                         this.updateUndoRedoButtons(); 
                 },
-                
                 undo(){
                     if (this.historyIndex <= 0) return; 
                         this.isRestoringState = true; 
@@ -1915,7 +1969,6 @@
                         this.isRestoringState = false; 
                         this.showToast('已撤销', 'info');
                 },
-                
                 redo(){
                      if (this.historyIndex >= this.history.length - 1) return; 
                         this.isRestoringState = true; 
@@ -1927,7 +1980,6 @@
                         this.isRestoringState = false; 
                         this.showToast('已重做', 'info');
                 },
-                
                 updateUndoRedoButtons(){
                     this.elements.undoBtn.disabled = this.historyIndex <= 0; 
                     this.elements.redoBtn.disabled = this.historyIndex >= this.history.length - 1; 
@@ -1953,11 +2005,9 @@
                         }
                         event.target.value = ''; 
                 },
-                
                 handleCardBgUpload(event, blockId, cardId){
                     this.handleImageUpload(event, 'cardBg', { blockId, cardId });
                 },
-                
                 async handleImageGalleryUpload(blockId, files){
                      const block = this.findBlock(blockId); 
                         if (!block || !files.length) return; 
@@ -1975,7 +2025,6 @@
                             this.hideLoading();
                         }
                 },
-                
                 deleteImage(blockId, index) { 
                     this.pushHistory(); 
                     const block = this.findBlock(blockId); 
@@ -1984,7 +2033,6 @@
                     this.renderEditorBlockById(blockId); 
                     this.renderPreviewBlockById(blockId); 
                 },
-                
                 cropImage(blockId, index){
                     const url = this.findBlock(blockId)?.images[index]?.url; 
                     if (url) this.showCropper(url, { type: 'imageBlock', blockId, index }); 
@@ -1997,7 +2045,6 @@
                         if (this.cropper) this.cropper.destroy(); 
                         this.cropper = new Cropper(this.elements.cropperImage, { aspectRatio: NaN, viewMode: 1, background: false }); 
                 },
-                
                 hideCropper(){
                      this.elements.cropperModal.classList.remove('visible'); 
                         if (this.cropper) { 
@@ -2005,7 +2052,6 @@
                             this.cropper = null; 
                         } 
                 },
-                
                 async saveCrop(){
                      if (!this.cropper || !this.currentCropTarget) return;
                         this.showLoading('正在压缩裁剪后的图片...');
@@ -2017,7 +2063,7 @@
                             }
 
                             const { type, blockId, index, cardId } = this.currentCropTarget;
-                            let maxWidth = 1024; // Default for image blocks
+                            let maxWidth = 1024;
                             if (type === 'pageBg') maxWidth = 1920;
                             if (type === 'avatar' || type === 'cardBg') maxWidth = 400;
                             
@@ -2041,7 +2087,6 @@
                             this.hideLoading();
                         }
                 },
-                
                 updateCropAspectRatio(){
                      if(this.cropper) this.cropper.setAspectRatio(parseFloat(document.querySelector('input[name="crop-ratio"]:checked').value)); 
                 },
@@ -2064,7 +2109,6 @@
                             this.hideLoading();
                         }
                 },
-                
                 async handleFontUpload(event){
                      const file = event.target.files[0];
                         if (!file) return;
@@ -2098,6 +2142,13 @@
                      const select = this.elements.fontFamilySelect;
                         const currentFont = this.state.globalCardStyles.fontFamily;
                         select.innerHTML = '';
+                        
+                        const recommendedFonts = [
+                            { family: 'Noto Sans SC', fullName: '思源黑体' },
+                            { family: 'Noto Serif SC', fullName: '思源宋体' },
+                            { family: 'ZCOOL KuaiLe', fullName: '站酷快乐体' },
+                            { family: 'ZCOOL XiaoWei', fullName: '站酷小薇体' },
+                        ];
 
                         const allFonts = [...this.uploadedFonts, ...this.localFonts];
                         const categories = { cjk: [], sans: [], serif: [], uploaded: [], other: [] };
@@ -2109,6 +2160,7 @@
                             : allFonts;
 
                         filteredFonts.forEach(font => {
+                            if (recommendedFonts.some(rf => rf.family === font.family)) return; // Skip if it's a recommended font
                             const category = this.getFontCategory(font);
                             if (!categories[category].some(f => f.family === font.family)) {
                                  categories[category].push(font);
@@ -2117,7 +2169,7 @@
 
                         const requiredFonts = this.getAllRequiredFonts();
                         requiredFonts.forEach(reqFont => {
-                            if (!allFonts.some(f => f.family === reqFont)) {
+                            if (!allFonts.some(f => f.family === reqFont) && !recommendedFonts.some(rf => rf.family === reqFont)) {
                                const placeholderFont = { family: reqFont, fullName: `${reqFont} (需要重新上传)`, type: 'uploaded', missing: true };
                                if (!categories.uploaded.some(f => f.family === reqFont)) {
                                    categories.uploaded.push(placeholderFont);
@@ -2135,6 +2187,7 @@
                         };
 
                         let html = '<option value="">系统默认</option>';
+                        html += createOptgroup('推荐字体', recommendedFonts);
                         html += createOptgroup('已上传字体', categories.uploaded);
                         html += createOptgroup('中文 / CJK', categories.cjk);
                         html += createOptgroup('无衬线 (Sans-serif)', categories.sans);
@@ -2155,7 +2208,6 @@
                         if (name.includes('sans')) return 'sans';
                         return 'other';
                 },
-                
                 getAllRequiredFonts(){
                      const fonts = new Set();
                         if (this.state.globalCardStyles.fontFamily) {
@@ -2204,14 +2256,12 @@
                         reader.onerror = reject;
                         reader.readAsDataURL(file);
                     })},
-                
                 readFileAsArrayBuffer(file){return new Promise((resolve, reject) => {
                         const reader = new FileReader();
                         reader.onload = () => resolve(reader.result);
                         reader.onerror = reject;
                         reader.readAsArrayBuffer(file);
                     })},
-                
                 compressImage(dataUrl, quality = 0.8, maxWidth = 1024){return new Promise(resolve => {
                         const img = new Image();
                         img.onload = () => {
@@ -2235,13 +2285,11 @@
                     localStorage.setItem('blokkoTheme', isDark ? 'dark' : 'light'); 
                     this.elements.themeLabel.textContent = isDark ? '暗黑模式' : '明亮模式'; 
                 },
-                
                 loadPreferences(){
                     if (localStorage.getItem('blokkoTheme') === 'dark') { 
                         this.elements.themeLabel.textContent = '暗黑模式'; 
                     } 
                 },
-                
                 saveToLocal(){
                      try { 
                             const stateToSave = this.deepClone(this.state);
@@ -2273,8 +2321,8 @@
                             stateToSave.personalInfo.tags = this.getDefaultState().personalInfo.tags;
                             stateToSave.personalInfo.avatarDataUrl = this.getDefaultState().personalInfo.avatarDataUrl;
                             stateToSave.pageStyles.pageBgImageDataUrl = null;
-                            stateToSave.pageStyles.pageBgPattern = ''; // Reset texture
-                            stateToSave.customIcons = []; // Reset custom icons
+                            stateToSave.pageStyles.pageBgPattern = '';
+                            stateToSave.customIcons = [];
 
                             stateToSave.blocks.forEach(block => {
                                 if (block.type === 'text') {
@@ -2364,12 +2412,10 @@
                         e.target.value = ''; 
                 },
                 
-                // FIX: Layering - This function now bakes all layers in the correct order.
                 async bakeOverlaysForExport(clone) {
                     const style = document.createElement('style');
                     clone.appendChild(style);
-
-                    // Bake Page Background
+                    
                     const pageWrapper = clone;
                     const styles = this.state.pageStyles;
                     let pageBgLayers = [];
@@ -2410,7 +2456,6 @@
                     pageWrapper.style.backgroundSize = pageBgSizes.join(', ');
                     pageWrapper.style.backgroundPosition = pageBgPositions.join(', ');
                     
-                    // Bake Card Backgrounds
                     clone.querySelectorAll('.preview-card-inner').forEach(cardInner => {
                         const computed = getComputedStyle(cardInner);
                         const beforeComputed = getComputedStyle(cardInner, '::before');
@@ -2432,14 +2477,7 @@
                         cardInner.style.boxShadow = computed.boxShadow;
                     });
                     
-                    style.innerHTML += `
-                        #${clone.id} .preview-card-inner::before, 
-                        #${clone.id} .preview-card-inner::after {
-                            content: none !important;
-                            background: none !important;
-                            display: none !important;
-                        }
-                    `;
+                    style.innerHTML += `#${clone.id} .preview-card-inner::before, #${clone.id} .preview-card-inner::after { content: none !important; background: none !important; display: none !important; }`;
                 },
                 
                 async exportPNG(){
@@ -2447,16 +2485,15 @@
                     
                     const isCustomWidth = this.elements.customWidthToggle.checked;
                     const isHD = this.elements.hdExportToggle.checked;
-                    let targetWidth = 1200; // default
+                    let targetWidth = 1200;
                     if (isCustomWidth) {
                         targetWidth = parseInt(this.elements.customWidthInput.value, 10) || 1200;
                     } else if (isHD) {
                         targetWidth = 1800;
                     }
-                    const sourceWidth = 600; // Fixed base width for rendering
+                    const sourceWidth = 600;
                     const scale = targetWidth / sourceWidth;
 
-                    // NEW: Rounded Corner Export
                     const exportRounded = this.elements.exportRoundedCornersToggle.checked;
                     const cornerRadius = parseInt(this.elements.exportCornerRadiusInput.value, 10) || 20;
 
@@ -2476,10 +2513,7 @@
                         clone.id = `export-clone-${Date.now()}`;
                         
                         const style = document.createElement('style');
-                        style.innerHTML = `
-                            #${clone.id}, #${clone.id} * { transition: none !important; animation: none !important; }
-                            #${clone.id} .preview-card:hover .preview-card-inner { transform: none !important; box-shadow: var(--active-card-shadow, none) !important; }
-                        `;
+                        style.innerHTML = `#${clone.id}, #${clone.id} * { transition: none !important; animation: none !important; } #${clone.id} .preview-card:hover .preview-card-inner { transform: none !important; box-shadow: var(--active-card-shadow, none) !important; }`;
                         clone.appendChild(style);
 
                         clone.style.position = 'absolute';
@@ -2496,15 +2530,9 @@
                         await this.sleep(100);
 
                         this.showLoading('正在渲染图片...');
-                        const canvas = await html2canvas(clone, {
-                            scale: scale,
-                            useCORS: true,
-                            backgroundColor: null,
-                            logging: false
-                        });
+                        const canvas = await html2canvas(clone, { scale: scale, useCORS: true, backgroundColor: null, logging: false });
 
                         let finalCanvas = canvas;
-                        // NEW: Rounded Corner Export logic
                         if (exportRounded && cornerRadius > 0) {
                             this.showLoading('正在应用圆角...');
                             finalCanvas = document.createElement('canvas');
@@ -2584,7 +2612,6 @@
                             reader.readAsDataURL(blob);
                         });
                 },
-                
                 base64ToArrayBuffer(base64){
                     const binaryString = atob(base64.split(',')[1]);
                         const len = binaryString.length;
@@ -2602,9 +2629,7 @@
                         if (url.startsWith('data:image')) content.insertAdjacentHTML('afterbegin', `<img src="${url}">`); 
                         this.elements.downloadModal.classList.add('visible'); 
                 },
-                
                 hideDownloadModal(){ this.elements.downloadModal.classList.remove('visible'); },
-                
                 showErrorModal(title, message){
                     const existingModal = document.querySelector('.error-modal');
                         if (existingModal) existingModal.remove();
@@ -2618,11 +2643,9 @@
                     this.elements.loadingText.textContent = text;
                         this.elements.loadingOverlay.classList.add('visible');
                 },
-                
                 hideLoading(){
                     this.elements.loadingOverlay.classList.remove('visible');
                 },
-                
                 showToast(message, type = 'info'){
                      const toast = document.createElement('div');
                         toast.className = `toast-notification ${type}`;
@@ -2643,7 +2666,7 @@
                         r.setProperty('--g-card-border-radius',`${g.radius}px`); 
                         r.setProperty('--g-card-text-align',g.textAlign); 
                         r.setProperty('--g-card-line-height',g.lineHeight); 
-                        r.setProperty('--active-card-font-family',g.fontFamily?`"${g.fontFamily}",sans-serif`:''); 
+                        r.setProperty('--active-card-font-family',g.fontFamily?`'${g.fontFamily}', sans-serif`:''); 
                         r.setProperty('--active-card-font-size',g.fontSize);
                         r.setProperty('--g-card-text-stroke', g.textStrokeWidth > 0 ? `${g.textStrokeWidth}px ${g.textStrokeColor}` : '0px transparent');
                         
@@ -2663,29 +2686,24 @@
                         this.initSortableBlocksPreview();
                         this.state.blocks.forEach(b => this.initSortablesForBlock(b.id));
                 },
-                
                 initSortablesForBlock(blockId){
                      const block = this.findBlock(blockId);
                         if (!block) return;
                         if (block.type === 'text') this.initSortableCards(blockId);
                         if (block.type === 'image') this.initSortableImages(blockId);
                 },
-                
                 initSortableBlocksEditor(){
                     if(this.sortableBlocksEditor) this.sortableBlocksEditor.destroy(); 
                     this.sortableBlocksEditor = new Sortable(this.elements.editorBlocksList, { handle: '.block-drag-handle', animation: 150, ghostClass: 'sortable-ghost', onEnd: e => { this.pushHistory(); const [m] = this.state.blocks.splice(e.oldIndex, 1); this.state.blocks.splice(e.newIndex, 0, m); this.debouncedSaveToLocal(); this.renderPreviewBlocks(); } }); 
                 },
-                
                 initSortableBlocksPreview(){
                     if(this.sortableBlocksPreview) this.sortableBlocksPreview.destroy(); 
                     this.sortableBlocksPreview = new Sortable(this.elements.previewBlocksContainer, { animation: 150, ghostClass: 'sortable-ghost', onEnd: e => { this.pushHistory(); const [m] = this.state.blocks.splice(e.oldIndex, 1); this.state.blocks.splice(e.newIndex, 0, m); this.debouncedSaveToLocal(); this.renderEditorBlocks(); } });
                 },
-                
                 initSortableCards(blockId){
                     const list = this.elements.editorBlocksList.querySelector(`[data-block-id="${blockId}"] .card-editors-list`); 
                     if (list) { if(this.cardSortables[blockId]) this.cardSortables[blockId].destroy(); this.cardSortables[blockId] = new Sortable(list, { handle: '.card-drag-handle', animation: 150, ghostClass: 'sortable-ghost', onEnd: e => { const b = this.findBlock(blockId); if (b) { this.pushHistory(); const [m] = b.cards.splice(e.oldIndex, 1); b.cards.splice(e.newIndex, 0, m); this.debouncedSaveToLocal(); this.renderPreviewBlockById(blockId); } } }); } 
                 },
-                
                 initSortableImages(blockId){
                     const container = this.elements.editorBlocksList.querySelector(`[data-block-id="${blockId}"] .image-thumbnails-grid`);
                     if (container) { if (this.imageSortables[blockId]) this.imageSortables[blockId].destroy(); this.imageSortables[blockId] = new Sortable(container, { animation: 150, ghostClass: 'sortable-ghost', onEnd: e => { const block = this.findBlock(blockId); if (block) { this.pushHistory(); const [moved] = block.images.splice(e.oldIndex, 1); block.images.splice(e.newIndex, 0, moved); this.debouncedSaveToLocal(); this.renderEditorBlockById(blockId); this.renderPreviewBlockById(blockId); } } }); }
@@ -2695,7 +2713,6 @@
                     const isOpen = this.elements.editorPanel.classList.toggle('is-open', forceState);
                     this.elements.body.classList.toggle('editor-open', isOpen);
                 },
-                
                 resetToDefault() {
                     if (window.confirm('警告：此操作将清空您所有的内容和样式设置，并恢复到初始模板。此过程不可撤销，确定要继续吗？')) {
                         localStorage.removeItem('blokkoState');
@@ -2741,7 +2758,6 @@
                         </div>`;
                     }).join('');
                 },
-                
                 addNewTag() {
                     const text = this.elements.newTagTextInput.value.trim();
                     if (!text) return;
@@ -2753,7 +2769,6 @@
                     this.elements.newTagTextInput.value = '';
                     this.elements.newTagTextInput.focus();
                 },
-
                 deleteTag(tagId) {
                     this.pushHistory();
                     this.state.personalInfo.tags = this.state.personalInfo.tags.filter(t => t.id !== tagId);
@@ -2761,12 +2776,9 @@
                     this.renderPersonalInfo();
                     this.renderTagManager();
                 },
-                
                 updateTag(tagId, key, value, pushHistory) {
                     const tagIndex = this.state.personalInfo.tags.findIndex(t => t.id === tagId);
-                    if (tagIndex > -1) {
-                        this.updateState(`personalInfo.tags.${tagIndex}.${key}`, value, pushHistory);
-                    }
+                    if (tagIndex > -1) this.updateState(`personalInfo.tags.${tagIndex}.${key}`, value, pushHistory);
                 },
 
                 async loadIcons(){
@@ -2780,7 +2792,6 @@
                         this.hideLoading();
                      }
                 },
-                
                 async renderIconGrid(searchTerm = ''){
                      this.elements.iconGrid.innerHTML = `<div class="spinner" style="margin: 40px auto;"></div>`;
 
@@ -2819,21 +2830,18 @@
                         this.elements.iconGrid.innerHTML = customIconsHTML + '<p style="text-align: center; color: var(--color-danger);">搜索失败，请检查网络。</p>';
                      }
                 },
-                
                 showIconPicker(type, id, cardId = null){
                      this.currentIconTarget = { type, id, cardId };
                      this.elements.iconPickerModal.classList.add('visible');
                      this.renderIconGrid(this.elements.iconSearch.value);
                      this.elements.iconSearch.focus();
                 },
-                
                 hideIconPicker(){
                      this.elements.iconPickerModal.classList.remove('visible');
                      this.currentIconTarget = null;
                      this.elements.iconSearch.value = '';
                      this.elements.iconGrid.innerHTML = '';
                 },
-                
                 selectIcon(iconClass){
                     if (this.currentIconTarget) {
                         const { type, id, cardId } = this.currentIconTarget;
@@ -2845,7 +2853,6 @@
                     }
                     this.hideIconPicker();
                 },
-                
                 async handleIconUpload(event) {
                     const file = event.target.files[0];
                     if (!file || file.type !== 'image/svg+xml') {
@@ -2871,7 +2878,6 @@
                         event.target.value = '';
                     }
                 },
-
                 deleteCustomIcon(iconName) {
                     if (window.confirm(`确定要删除自定义图标 "${iconName}" 吗？`)) {
                         this.pushHistory();
@@ -2892,7 +2898,6 @@
                                 </div>`;
                     }).join('');
                 },
-
                 selectTexture(textureName) {
                     this.updateState('pageStyles.pageBgPattern', textureName, true);
                     if (textureName) this.elements.currentTextureName.textContent = textureName;
@@ -2914,13 +2919,9 @@
                      let timeout; 
                      return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), wait); }; 
                 },
-                
                 generateId(p){ return `${p}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` },
-                
                 deepClone(obj){ return JSON.parse(JSON.stringify(obj)) },
-                
                 escapeHTML(str){ return (str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]) },
-                
                 sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)) },
 
                 async addBlock(type) {
@@ -2962,7 +2963,6 @@
                     const newEditorBlock = this.elements.editorBlocksList.querySelector(`[data-block-id="${newBlock.id}"]`);
                     if(newEditorBlock) newEditorBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 },
-
                 async deleteBlock(blockId) {
                     this.pushHistory();
                     
