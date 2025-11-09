@@ -1180,14 +1180,19 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
                         // Handle color picker and HEX input sync
                         if (target.type === 'color') {
-                            if (target.nextElementSibling?.matches('.color-hex-input')) {
-                                target.nextElementSibling.value = value;
-                            }
+                            const hexInput = target.nextElementSibling;
+                             if(hexInput && hexInput.matches('.color-hex-input')) {
+                                hexInput.value = value;
+                             }
                         } else if (target.matches('.color-hex-input')) {
                              if (/^#([0-9A-F]{3}){1,2}$/i.test(target.value)) {
-                                if (target.previousElementSibling?.type === 'color') {
-                                    target.previousElementSibling.value = value;
+                                const colorInput = target.previousElementSibling;
+                                if (colorInput && colorInput.type === 'color') {
+                                    colorInput.value = value;
                                 }
+                             } else {
+                                // If hex is invalid, don't update the color picker
+                                return;
                              }
                         }
                         
@@ -2117,8 +2122,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                 syncControl(stateKey) {
                     this.isRestoringState = true;
                     try {
-                        const input = this.elements.inspectorPanel.querySelector(`[data-state-key="${stateKey}"]`);
+                        const input = this.elements.inspectorPanel.querySelector(`[data-state-key="${stateKey}"], [data-setting-key="${stateKey.split('.').slice(2).join('.')}"]`);
                         if (!input) return;
+
                         const value = keyPath.split('.').reduce((o, k) => o && o[k], this.state);
                         
                         if (input.type === 'radio') {
@@ -2132,8 +2138,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                             const hexInput = input.nextElementSibling;
                             if(hexInput && hexInput.matches('.color-hex-input')) hexInput.value = value || '';
                         }
-                        if (input.type === 'range' && stateKey.endsWith('Angle')) {
-                            input.previousElementSibling.querySelector('.angle-value').textContent = value;
+                        if (input.type === 'range' && (stateKey.endsWith('Angle') || input.dataset.settingKey === 'height')) {
+                            const valueDisplay = input.previousElementSibling.querySelector('.angle-value, .spacer-height-value');
+                            if (valueDisplay) valueDisplay.textContent = value;
                         }
                     } catch (e) {
                          console.error(`Error syncing control for ${stateKey}:`, e);
@@ -2142,26 +2149,42 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     }
                 },
 
+
                 syncAllControls() {
                     this.isRestoringState = true;
-                    this.elements.inspectorPanel.querySelectorAll('[data-state-key]').forEach(input => {
+                    this.elements.inspectorPanel.querySelectorAll('[data-state-key], [data-setting-key]').forEach(input => {
                         try {
                             const stateKey = input.dataset.stateKey;
-                            if (stateKey === 'personalInfo.tags') return;
-                            
-                            const value = stateKey.split('.').reduce((o, k) => o && o[k], this.state);
-                            if (input.type === 'radio') {
-                                input.checked = (input.value == value);
+                            const settingKey = input.dataset.settingKey;
+                            let value;
+
+                            if (stateKey) {
+                                if (stateKey === 'personalInfo.tags') return;
+                                value = stateKey.split('.').reduce((o, k) => o && o[k], this.state);
+                            } else if (settingKey && this.selection.type === 'block') {
+                                const block = this.findBlock(this.selection.id);
+                                if (block) value = block.settings[settingKey];
                             }
-                            else if (input.type === 'checkbox') input.checked = !!value;
-                            else input.value = value ?? '';
                             
-                            if (input.type === 'range' && stateKey.endsWith('Angle')) {
-                                input.previousElementSibling.querySelector('.angle-value').textContent = value;
-                            }
-                             if (input.type === 'color') {
-                                const hexInput = input.nextElementSibling;
-                                if(hexInput && hexInput.matches('.color-hex-input')) hexInput.value = value || '';
+                            if (value !== undefined) {
+                                if (input.type === 'radio') {
+                                    input.checked = (input.value == value);
+                                } else if (input.type === 'checkbox') {
+                                    input.checked = !!value;
+                                } else {
+                                    input.value = value ?? '';
+                                }
+
+                                if (input.type === 'color') {
+                                    const hexInput = input.nextElementSibling;
+                                    if(hexInput && hexInput.matches('.color-hex-input')) {
+                                        hexInput.value = value || (input.placeholder || '');
+                                    }
+                                }
+                                if (input.type === 'range' && (stateKey?.endsWith('Angle') || settingKey === 'height')) {
+                                     const valueDisplay = input.previousElementSibling.querySelector('.angle-value, .spacer-height-value');
+                                     if(valueDisplay) valueDisplay.textContent = value;
+                                }
                             }
                         } catch (e) {}
                     });
@@ -2746,9 +2769,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     }
 
                     pageWrapper.style.backgroundColor = pageBgColor;
-                    pageWrapper.style.backgroundImage = bgLayers.join(', ');
+                    pageWrapper.style.backgroundImage = pageBgLayers.join(', ');
                     pageWrapper.style.backgroundSize = pageBgSizes.join(', ');
-                    pageWrapper.style.backgroundPosition = bgPositions.join(', ');
+                    pageWrapper.style.backgroundPosition = pageBgPositions.join(', ');
                     
                     clone.querySelectorAll('.preview-card-inner').forEach(cardInner => {
                         const computed = getComputedStyle(cardInner);
@@ -3035,7 +3058,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                         ghostClass: 'sortable-ghost',
                         filter: 'hr, .layer-item[data-type="personalInfo"]',
                         onEnd: e => {
-                            const oldIndex = e.oldIndex - 2; // Adjust for "PersonalInfo" and <hr>
+                            const oldIndex = e.oldIndex - 2; // Adjust for "Personal Info" and hr
                             const newIndex = e.newIndex - 2;
                             if (oldIndex === newIndex) return;
 
@@ -3044,10 +3067,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                             this.state.blocks.splice(newIndex, 0, moved);
                             this.debouncedSaveToLocal();
                             
+                            // Re-render both panels to keep them in sync
+                            this.renderLayerPanel();
                             this.renderPreviewBlocks();
                         }
                     });
                 },
+                
                 initSortablePreviewBlocks() {
                     if (this.sortablePreview) this.sortablePreview.destroy();
                     this.sortablePreview = new Sortable(this.elements.previewBlocksContainer, {
@@ -3055,16 +3081,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                         ghostClass: 'sortable-ghost',
                         onEnd: e => {
                             if (e.oldIndex === e.newIndex) return;
-
                             this.pushHistory();
                             const [movedBlock] = this.state.blocks.splice(e.oldIndex, 1);
                             this.state.blocks.splice(e.newIndex, 0, movedBlock);
-                            
                             this.debouncedSaveToLocal();
-                            this.renderLayerPanel();
+                            this.renderLayerPanel(); // Sync the layer panel
                         }
                     });
                 },
+
                 initSortableCards(blockId){
                     const list = this.elements.inspectorPanel.querySelector(`.editor-block[data-block-id="${blockId}"] .card-editors-list`); 
                     if (list) { if(this.cardSortables[blockId]) this.cardSortables[blockId].destroy(); this.cardSortables[blockId] = new Sortable(list, { handle: '.card-drag-handle', animation: 150, ghostClass: 'sortable-ghost', onEnd: e => { const b = this.findBlock(blockId); if (b) { this.pushHistory(); const [m] = b.cards.splice(e.oldIndex, 1); b.cards.splice(e.newIndex, 0, m); this.debouncedSaveToLocal(); this.renderPreviewBlockById(blockId); } } }); } 
@@ -3414,7 +3439,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     };
                     if(actionMap[action]) {
                         this.updateState(actionMap[action], color, true);
-                        this.showToast('颜色已应用', 'info'); 
+                        this.showToast('颜色已应用', 'info');
                     }
                 },
 
@@ -3506,7 +3531,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     randomState.personalInfo.bioColor = randColor();
                     randomState.personalInfo.avatarShape = randChoice(['50%', '16px', '0px']);
                     randomState.personalInfo.avatarBorderSize = rand(0, 10);
-					randomState.personalInfo.avatarBorderColor = randColor();
+                    randomState.personalInfo.avatarBorderColor = randColor();
                     randomState.personalInfo.tags = Array.from({length: rand(3, 5)}, (_, i) => ({ id: this.generateId('t'), icon: null, text: `标签${i+1}`}));
                     randomState.personalInfo.tagBgColor = randColor();
                     randomState.personalInfo.tagTextColor = randColor();
@@ -3515,6 +3540,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     randomState.globalCardStyles.bgColor = randColor();
                     randomState.globalCardStyles.textColor = randColor();
                     randomState.globalCardStyles.shadowEnabled = randBool();
+
                     randomState.blocks = [];
                     const blockTypes = ['text', 'image', 'separator', 'spacer'];
                     for (let i = 0; i < rand(5, 8); i++) {
