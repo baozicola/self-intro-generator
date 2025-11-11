@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Blokko v1.5.3 (Internal): -->
-    <title>Blokko-个人简介生成器！ (v1.5.3)-来玩2077吧！</title>
+    <!-- Blokko v1.5.4 (Internal): -->
+    <title>Blokko-个人简介生成器！ (v1.5.4)-来玩《赛博朋克：2077》吧！</title>
     
     <script>
         // Anti-FOUC (Flash of Unstyled Content) Script
@@ -20,10 +20,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
 
     <!-- v1.3.1: Add Recommended Fonts via reliable CDN -->
-    <link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Sans+SC:400,700&display=swap">
-    <link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:400,700&display=swap">
-    <link rel="stylesheet" href="https://fonts.loli.net/css?family=ZCOOL+KuaiLe&display=swap">
-    <link rel="stylesheet" href="https://fonts.loli.net/css?family=ZCOOL+XiaoWei&display=swap">
+    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/69/main/result.css">
+    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/285/main/result.css">
+    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/47/main/result.css">
+    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/265/main/result.css">
+	<link rel="stylesheet" href="https://fontsapi.zeoseven.com/292/main/result.css">
 
     <style>
         /* CSS 变量 */
@@ -74,7 +75,6 @@
         .header-actions-wrapper { display: flex; align-items: center; gap: 15px; }
         .app-header-title { font-size: 1.25rem; font-weight: 700; }
         .theme-switch-wrapper { display: flex; align-items: center; gap: 10px; }
-        .theme-switch-wrapper span { font-size: 0.9rem; color: var(--text-secondary); }
         .app-container { display: flex; height: 100vh; padding-top: var(--header-height); }
 
         .layer-panel, .inspector-panel {
@@ -448,13 +448,12 @@
 
     <header class="app-header">
         <button id="mobile-layer-toggle" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:layers-outline"></span> 内容</button>
-        <div class="app-header-title">Blokko (v1.5.3)</div>
+        <div class="app-header-title">Blokko (v1.5.4)</div>
         <div class="header-actions-wrapper">
             <button id="lock-mode-toggle" class="btn btn-default" style="width: auto; padding: 6px 12px;" title="切换编辑/预览模式">编辑中</button>
             <button id="show-help-btn" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:help-circle-outline"></span> 帮助</button>
             <div class="theme-switch-wrapper">
-                <span id="theme-label">明亮模式</span>
-                <button id="theme-toggle-btn" class="btn btn-default" style="width: auto; padding: 6px 12px;">切换</button>
+                <button id="theme-toggle-btn" class="btn btn-default" style="width: auto; padding: 6px 12px;">明亮模式</button>
             </div>
             <button id="mobile-inspector-toggle" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:pencil-ruler"></span> 样式</button>
         </div>
@@ -513,36 +512,36 @@
     <div class="modal-overlay" id="help-modal">
         <div class="modal-container" style="max-width: 700px;">
             <div class="tabs">
-                <button class="tab-btn" data-tab="help-tutorial">新手教程</button>
-                <button class="tab-btn active" data-tab="help-instructions">使用说明</button>
-                <button class="tab-btn" data-tab="help-changelog">更新日志</button>
+                <button class="tab-btn active" data-tab="help-tutorial">新手教程</button>
+                <button class="tab-btn" data-tab="help-instructions">使用说明</button>
                 <button class="tab-btn" data-tab="help-thanks">感谢信息</button>
                 <button class="tab-btn" data-tab="help-about">关于</button>
             </div>
-            <div id="help-tutorial" class="tab-content">
+            <div id="help-tutorial" class="tab-content active">
                 <h4>欢迎来到 Blokko！✨</h4>
-                <p>别担心，这个小教程将带你快速上手，整个过程只需一分钟！当然如果你有类似工具使用经验，或是已经熟练使用的话，看完重要提示，就放心关掉吧!</p>
+                <p>别担心，这个小教程将带你快速上手，整个过程只需一分钟！如果你有类似工具的使用经验，或是已经非常熟悉，看完下方的“重要提示”就可以放心关闭啦！</p>
                 
                 <h4>⚠️ 关于版权的重要提示</h4>
-                <p><strong>Blokko 是一个完全免费的本地创作工具。当您使用“上传字体”、“上传图片/图标”功能时，您需要对这些素材负责。请确保您上传和使用的任何文件都已获得了原版权方的合法授权，或使用无版权可商用素材。</strong></p>
-                <p><strong>因使用未授权素材而产生的任何版权问题，将由您自行承担。换言之，自己上传素材，一定要注意版权信息哦！</strong></p>
+                <p><strong>Blokko 是一个完全免费的本地创作工具。</strong>当您使用“上传字体”、“上传图片/图标”功能时，您需要对这些素材负责。请确保您上传和使用的任何文件都已获得了原版权方的合法授权，或使用无版权可商用素材。</p>
+                <p>因使用未授权素材而产生的任何版权问题，将由您自行承担。换言之，自己上传的素材，一定要注意版权信息哦！</p>
                 
                 <h4>写在正式开始前</h4>
-                <p>Blokko 是一个免费的工具，设计之初是为了电脑端编辑使用的，建议使用PC端的Edge浏览器和Chrome浏览器来使用体验最佳，移动端也做了基础的适配，竖屏状态下建议使用via浏览器，并开启全屏模式使用。</p>
+                <p>Blokko 是一个免费的、为电脑端编辑而设计的工具。为了最佳体验，建议使用PC端的 Edge 或 Chrome 浏览器。移动端也做了基础适配，竖屏状态下建议使用 Via 浏览器并开启全屏模式。在竖屏下，“内容”和“样式”面板会被折叠，需要手动点击左上角和右上角的按钮来唤出。</p>
+                <p>Blokko 采用三栏式布局：<b>左侧“内容图层”</b>管理所有区块，<b>中间是“实时预览”</b>，<b>右侧是“样式检查器”</b>。在左侧点击任意图层，右侧就会自动显示其相关设置。默认状态下（未选中任何图层）会显示全局设置。卡片的独立样式优先级高于全局样式哦！</p>
                 
                 <h4>第一步：核心技巧 - 双击编辑！</h4>
-                <p>Blokko 最便捷的操作就是“双击”。预览区域里你看到的所有文字（比如昵称、简介、卡片标题和内容），直接双击它们，就可以立刻开始编辑，非常方便！（需要把最上方按钮切换成“编辑中”状态哦）</p>
+                <p>Blokko 最便捷的操作就是“双击”。在预览区域，你看到的所有文字（比如昵称、简介、卡片标题和内容），直接双击它们就可以立刻开始编辑，非常方便！（请确保页面顶部的按钮处于“编辑中”状态）</p>
                 
                 <h4>第二步：调整你的个人信息</h4>
-                <p>在左侧的 “内容图层” 面板，点击 “👤 个人信息” 图层，右侧的 “样式检查器” 就会显示出所有相关设置，你可以在那里上传头像、修改昵称、添加标签等。</p>
+                <p>在左侧的“内容图层”面板，点击 “👤 个人信息” 图层，右侧的“样式”面板就会显示出所有相关设置。你可以在那里上传头像、修改昵称、添加标签等。</p>
                 
                 <h4>第三步：添加和管理内容</h4>
-                <p>在左下角的 “➕” 按钮可以添加不同类型的展示模块。在 “内容图层” 面板，你可以通过拖拽来排序所有区块。</p>
+                <p>点击左下角的“➕”系列按钮可以添加不同类型的展示模块。在“内容图层”面板，你可以通过拖拽来排序所有区块。</p>
                 
                 <h4>第四步：美化与导出</h4>
-                <p>当你对内容满意后，可以点击不同的图层来调整样式，或者在未选中任何图层时，在右侧面板调整全局样式。全部完成后，在右侧面板的 “全局与导出” 设置中，滑到最下方，点击 “导出为图片” 按钮，就可以保存你的杰作啦！</p>
+                <p>当你对内容满意后，可以点击不同的图层来调整样式，或者在未选中任何图层时，在右侧面板调整全局样式。全部完成后，在右侧面板的“全局与导出”设置中，滑到最下方，点击“导出为图片”按钮，就可以保存你的杰作啦！</p>
             </div>
-            <div id="help-instructions" class="tab-content active">
+            <div id="help-instructions" class="tab-content">
                 <h4>欢迎使用 Blokko！</h4>
                 <p><strong><span class="iconify" data-icon="mdi:cursor-default-click-outline" style="vertical-align: -0.2em;"></span> 双击编辑：</strong> 预览区域的大部分文本内容（如昵称、简介、卡片标题和内容）都可以通过双击直接进行编辑。</p>
                 <p><strong><span class="iconify" data-icon="mdi:drag" style="vertical-align: -0.2em;"></span> 拖拽排序：</strong> 在左侧“内容图层”面板，你可以拖动图层来进行排序。</p>
@@ -562,108 +561,6 @@
                     <li>此过程是匿名的，不包含您的任何个人信息或创作内容。</li>
                 </ul>
 		   </div>
-            <div id="help-changelog" class="tab-content">
-                <h4>v1.5.3</h4>
-                <ul>
-                    <li><b>【修复】</b> 修复了在编辑文本区块内的卡片时，每次输入（如修改标题、颜色、不透明度等）都会导致整个右侧面板刷新，从而造成输入框失焦、滑块无法拖动的问题。</li>
-                    <li><b>【修复】</b> 修复了移动端视图下部分样式（如渐变控制）因CSS语法错误（使用了全角句号<code>。</code>）而未生效的问题。</li>
-                    <li><b>【优化】</b> 优化了更新日志的文本格式，将代码相关的关键词（如 <code>box-shadow</code>）使用 <code>&lt;code&gt;</code> 标签包裹，以提高可读性。</li>
-                </ul>
-                <hr class="separator">
-                <h4>v1.5.2</h4>
-                <ul>
-                    <li><b>【新增】</b> <b>树状图层 & 嵌套排序</b>: 左侧“内容图层”面板现在支持折叠。点击区块旁的箭头可展开/收起其内部的卡片列表，并支持在区块内拖动卡片进行排序。</li>
-                    <li><b>【新增】</b> <b>区块显/隐切换</b>: 在左侧图层面板中，为每个区块增加了“眼睛”图标，可一键在预览中显示或隐藏整个区块。</li>
-                    <li><b>【新增】</b> <b>样式复制 (区块)</b>: 在左侧图层面板中，为每个区块增加了“复制”图标，可快速创建一个样式相同但内容为空的新区块。</li>
-                    <li><b>【新增】</b> <b>标签拖拽排序</b>: 在个人信息设置的“标签管理器”中，现在可以通过拖拽来调整标签的显示顺序。</li>
-                    <li><b>【优化】</b> <b>“基础/高级”样式分离</b>: 为了简化界面，右侧检查器中的复杂设置项（如描边、纹理、独立不透明度等）被默认隐藏，可通过“显示高级选项”开关来显示。</li>
-                    <li><b>【优化】</b> <b>卡片颜色重置</b>: 为卡片独立的颜色设置项增加了“重置”按钮，可一键清除独立设置，使其回退至全局样式。</li>
-                    <li><b>【调整】</b> <b>移除所有阴影</b>: 根据设计反馈，以及频繁的渲染失败，暂时移除了应用内所有的 <code>box-shadow</code> 阴影效果。同时保留了旧配置文件的兼容性，未来会重做阴影效果。</li>
-                    <li><b>【修复】</b> 修复了删除区块后，其在左侧图层面板中仍会残留显示的BUG。</li>
-                    <li><b>【修复】</b> 修复了在检查器中手动输入HEX颜色代码无法生效的问题。</li>
-                    <li><b>【修复】</b> 修复了使用智能取色或重置颜色后，检查器中对应的颜色选择器和HEX代码不会同步更新的问题。</li>
-                    <li><b>【修复】</b> 修复了当卡片文字设为“居右”对齐时，卡片标题未同步居右的问题。</li>
-					<li><b>【修复】</b> 修复了在区块设置中为单个卡片选择“居左/中/右”对齐后，虽然预览生效，但设置面板里的单选框没有同步更新的问题。</li>
-                    <li><b>【修复】</b> 修复了编辑区块标题名无法保存的问题。</li>
-					<li><b>【修复】</b> 修复了文字区块导入图片，导出时无法正确渲染的问题。</li>
-                    <li><b>【修复】</b> 修复了独立区块异常显示“高级”的问题。</li>
-                </ul>
-                <hr class="separator">
-                <h4>v1.5.1</h4>
-                <ul>
-                    <li><b>【新增】</b> <b>智能取色 & 调色板</b>: 新增独立的“智能取色”面板，可上传图片自动提取8种推荐色，并通过右键快捷应用。</li>
-                    <li><b>【新增】</b> <b>增强版分隔符</b>: 分隔符现已支持嵌入文字和图标，并可自定义文字颜色。</li>
-                    <li><b>【优化】</b> <b>图层双击重命名</b>: 现在可以直接在左侧“内容图层”面板双击区块名称进行重命名。</li>
-                    <li><b>【优化】</b> <b>字体实时预览</b>: 字体选择下拉框现在会以对应的字体样式显示选项。</li>
-                    <li><b>【优化】</b> <b>交互体验</b>: 使用体验更佳的自定义模态框替代了浏览器的原生确认弹窗；提升了应用的初始加载速度。</li>
-                    <li><b>【修复】</b> 修复了右侧检查器中部分区域无法正常展开/收起的问题。</li>
-                    <li><b>【修复】</b> 修复了移动端视图下，“三排”区块无法正确显示为三列的BUG。</li>
-                    <li><b>【修复】</b> 修复了切换“编辑/预览”模式后，可能导致无法拖拽排序的BUG。</li>
-                    <li><b>【修复】</b> 修复了颜色选择器与HEX输入框内容在某些情况下不同步的BUG。</li>
-                </ul>
-                <hr class="separator">
-                <h4>v1.5.0</h4>
-                <ul>
-                    <li><b>【新增】</b> <b>全新三栏式布局</b>: 重构为“内容图层(左) - 实时预览(中) - 样式检查器(右)”的三栏布局，操作流程更清晰。</li>
-                    <li><b>【新增】</b> <b>上下文关联编辑</b>: 点击预览区或左侧图层中的任意元素，右侧检查器将自动显示其相关设置。</li>
-                    <li><b>【优化】</b> <b>视觉联动高亮</b>: 编辑元素时，在预览区和图层列表中会同步高亮显示。</li>
-                    <li><b>【优化】</b> 更新了新手教程和帮助文档中的文本内容。</li>
-                    <li><b>【修复】</b> 修复了全局卡片不透明度为0时，边框样式会消失的BUG。</li>
-                    <li><b>【修复】</b> 修复了为多列区块启用瀑布流布局后，导出图片时可能发生的布局错乱问题。</li>
-                </ul>
-                <details>
-                    <summary>查看更早的版本更新日志</summary>
-                    <div style="padding-top: 15px;">
-                        <h4>v1.4.0（25.11.08）</h4>
-                        <ul>
-                            <li><b>【新增】</b> <b>新手教程</b>: 首次访问的用户将自动弹出新手教程，帮助快速上手。后续可通过“帮助”按钮查看。</li>
-                            <li><b>【优化】</b> <b>编辑区布局</b>: 调整了左侧编辑区的模块顺序，将不常用的“操作”部分移至底部，更符合新用户的使用习惯。</li>
-                            <li><b>【优化】</b> <b>预览定位增强</b>: 在电脑端，点击预览区的任意卡片，左侧编辑区现在会精确滚动到该卡片的具体设置项，而不仅仅是其所属的区块。</li>
-                            <li><b>【优化】</b> <b>移动端UI</b>: 修复了在手机上编辑面板可能会出现水平滚动条的问题；减小了各编辑模块之间的垂直间距；修复了“页面样式”设置中Tab控件互相干扰的BUG。</li>
-                            <li><b>【修复】</b> <b>图片导出</b>: 修复了在特定情况下导出图片时可能因背景定位问题导致报错的BUG。</li>
-                        </ul>
-                        <hr>
-                        <h4>v1.3.2 (25.11.08)</h4>
-                        <ul>
-                            <li><b>【新增】</b> 为多列文本区块（双排/三排）增加了瀑布流（Masonry）布局选项。</li>
-                            <li><b>【新增/重构】</b> 图片区块已完全重构，现在与文本区块拥有统一的卡片式管理逻辑，并支持瀑布流。</li>
-                            <li><b>【优化】</b> 点击预览区区块时，左侧编辑面板会自动定位并展开。</li>
-                            <li><b>【优化】</b> 导入旧版配置文件时，会自动迁移旧的图片区块数据结构，保证兼容性。</li>
-                        </ul>
-                        <hr>
-                        <h4>v1.3.1 (2025.11.07)</h4>
-                        <ul>
-                            <li><b>【新增】</b> 内置了四款开源字体。</li>
-                            <li><b>【优化】</b> 优化了感谢信息，现在会显示许可证原文和官网链接。</li>
-                        </ul>
-                        <hr>
-                        <h4>v1.3.0 (2025.11.07)</h4>
-                        <ul>
-                           <li><b>【新增】</b> 自定义导出宽度和导出圆角功能回归。</li>
-                           <li><b>【新增】</b> 背景纹理功能，可与背景色、背景图叠加。</li>
-                           <li><b>【新增】</b> 新增“三排卡片”布局和“留白块”。</li>
-                           <li><b>【优化】</b> 图片区块的文字现在支持独立的颜色和字号设置。</li>
-                           <li><b>【调整】</b> 出于署名合规原则，图标库搜索源已调整。</li>
-                           <li><b>【修复】</b> 修复了双击编辑只能输入一个字符的BUG；修复了导出图片时背景图无法显示的BUG。</li>
-                        </ul>
-                        <hr>
-                        <h4>v1.2.0 - v1.2.3 (2025.11.06-07)</h4>
-                        <ul>
-                           <li><b>【新增】</b> 新增锁定按钮、自定义导出宽度、关于与致谢页面。</li>
-                           <li><b>【优化】</b> 优化触屏体验、重做标签系统、更换为 "Iconify" 图标库。</li>
-                           <li><b>【调整】</b> 更名为“Blokko”。</li>
-                           <li><b>【修复】</b> 修复了无法增删区块、手机导出异常、背景蒙版导出、圆角边框空隙等多个BUG。</li>
-                        </ul>
-                        <hr>
-                        <h4>v1.1.1 (2025.11.06)</h4>
-                        <ul>
-                           <li><b>【新增】</b> 新增渐变角度、小图标、导出模板、卡片边框功能。</li>
-                           <li><b>【优化】</b> 优化手机端体验，支持折叠编辑区。</li>
-                           <li><b>【修复】</b> 修复刷新丢失编辑记录的BUG。</li>
-                        </ul>
-                    </div>
-                </details>
-            </div>
             <div id="help-thanks" class="tab-content">
                 <p>本工具的实现离不开以下优秀的开源项目，在此表示诚挚的感谢：</p>
                 <div class="thanks-item">
@@ -703,12 +600,13 @@ SOFTWARE.
                 </div>
                  <div class="thanks-item">
                     <h4>开源字体</h4>
-                    <p>本项目集成的推荐字体均基于 <strong>SIL Open Font License 1.1</strong> 协议，可免费商用。</p>
+                    <p>本项目集成的推荐字体，除两款来自站酷的字体以外，均基于 <strong>SIL Open Font License 1.1</strong> 协议，均可免费商用。</p>
                     <ul>
-                        <li><a href="https://github.com/adobe-fonts/source-han-sans" target="_blank" rel="noopener noreferrer"><strong>思源黑体 (Source Han Sans)</strong></a> - 由 Adobe 与 Google 联合开发。</li>
+                        <li><a href="https://github.com/lxgw/LxgwWenkai?tab=readme-ov-file" target="_blank" rel="noopener noreferrer"><strong>霞鹜文楷 (LXGW WenKai)</strong></a> - 由落霞孤鹜，基于 FONTWORKS 出品字体 Klee One 衍生的字体。</li>
+						<li><a href="https://github.com/adobe-fonts/source-han-sans" target="_blank" rel="noopener noreferrer"><strong>思源黑体 (Source Han Sans)</strong></a> - 由 Adobe 与 Google 联合开发。</li>
                         <li><a href="https://github.com/adobe-fonts/source-han-serif" target="_blank" rel="noopener noreferrer"><strong>思源宋体 (Source Han Serif)</strong></a> - 由 Adobe 与 Google 联合开发。</li>
-                        <li><a href="https://www.zcool.com.cn/work/ZMTg5Njc2NTI=.html" target="_blank" rel="noopener noreferrer"><strong>站酷快乐体 (ZCOOL KuaiLe)</strong></a> - 由 站酷 (ZCOOL) 设计师团队创作。</li>
-                        <li><a href="https://www.zcool.com.cn/work/ZMTg5ODY0NDQ=.html" target="_blank" rel="noopener noreferrer"><strong>站酷小薇体 (ZCOOL XiaoWei)</strong></a> - 由 站酷 (ZCOOL) 设计师团队创作。</li>
+                        <li><a href="https://www.zcool.com.cn/special/zcoolfonts/" target="_blank" rel="noopener noreferrer"><strong>站酷快乐体 (ZCOOL KuaiLe)</strong></a> - 由 站酷 (ZCOOL) 设计师团队创作。</li>
+                        <li><a href="https://www.zcool.com.cn/special/zcoolfonts/" target="_blank" rel="noopener noreferrer"><strong>站酷小薇体 (ZCOOL XiaoWei)</strong></a> - 由 站酷 (ZCOOL) 设计师团队创作。</li>
                     </ul>
                     <details>
                         <summary>查看 SIL Open Font License 1.1 许可证原文</summary>
@@ -811,6 +709,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     <ul>
                         <li><a href="https://iconify.design/" target="_blank" rel="noopener noreferrer"><strong>Iconify</strong></a>: 提供了统一的图标检索和加载功能。本项目使用的图标库（如MDI, Tabler, Lucide等）均基于对商业友好的开源协议发布。</li>
                         <li><a href="https://heropatterns.com/" target="_blank" rel="noopener noreferrer"><strong>Hero Patterns</strong></a>: 提供了精美、可定制的SVG背景纹理 (MIT License)。</li>
+						<li><a href="https://fonts.zeoseven.com/" target="_blank" rel="noopener noreferrer"><strong>ZeoSeven™ Fonts</strong></a>: 提供了在线获取字体服务，您也可以在此处免费获取更多商业友好协议的字体。</li>
                     </ul>
                 </div>
             </div>
@@ -819,7 +718,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                 <p>Blokko是一个方便大家快速制作扩列/自荐/置顶图的小工具！</p>
                 <p><strong>作者：</strong> 四十七</p>
                 <p>如果你在使用中遇到BUG，可以通过链接私信我！如果觉得好用，也希望能点击链接去置顶评论区留下评论或转发，或者是在自己的制作的图评论区或正文里贴上原博链接（就是置顶那一条，当然这些都不是强制要求的，但是如果可以的话会让我很开心！），最后感谢您使用Blokko!</p>
-                <p><a href="https://weibo.com/u/5095783616" target="_blank" rel="noopener noreferrer"><strong>我的微博主页</strong></a></p>
+                <p style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <a href="https://weibo.com/u/5095783616" target="_blank" rel="noopener noreferrer" class="btn btn-default" style="width: auto; text-decoration: none;">我的微博主页</a>
+                    <a href="https://weibo.com/5095783616/QcM8qwmLs" target="_blank" rel="noopener noreferrer" class="btn btn-default" style="width: auto; text-decoration: none;">查看更新日志</a>
+                </p>
             </div>
             <div class="modal-actions" style="justify-content: center; margin-top: 20px;">
                 <button id="help-modal-close-btn" class="btn btn-primary">关闭</button>
@@ -934,7 +836,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                 lastPalette: [],
 
                 init() {
-                    console.log("Blokko 初始化 v1.5.3 ...");
+                    console.log("Blokko 初始化 v1.5.4 ...");
                     this.elements = this.queryElements();
                     this.presets = this.getPresets();
                     this.state = this.getDefaultState();
@@ -1079,7 +981,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                         layerList: q('#layer-list'),
                         previewPanel: q('#preview-panel'),
                         resizer: q('#resizer'),
-                        themeToggleBtn: q('#theme-toggle-btn'), themeLabel: q('#theme-label'),
+                        themeToggleBtn: q('#theme-toggle-btn'),
                         previewWrapper: q('#preview-wrapper'), previewOverlay: q('#preview-overlay'),
                         previewBlocksContainer: q('#preview-blocks-container'),
                         previewHeader: q('#preview-header'), previewAvatar: q('#preview-avatar'),
@@ -1197,6 +1099,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                                 this.toggleBlockVisibility(blockId);
                             } else if (actionBtn.matches('.duplicate-block-btn')) {
                                 this.duplicateBlock(blockId);
+                            } else if (actionBtn.matches('.add-card-to-block-btn')) {
+                                const block = this.findBlock(blockId);
+                                if (block.type === 'text') this.addCard(blockId, true);
+                                else if (block.type === 'image') this.addImageCard(blockId);
                             } else if (actionBtn.matches('.layer-toggle')) {
                                 layerItemContainer.classList.toggle('is-expanded');
                             }
@@ -1347,6 +1253,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                         if (target.dataset.stateKey || target.closest('.editor-block') || target.dataset.colorSyncKey || target.matches('.tag-manager-item .tag-text-input')) {
                             this.pushHistory();
                         }
+                        
+                        // v1.5.4 BUG FIX: Re-render inspector for radio buttons inside cards to sync UI state
+                        if (target.type === 'radio' && target.closest('.editor-card')) {
+                            this.renderInspector();
+                        }
 
                         const fileInputs = {
                             '#avatar-upload': 'avatar',
@@ -1367,7 +1278,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                             const blockEl = target.closest('.editor-block');
                             if (blockEl) {
                                 this.handleImageGalleryUpload(blockEl.dataset.blockId, e.target.files);
-                                e.target.value = '';
                             }
                         }
                         
@@ -1760,10 +1670,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     this.elements.previewSubtitle.style.color = this.state.personalInfo.subtitleColor;
                     this.elements.previewBio.style.color = this.state.personalInfo.bioColor;
                     
-                    const pageImageControls = document.getElementById('page-image-controls');
-                    const pageTextureControls = document.getElementById('page-texture-controls');
-                    if (pageImageControls) pageImageControls.style.display = styles.pageBgImageDataUrl ? 'block' : 'none';
-                    if (pageTextureControls) pageTextureControls.style.display = styles.pageBgPattern ? 'block' : 'none';
+                    // v1.5.4 BUG FIX: This logic is now handled in syncAllControls to ensure inspector is rendered first.
+                    // const pageImageControls = document.getElementById('page-image-controls');
+                    // if (pageImageControls) pageImageControls.style.display = styles.pageBgImageDataUrl ? 'block' : 'none';
                 },
 
                 renderLayerPanel() {
@@ -1782,10 +1691,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                         const iconMap = { text: 'mdi:format-text-variant-outline', image: 'mdi:image-multiple-outline', separator: 'mdi:minus', spacer: 'mdi:arrow-expand-vertical' };
                         const isHidden = b.isVisible === false;
                         const isExpandable = (b.type === 'text' || b.type === 'image') && b.cards && b.cards.length > 0;
+                        const hasQuickAdd = (b.type === 'text' || b.type === 'image');
                         
                         const cardsListHTML = isExpandable ? `<ul class="card-layer-list" data-block-id="${b.id}">
                             ${b.cards.map(c => `<li class="card-layer-item ${cardId === c.id ? 'selected' : ''}" data-card-id="${c.id}">${this.escapeHTML(c.title) || '无标题卡片'}</li>`).join('')}
                         </ul>` : '';
+
+                        const quickAddBtn = hasQuickAdd ? `<button class="btn-icon add-card-to-block-btn" title="添加卡片/图片"><span class="iconify" data-icon="mdi:plus"></span></button>` : '';
 
                         return `<div class="layer-item-container ${isExpandable ? 'is-expandable' : ''}" data-block-id="${b.id}">
                                     <div class="layer-item ${type === 'block' && id === b.id ? 'selected' : ''} ${isHidden ? 'is-hidden': ''}" data-type="block" data-id="${b.id}">
@@ -1793,6 +1705,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                                         <span class="layer-icon iconify" data-icon="${iconMap[b.type]}"></span>
                                         <span class="layer-name">${this.escapeHTML(b.title)}</span>
                                         <div class="layer-actions">
+                                            ${quickAddBtn}
                                             <button class="btn-icon toggle-visibility-btn" title="切换显示/隐藏"><span class="iconify" data-icon="${isHidden ? 'mdi:eye-off' : 'mdi:eye'}"></span></button>
                                             <button class="btn-icon duplicate-block-btn" title="复制样式"><span class="iconify" data-icon="mdi:content-copy"></span></button>
                                         </div>
@@ -1862,11 +1775,19 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                                             <label class="checkbox-group advanced-toggle-label"><input type="checkbox" class="advanced-toggle"> 高级</label>
                                         </div>
                                         <div class="tabs"><button class="tab-btn" data-tab="page-bg-solid">纯色/图片</button><button class="tab-btn" data-tab="page-bg-gradient">渐变</button></div>
-                                        <div id="page-bg-solid" class="tab-content"><div class="form-group"><label>页面背景颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageBgSolidColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageBgSolidColor"></div></div><div class="form-group"><label>背景图 (可选):</label><div class="input-group simple"><input type="file" id="page-bg-upload" accept="image/*" style="width:100%"><button id="clear-page-bg-btn" class="btn btn-default btn-small">清除</button></div></div>
-                                        <div id="page-image-controls" class="advanced-setting" style="display:none;"><div class="form-group"><label>图片遮罩颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageOverlayColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageOverlayColor"></div></div><div class="form-group"><label>图片遮罩不透明度:</label><input type="range" data-state-key="pageStyles.pageOverlayOpacity" min="0" max="1" step="0.05"></div></div></div>
+                                        <div id="page-bg-solid" class="tab-content">
+                                            <div class="form-group"><label>页面背景颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageBgSolidColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageBgSolidColor"></div></div>
+                                            <div class="form-group"><label>背景图 (可选):</label><div class="input-group simple"><input type="file" id="page-bg-upload" accept="image/*" style="width:100%"><button id="clear-page-bg-btn" class="btn btn-default btn-small">清除</button></div></div>
+                                            <div id="page-image-controls">
+                                                <div class="form-group"><label>图片遮罩颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageOverlayColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageOverlayColor"></div></div>
+                                                <div class="form-group"><label>图片遮罩不透明度:</label><input type="range" data-state-key="pageStyles.pageOverlayOpacity" min="0" max="1" step="0.05"></div>
+                                            </div>
+                                        </div>
                                         <div id="page-bg-gradient" class="tab-content"><div class="gradient-controls"><div class="form-group"><label>起始颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageBgGradientStart"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageBgGradientStart"></div></div><div class="form-group"><label>结束颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageBgGradientEnd"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageBgGradientEnd"></div></div><div class="gradient-angle-control form-group advanced-setting"><label>角度 (<span class="angle-value">135</span>°):</label><input type="range" data-state-key="pageStyles.pageBgGradientAngle" min="0" max="360" step="1"></div></div></div>
-                                        <div class="form-group advanced-setting" style="margin-top: 10px;"><button id="show-texture-picker-btn" class="btn btn-default">🎨 添加纹理</button></div>
-                                        <div id="page-texture-controls" class="inset-controls advanced-setting" style="display:none;"><div class="form-group"><label>当前纹理: <span id="current-texture-name">无</span></label><button id="clear-texture-btn" class="btn btn-default btn-small">清除纹理</button></div><div class="color-control-row"><div class="color-control-group"><label>纹理颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageBgPatternColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageBgPatternColor"></div></div><div class="color-control-group"><label>纹理不透明度:</label><input type="range" data-state-key="pageStyles.pageBgPatternOpacity" min="0" max="1" step="0.05"></div></div><div class="form-group"><label>纹理密度:</label><input type="range" data-state-key="pageStyles.pageBgPatternDensity" min="10" max="100" step="2"></div></div>
+                                        <div class="advanced-setting" style="margin-top: 10px;">
+                                            <div class="form-group"><button id="show-texture-picker-btn" class="btn btn-default">🎨 添加纹理</button></div>
+                                            <div id="page-texture-controls" class="inset-controls"><div class="form-group"><label>当前纹理: <span id="current-texture-name">无</span></label><button id="clear-texture-btn" class="btn btn-default btn-small">清除纹理</button></div><div class="color-control-row"><div class="color-control-group"><label>纹理颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageBgPatternColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageBgPatternColor"></div></div><div class="color-control-group"><label>纹理不透明度:</label><input type="range" data-state-key="pageStyles.pageBgPatternOpacity" min="0" max="1" step="0.05"></div></div><div class="form-group"><label>纹理密度:</label><input type="range" data-state-key="pageStyles.pageBgPatternDensity" min="10" max="100" step="2"></div></div>
+                                        </div>
                                     </div>
                                     <hr class="separator">
                                     <div class="tab-group-wrapper">
@@ -2152,8 +2073,37 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     this.syncControl(keyPath);
                 },
 
+                /**
+                 * @zh-CN 根据更新的state key来决定重新渲染哪个部分的UI。
+                 * @description 这是一个核心的调度函数，用于提高渲染效率，避免不必要的全局刷新。
+                 * @param {string} keyPath - 状态对象中的路径，例如 'personalInfo.nickname'。
+                 */
                 triggerRender(keyPath) {
                     const mainKey = keyPath.split('.')[0];
+                    
+                    // v1.5.4 BUG FIX: 精确更新，避免左侧面板闪烁
+                    const keyParts = keyPath.split('.');
+                    if (mainKey === 'blocks' && keyParts.length > 3 && keyParts[2] === 'cards') {
+                        // 这是一个对卡片内部属性的更新 (e.g., blocks.0.cards.1.title)
+                        const blockIndex = parseInt(keyParts[1], 10);
+                        const cardIndex = parseInt(keyParts[3], 10);
+                        const cardProp = keyParts[4];
+                        const blockId = this.state.blocks[blockIndex]?.id;
+                        const cardId = this.state.blocks[blockIndex]?.cards[cardIndex]?.id;
+                        
+                        if (blockId && cardId) {
+                            if (cardProp === 'title') {
+                                // 只更新左侧图层面板中对应卡片的标题，不重绘整个面板
+                                const cardLayerItem = this.elements.layerList.querySelector(`.card-layer-item[data-card-id="${cardId}"]`);
+                                if (cardLayerItem) {
+                                    cardLayerItem.textContent = this.state.blocks[blockIndex].cards[cardIndex].title || '无标题卡片';
+                                }
+                            }
+                            this.renderPreviewBlockById(blockId); // 仅重绘受影响的预览区块
+                            return; // 结束，不再执行后续的全局渲染
+                        }
+                    }
+
                     if (mainKey === 'personalInfo') {
                         this.renderPersonalInfo();
                         if (keyPath.includes('tags')) this.renderTagManager();
@@ -2161,30 +2111,18 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                         if (mainKey === 'globalCardStyles') this.updateGlobalCardStyleVars();
                         this.renderPageStyles();
                         this.renderPreviewBlocks();
-                    } else if (mainKey === 'blocks') {
-                        const blockIndex = parseInt(keyPath.split('.')[1], 10);
-                        const blockId = this.state.blocks[blockIndex]?.id;
-                        if(blockId) {
-                            if (keyPath.includes('isVisible')) {
-                                this.renderLayerPanel();
-                                this.renderPreviewBlocks();
-                            } else if (keyPath.includes('cards')) {
-                                this.renderLayerPanel();
-                                this.renderPreviewBlockById(blockId);
-                                if (this.selection.type === 'block' && this.selection.id === blockId) {
-                                    const currentScroll = this.elements.inspectorPanel.scrollTop;
-                                    // this.renderInspector(); // BUG FIX: This was causing the panel to refresh on every input
-                                    this.elements.inspectorPanel.scrollTop = currentScroll;
-                                }
-                            }
-                            else {
-                                this.renderPreviewBlockById(blockId);
-                            }
+						// HOTFIX: 当页面样式（如背景图）更新时，需要同步检查器UI以显示/隐藏相关控件。
+                        if (this.selection.type === 'global') {
+                            this.syncAllControls();
                         }
+                    } else if (mainKey === 'blocks') {
+                        // 对区块本身或卡片列表的增删改，依然需要重绘
+                        this.renderLayerPanel();
+                        this.renderPreviewBlocks();
                     }
                 },
-
-                addCard(blockId) {
+                
+                addCard(blockId, isQuickAdd = false) {
                     const block = this.findBlock(blockId);
                     if (!block || block.type !== 'text') return;
                     
@@ -2194,8 +2132,21 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     block.cards.push(newCard);
                     this.debouncedSaveToLocal();
                     
+                    if (isQuickAdd) {
+                        const cardListEl = this.elements.layerList.querySelector(`.layer-item-container[data-block-id="${blockId}"] .card-layer-list`);
+                        if (cardListEl) {
+                            const newCardLayerItem = document.createElement('li');
+                            newCardLayerItem.className = 'card-layer-item';
+                            newCardLayerItem.dataset.cardId = newCard.id;
+                            newCardLayerItem.textContent = newCard.title || '无标题卡片';
+                            cardListEl.appendChild(newCardLayerItem);
+                            cardListEl.closest('.layer-item-container').classList.add('is-expanded');
+                        }
+                    } else {
+                        this.renderLayerPanel();
+                    }
+
                     this.renderInspector();
-                    this.renderLayerPanel();
                     
                     const container = this.elements.previewBlocksContainer.querySelector(`[data-block-id="${blockId}"] > div`);
                     if (!container) {
@@ -2372,64 +2323,78 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     }
                 },
 
-
                 syncAllControls() {
                     this.isRestoringState = true;
-                    this.elements.inspectorPanel.querySelectorAll('[data-state-key], [data-setting-key]').forEach(input => {
-                        try {
-                            const stateKey = input.dataset.stateKey;
-                            const settingKey = input.dataset.settingKey;
-                            let value;
+                    try {
+                        this.elements.inspectorPanel.querySelectorAll('[data-state-key], [data-setting-key]').forEach(input => {
+                            try {
+                                const stateKey = input.dataset.stateKey;
+                                const settingKey = input.dataset.settingKey;
+                                let value;
 
-                            if (stateKey) {
-                                if (stateKey === 'personalInfo.tags') return;
-                                value = stateKey.split('.').reduce((o, k) => o && o[k], this.state);
-                            } else if (settingKey && this.selection.type === 'block') {
-                                const block = this.findBlock(this.selection.id);
-                                if (block) value = block.settings[settingKey];
-                            }
-                            
-                            if (value !== undefined) {
-                                if (input.type === 'radio') {
-                                    input.checked = (input.value == value);
-                                } else if (input.type === 'checkbox') {
-                                    input.checked = !!value;
-                                } else {
-                                    input.value = value ?? '';
+                                if (stateKey) {
+                                    if (stateKey === 'personalInfo.tags') return;
+                                    value = stateKey.split('.').reduce((o, k) => o && o[k], this.state);
+                                } else if (settingKey && this.selection.type === 'block') {
+                                    const block = this.findBlock(this.selection.id);
+                                    if (block) value = block.settings[settingKey];
                                 }
+                                
+                                if (value !== undefined) {
+                                    if (input.type === 'radio') {
+                                        input.checked = (input.value == value);
+                                    } else if (input.type === 'checkbox') {
+                                        input.checked = !!value;
+                                    } else {
+                                        input.value = value ?? '';
+                                    }
 
-                                if (input.type === 'color') {
-                                    const hexInput = input.nextElementSibling;
-                                    if(hexInput && hexInput.matches('.color-hex-input')) {
-                                        hexInput.value = value || (input.placeholder || '');
+                                    if (input.type === 'color') {
+                                        const hexInput = input.nextElementSibling;
+                                        if(hexInput && hexInput.matches('.color-hex-input')) {
+                                            hexInput.value = value || (input.placeholder || '');
+                                        }
+                                    }
+                                    if (input.type === 'range') {
+                                        const valueDisplay = input.closest('.form-group').querySelector('.angle-value, .spacer-height-value, #gCardRadiusValue');
+                                        if(valueDisplay) valueDisplay.textContent = value;
                                     }
                                 }
-                                if (input.type === 'range') {
-                                     const valueDisplay = input.closest('.form-group').querySelector('.angle-value, .spacer-height-value, #gCardRadiusValue');
-                                     if(valueDisplay) valueDisplay.textContent = value;
-                                }
-                            }
-                        } catch (e) {}
-                    });
-                     
-                    const gCardSection = document.getElementById('global-card-styles-section');
-                    if (gCardSection) {
-                        const gCardActiveTab = this.state.globalCardStyles.bgMode === 'gradient' ? 'card-bg-gradient' : 'card-bg-solid';
-                        gCardSection.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === gCardActiveTab));
-                        gCardSection.querySelectorAll(':scope > .section-content > .tab-content').forEach(c => c.classList.toggle('active', c.id === gCardActiveTab));
-                    }
+                            } catch (e) {}
+                        });
+                        
+                        const gCardSection = this.elements.inspectorPanel.querySelector('#global-card-styles-section');
+                        if (gCardSection) {
+                            const gCardActiveTab = this.state.globalCardStyles.bgMode === 'gradient' ? 'card-bg-gradient' : 'card-bg-solid';
+                            gCardSection.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === gCardActiveTab));
+                            gCardSection.querySelectorAll(':scope > .section-content > .tab-content').forEach(c => c.classList.toggle('active', c.id === gCardActiveTab));
+                        }
 
-                    const pageSection = document.getElementById('page-styles-section');
-                    if (pageSection) {
-                        const pageActiveTab = this.state.pageStyles.pageBgMode === 'gradient' ? 'page-bg-gradient' : 'page-bg-solid';
-                        const headerActiveTab = this.state.pageStyles.headerBgMode === 'gradient' ? 'header-bg-gradient' : 'header-bg-solid';
-                        pageSection.querySelectorAll('[data-tab^="page-bg-"]').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === pageActiveTab));
-                        pageSection.querySelectorAll('#page-bg-solid, #page-bg-gradient').forEach(c => c.classList.toggle('active', c.id === pageActiveTab));
-                        pageSection.querySelectorAll('[data-tab^="header-bg-"]').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === headerActiveTab));
-                        pageSection.querySelectorAll('#header-bg-solid, #header-bg-gradient').forEach(c => c.classList.toggle('active', c.id === headerActiveTab));
+                        const pageSection = this.elements.inspectorPanel.querySelector('#page-styles-section');
+                        if (pageSection) {
+                            const pageActiveTab = this.state.pageStyles.pageBgMode === 'gradient' ? 'page-bg-gradient' : 'page-bg-solid';
+                            const headerActiveTab = this.state.pageStyles.headerBgMode === 'gradient' ? 'header-bg-gradient' : 'header-bg-solid';
+                            pageSection.querySelectorAll('[data-tab^="page-bg-"]').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === pageActiveTab));
+                            pageSection.querySelectorAll('#page-bg-solid, #page-bg-gradient').forEach(c => c.classList.toggle('active', c.id === pageActiveTab));
+                            pageSection.querySelectorAll('[data-tab^="header-bg-"]').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === headerActiveTab));
+                            pageSection.querySelectorAll('#header-bg-solid, #header-bg-gradient').forEach(c => c.classList.toggle('active', c.id === headerActiveTab));
+                        }
+                        
+                        // v1.5.4 BUG FIX: Sync texture and image overlay controls visibility on load/render
+                        const pageImageControls = this.elements.inspectorPanel.querySelector('#page-image-controls');
+                        if (pageImageControls) {
+                            pageImageControls.style.display = this.state.pageStyles.pageBgImageDataUrl ? 'block' : 'none';
+                        }
+                        const pageTextureControls = this.elements.inspectorPanel.querySelector('#page-texture-controls');
+                        if (pageTextureControls) {
+                            pageTextureControls.style.display = this.state.pageStyles.pageBgPattern ? 'block' : 'none';
+                            const currentTextureName = pageTextureControls.querySelector('#current-texture-name');
+                            if(currentTextureName) currentTextureName.textContent = this.state.pageStyles.pageBgPattern || '无';
+                        }
+                        
+                    } finally {
+                        this.isRestoringState = false;
                     }
-                    
-                    this.isRestoringState = false;
                 },
                 
                 findBlock(blockId) { return this.state.blocks.find(b => b.id === blockId); },
@@ -2508,8 +2473,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                                 const dataUrl = e.target.result;
                                 if(target === 'colorThief') {
                                     this.analyzeColorsFromImage(dataUrl);
-                                    this.hideLoading();
-                                    return;
+                                    return; // analyzeColorsFromImage will hide loading
                                 }
                                 const compressedUrl = await this.compressImage(dataUrl, 0.85, 1200);
                                 if (['avatar', 'pageBg', 'cardBg', 'imageCard'].includes(target)) {
@@ -2525,8 +2489,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                         } catch(err) {
                             this.showErrorModal('图片处理失败', err.message);
                             this.hideLoading();
+                        } finally {
+                            event.target.value = ''; 
                         }
-                        event.target.value = ''; 
                 },
                 handleCardBgUpload(event, blockId, cardId){
                     this.handleImageUpload(event, 'cardBg', { blockId, cardId });
@@ -2548,6 +2513,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                             this.showErrorModal('图片上传失败', err.message);
                         } finally {
                             this.hideLoading();
+                            const input = this.elements.inspectorPanel.querySelector(`.editor-block[data-block-id="${blockId}"] .image-upload-input`);
+                            if (input) input.value = '';
                         }
                 },
                 cropImage(blockId, cardId){
@@ -2665,10 +2632,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                         select.innerHTML = '';
                         
                         const recommendedFonts = [
-                            { family: 'Noto Sans SC', fullName: '思源黑体' },
-                            { family: 'Noto Serif SC', fullName: '思源宋体' },
-                            { family: 'ZCOOL KuaiLe', fullName: '站酷快乐体' },
+                            { family: 'Noto Sans CJK', fullName: '思源黑体' },
+                            { family: 'Noto Serif CJK', fullName: '思源宋体' },
+                            { family: 'HappyZcool-2016', fullName: '站酷快乐体' },
                             { family: 'ZCOOL XiaoWei', fullName: '站酷小薇体' },
+							{ family: 'LXGW WenKai', fullName: '霞鹜文楷' },
                         ];
 
                         const allFonts = [...this.uploadedFonts, ...this.localFonts];
@@ -2805,12 +2773,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                 toggleTheme(){
                     const isDark = document.documentElement.classList.toggle('dark-mode'); 
                     localStorage.setItem('blokkoTheme', isDark ? 'dark' : 'light'); 
-                    this.elements.themeLabel.textContent = isDark ? '暗黑模式' : '明亮模式'; 
+                    this.elements.themeToggleBtn.textContent = isDark ? '暗黑模式' : '明亮模式'; 
                 },
                 loadPreferences(){
-                    if (localStorage.getItem('blokkoTheme') === 'dark') { 
-                        this.elements.themeLabel.textContent = '暗黑模式'; 
+                    const isDark = localStorage.getItem('blokkoTheme') === 'dark';
+                    if (isDark) { 
+                        document.documentElement.classList.add('dark-mode');
                     } 
+                    this.elements.themeToggleBtn.textContent = isDark ? '暗黑模式' : '明亮模式';
                 },
                 saveToLocal(){
                      try { 
@@ -2870,6 +2840,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                         this.showDownloadModal(URL.createObjectURL(blob), filename, isTemplate ? '模板已生成' : '配置已生成');
                 },
                 
+                /**
+                 * @zh-CN 处理配置文件的导入。
+                 * @description 用户选择.json文件后，此函数会弹出确认框，然后读取、解析文件内容，并用其覆盖当前应用状态。
+                 * @param {Event} e - 文件输入框的change事件对象。
+                 * @async
+                 */
                 async handleConfigFile(e){
                     const file = e.target.files[0]; 
                         if (!file) return;
@@ -2887,7 +2863,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                         reader.onload = async (re) => { 
                             try { 
                                 let importedState = JSON.parse(re.target.result); 
-                                if (!importedState || !importedState.personalInfo || !importedState.blocks) throw new Error('Invalid file format'); 
+                                if (!importedState || !importedState.personalInfo || !importedState.blocks) throw new Error('无效的文件格式'); 
                                 
                                 if (typeof importedState.personalInfo.tags === 'string') {
                                     importedState.personalInfo.tags = importedState.personalInfo.tags.split(/[,，、]/).map(t => t.trim()).filter(Boolean)
@@ -3041,6 +3017,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     style.innerHTML += `#${clone.id} .preview-card-inner::before, #${clone.id} .preview-card-inner::after { content: none !important; background: none !important; display: none !important; }`;
                 },
                 
+                /**
+                 * @zh-CN 将预览区导出为PNG图片。
+                 * @description 此函数负责整个截图流程：克隆预览区DOM，处理瀑布流和样式“烘焙”（将伪元素样式应用到主元素），
+                 * 最后调用html2canvas库生成图片，并处理可选的圆角效果。
+                 * @async
+                 */
                 async exportPNG(){
                     this.showLoading('正在准备导出...');
                     
@@ -3102,6 +3084,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                             await this.sleep(200);
                         }
                         
+                        // 核心修复：由于html2canvas无法直接渲染伪元素(:before, :after)的背景和蒙版，
+                        // 我们需要手动计算这些样式，并将它们“烘焙”到克隆出的主元素上，以便正确导出。
                         this.showLoading('正在处理样式 (烘焙)...');
                         await this.bakeOverlaysForExport(clone);
                         await this.sleep(100);
@@ -3505,11 +3489,19 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     this.loadIcons();
                     this.iconPickerInitialized = true;
                 },
+                /**
+                 * @zh-CN 初始化并显示纹理选择器模态框。
+                 * @description 首次调用时会渲染纹理网格，后续调用仅显示模态框。
+                 */
                 initTexturePicker() {
-                    if (this.texturePickerInitialized) return;
-                    this.renderTexturePicker();
+                    // v1.5.4 BUG FIX: 调整逻辑，确保每次都能显示Modal
+                    // 仅在首次调用时渲染内容
+                    if (!this.texturePickerInitialized) {
+                        this.renderTexturePicker();
+                        this.texturePickerInitialized = true;
+                    }
+                    // 每次调用都确保 Modal 是可见的
                     this.elements.texturePickerModal.classList.add('visible');
-                    this.texturePickerInitialized = true;
                 },
                 async loadIcons(){
                      this.showLoading('正在加载图标库...');
@@ -3667,9 +3659,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                             this.showToast('颜色提取成功！', 'success');
                         } catch(e) {
                             this.showErrorModal('颜色提取失败', e.message);
+                        } finally {
+                            this.hideLoading();
                         }
                     };
-                    img.onerror = () => this.showErrorModal('图片加载失败', '无法从该图片提取颜色。');
+                    img.onerror = () => {
+                        this.showErrorModal('图片加载失败', '无法从该图片提取颜色。');
+                        this.hideLoading();
+                    };
                     img.src = dataUrl;
                 },
                 renderPalette(palette) {
