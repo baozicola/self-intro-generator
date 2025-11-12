@@ -286,7 +286,6 @@
         .section-header h4 { margin: 0; }
 
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 0.9rem; font-weight: 600; color: var(--text-label); margin-bottom: 8px; }
         .form-group input[type="text"], .form-group input[type="number"], .form-group input[type="file"], .form-group select, .form-group textarea { width: 100%; padding: 10px; font-size: 14px; background: var(--bg-input); border: 1px solid var(--border-input); border-radius: 6px; color: var(--text-primary); transition: all var(--transition-short) ease; max-width: 100%; overflow-wrap: break-word; }
         .form-group input[type="text"]:focus, .form-group input[type="number"]:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2); }
         .form-group textarea { min-height: 80px; resize: vertical; }
@@ -1017,9 +1016,9 @@ Monitor of this License or out of the use or inability to use the
             </div>
             <div id="help-about" class="tab-content">
                 <h4>关于 Blokko</h4>
-                <p>Blokko是一个方便大家快速制作扩列/自荐/置顶图的小工具！因为本质上是自用小工具，很多地方都没有细细打磨略显简陋，也缺少完善的新手教程_(:з」∠)_，未来或许会补充，一个外挂文档，制作的初衷是发现lit.link网站对简体中文支持不完善，很多字体都会缺字导致效果不好看，于是制作了Blokko来替代。</p>
+                <p>Blokko是一个方便大家快速制作扩列/自荐/置顶图的小工具！因为本质上是自用小工具，很多地方都没有细细打磨略显简陋，也缺少完善的新手教程_(:з」∠)_，未来或许会补充一个在线文档，制作的初衷是发现lit.link网站对简体中文支持不完善，很多字体都会缺字导致效果不好看，于是制作了Blokko来替代。</p>
                 <p><strong>作者：</strong> 四十七/baozi_cola</p>
-                <p>如果你在使用中遇到BUG，可以通过链接私信我！如果觉得好用，也希望能点击链接去置顶评论区留下评论或转发，或者是在自己的制作的图评论区或正文里贴上原博链接（就是置顶那一条，当然这些都不是强制要求的，但是如果可以的话会让我很开心！），最后感谢您使用Blokkoദ്ദി˶•̀֊•́)✧</p>
+                <p>如果你在使用中遇到BUG，可以通过链接私信我！如果觉得好用，也希望能点击链接去置顶评论区留下评论或转发，或者是在自己的制作的图评论区或正文里贴上原博链接（就是置顶那一条，当然这些都不是强制要求的，但是如果可以的话会让我很开心！），最后感谢您使用Blokkoദ്ദി˶•̀֊•́)✧希望你可以用这个工具做出满意的效果。</p>
                 <p style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <a href="https://weibo.com/u/5095783616" target="_blank" rel="noopener noreferrer" class="btn btn-default" style="width: auto; text-decoration: none;">我的微博主页</a>
                     <a href="https://weibo.com/5095783616/QcM8qwmLs" target="_blank" rel="noopener noreferrer" class="btn btn-default" style="width: auto; text-decoration: none;">查看历史更新日志</a>
@@ -2055,7 +2054,6 @@ Monitor of this License or out of the use or inability to use the
                 async renderPersonalInfo() {
                     const info = this.state.personalInfo;
                     
-                    // ++ NEW: Asynchronously set avatar source
                     const setAvatarSrc = async (url) => {
                         if (url && url.startsWith('idb://')) {
                             try {
@@ -2124,7 +2122,6 @@ Monitor of this License or out of the use or inability to use the
                         }
                     }
 
-                    // ++ NEW: Asynchronously handle background image
                     if (styles.pageBgImageDataUrl) {
                         let imageUrl = styles.pageBgImageDataUrl;
                         if (imageUrl.startsWith('idb://')) {
@@ -2256,6 +2253,30 @@ Monitor of this License or out of the use or inability to use the
                         }
                     }
                     
+                    // BUGFIX: Asynchronously update editor thumbnails
+                    panel.querySelectorAll('.thumbnail-wrapper img').forEach(img => {
+                        const cardEl = img.closest('.editor-card');
+                        if (!cardEl) return;
+                        const cardId = cardEl.dataset.cardId;
+                        const blockEl = img.closest('.editor-block');
+                        if (!blockEl) return;
+                        const blockId = blockEl.dataset.blockId;
+                        const block = this.findBlock(blockId);
+                        const card = block?.cards.find(c => c.id === cardId);
+                        if (card && card.url) {
+                            const setSrc = async (url) => {
+                                if (url && url.startsWith('idb://')) {
+                                    const imageId = url.substring(6);
+                                    const record = await this.getImageFromDB(imageId);
+                                    if (record && record.blob) img.src = URL.createObjectURL(record.blob);
+                                } else {
+                                    img.src = url;
+                                }
+                            };
+                            setSrc(card.url);
+                        }
+                    });
+
                     this.syncAllControls();
                     this.updateUndoRedoButtons();
 
@@ -2397,6 +2418,7 @@ Monitor of this License or out of the use or inability to use the
 
                 renderPreviewBlocks() {
                     this.elements.previewBlocksContainer.innerHTML = this.state.blocks.length ? this.state.blocks.map(b => `<div class="preview-block-wrapper ${b.isVisible === false ? 'is-hidden' : ''}" data-block-id="${b.id}">${this.createPreviewBlockHTML(b)}</div>`).join('') : '<div class="empty-placeholder">(预览区) 无区块</div>';
+                    this.postRenderAsyncUpdates(this.elements.previewBlocksContainer); // BUGFIX
                     this.state.blocks.forEach(b => this.initMasonryForBlock(b.id));
                     this.updateHighlights();
                 },
@@ -2476,12 +2498,11 @@ Monitor of this License or out of the use or inability to use the
                     const finalAlign = (card.textAlign === undefined || card.textAlign === null || card.textAlign === '') ? this.state.globalCardStyles.textAlign : card.textAlign;
                     const justifyContent = { left: 'flex-start', center: 'center', right: 'flex-end' }[finalAlign] || 'flex-start';
                     
-                    // ++ MODIFIED for rich text
                     cardEl.innerHTML = `<div class="preview-card-inner">
                             <h3 class="preview-card-title" data-card-key="title" style="justify-content: ${justifyContent};">${iconHTML}${this.escapeHTML(card.title || '')}</h3>
                             <div class="preview-card-content" data-card-key="content">${card.content || ''}</div>
                         </div>`;
-                    this.applyCardStyles(cardEl, card);
+                    // this.applyCardStyles(cardEl, card); // BUGFIX: Removed call from here
                     return cardEl.outerHTML;
                 },
 
@@ -2493,36 +2514,20 @@ Monitor of this License or out of the use or inability to use the
                             <span data-card-key="description">${this.escapeHTML(card.description || '')}</span>
                         </figcaption>` 
                         : '';
-
-                    // ++ NEW: Asynchronously set image source
-                    const figure = document.createElement('figure');
-                    figure.dataset.cardId = card.id;
-                    figure.innerHTML = `<img src="" alt="${this.escapeHTML(card.title || '')}" loading="lazy">${figcaptionContent}`;
                     
-                    const setImageSrc = async (url) => {
-                        const img = figure.querySelector('img');
-                        if (url && url.startsWith('idb://')) {
-                            try {
-                                const imageId = url.substring(6);
-                                const imageRecord = await this.getImageFromDB(imageId);
-                                if (imageRecord && imageRecord.blob) {
-                                    img.src = URL.createObjectURL(imageRecord.blob);
-                                }
-                            } catch(e) { console.error('Failed to load image card from DB', e); }
-                        } else {
-                            img.src = url;
-                        }
-                    };
-                    setImageSrc(card.url);
+                    // BUGFIX: Just return the structure. Src will be filled in later.
+                    const figureHTML = `<figure data-card-id="${card.id}">
+                        <img src="" alt="${this.escapeHTML(card.title || '')}" loading="lazy">
+                        ${figcaptionContent}
+                    </figure>`;
 
-                   return figure.outerHTML;
+                   return figureHTML;
                 },
 
                 createEditorCardHTML(card) {
                     const iconHTML = card.icon ? `<span class="iconify" data-icon="${card.icon}" style="font-size: 1.2em; vertical-align: middle; margin-right: 5px;"></span>` : '选择图标';
                     const g = this.state.globalCardStyles;
 
-                    // ++ MODIFIED: Use textarea for content to avoid accidental rich text pasting here.
                     return `<span class="card-drag-handle">☰</span><div class="editor-card-header"><button class="btn btn-danger btn-small card-delete-btn">删</button></div>
                         <div class="editor-card-content">
                             <h4>基础设置</h4>
@@ -2546,18 +2551,8 @@ Monitor of this License or out of the use or inability to use the
                 },
 
                 createEditorImageCardHTML(card) {
-                    const img = document.createElement('img');
-                    img.loading = 'lazy';
-                    const setSrc = async (url) => {
-                        if (url && url.startsWith('idb://')) {
-                            const imageId = url.substring(6);
-                            const record = await this.getImageFromDB(imageId);
-                            if (record) img.src = URL.createObjectURL(record.blob);
-                        } else {
-                            img.src = url;
-                        }
-                    };
-                    setSrc(card.url);
+                    // BUGFIX: Just return the structure. Src will be filled in by renderInspector.
+                    const imgHTML = `<img src="" loading="lazy">`;
 
                     return `<span class="card-drag-handle">☰</span>
                         <div class="editor-card-header"><button class="btn btn-danger btn-small card-delete-btn">删</button></div>
@@ -2565,7 +2560,7 @@ Monitor of this License or out of the use or inability to use the
                             <div class="image-card-editor-content">
                                 <div class="image-card-editor-thumb">
                                     <div class="thumbnail-wrapper">
-                                        ${img.outerHTML}
+                                        ${imgHTML}
                                         <div class="thumbnail-actions">
                                             <button class="btn btn-icon crop-image-btn" title="裁剪"><span class="iconify" data-icon="mdi:crop"></span></button>
                                         </div>
@@ -2602,7 +2597,7 @@ Monitor of this License or out of the use or inability to use the
                                 try {
                                     const imageId = imageUrl.substring(6);
                                     const record = await this.getImageFromDB(imageId);
-                                    if(record) imageUrl = URL.createObjectURL(record.blob);
+                                    if(record && record.blob) imageUrl = URL.createObjectURL(record.blob); // BUGFIX: Check blob exists
                                 } catch (e) { console.error('Failed to load card bg from DB', e); }
                             }
                             finalBg = `url(${imageUrl})`;
@@ -2790,6 +2785,7 @@ Monitor of this License or out of the use or inability to use the
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = this.createPreviewCardHTML(newCard);
                     const newCardEl = tempDiv.firstChild;
+                    this.applyCardStyles(newCardEl, newCard); // BUGFIX: Apply styles after creation
                     container.appendChild(newCardEl);
 
                     const masonry = this.masonryInstances[blockId];
@@ -2864,7 +2860,6 @@ Monitor of this License or out of the use or inability to use the
                     try { 
                         let saved = JSON.parse(json);
                         if (saved && saved.personalInfo) {
-                            // ++ NEW: Image migration
                             saved = await this.processStateForImageMigration(saved);
 
                             if (typeof saved.personalInfo.tags === 'string') {
@@ -3061,6 +3056,7 @@ Monitor of this License or out of the use or inability to use the
                     if (block && wrapper) {
                         wrapper.classList.toggle('is-hidden', block.isVisible === false);
                         wrapper.innerHTML = this.createPreviewBlockHTML(block);
+                        this.postRenderAsyncUpdates(wrapper); // BUGFIX
                         this.initMasonryForBlock(blockId);
                     }
                 },
@@ -3177,7 +3173,7 @@ Monitor of this License or out of the use or inability to use the
                         let imageUrl = card.url;
                         if (imageUrl.startsWith('idb://')) {
                             const record = await this.getImageFromDB(imageUrl.substring(6));
-                            if (record) {
+                            if (record && record.blob) { // BUGFIX: Check blob exists
                                 imageUrl = URL.createObjectURL(record.blob);
                             }
                         }
@@ -3537,7 +3533,6 @@ Monitor of this License or out of the use or inability to use the
                                 let importedState = JSON.parse(re.target.result); 
                                 if (!importedState || !importedState.personalInfo || !importedState.blocks) throw new Error('无效的文件格式'); 
                                 
-                                // ++ NEW: Image migration on import
                                 importedState = await this.processStateForImageMigration(importedState);
 
                                 if (typeof importedState.personalInfo.tags === 'string') {
@@ -3595,7 +3590,6 @@ Monitor of this License or out of the use or inability to use the
                     // ... (This function is complex and remains the same, I'm omitting it here for brevity, but it's in the full code block)
                 },
                 
-                // ++ FIXED: Reverted to v1.5.0 export logic
                 async exportPNG(){
                     this.showLoading('正在准备导出...');
 
@@ -3786,7 +3780,6 @@ Monitor of this License or out of the use or inability to use the
                         modal.innerHTML = `<h3>${title}</h3><p>${message}</p><button class="btn btn-primary" onclick="this.closest('.error-modal').remove()">确定</button>`;
                         document.body.appendChild(modal);
                 },
-                // ++ NEW: Special modal for fatal errors
                 showFatalErrorModal(title, message, error) {
                     const existingModal = document.querySelector('.error-modal');
                     if (existingModal) existingModal.remove();
@@ -4424,6 +4417,53 @@ Monitor of this License or out of the use or inability to use the
                      return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), wait); }; 
                 },
                 generateId(p){ return `${p}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` },
+                // BUGFIX: New function
+                postRenderAsyncUpdates(container) {
+                    // 1. Update image block images
+                    container.querySelectorAll('figure[data-card-id]').forEach(figure => {
+                        const img = figure.querySelector('img');
+                        if (!img) return;
+
+                        const cardId = figure.dataset.cardId;
+                        const blockWrapper = figure.closest('.preview-block-wrapper');
+                        if (!blockWrapper) return;
+                        
+                        const blockId = blockWrapper.dataset.blockId;
+                        const block = this.findBlock(blockId);
+                        const card = block?.cards.find(c => c.id === cardId);
+
+                        if (card && card.url) {
+                            const setImageSrc = async (url) => {
+                                if (url && url.startsWith('idb://')) {
+                                    try {
+                                        const imageId = url.substring(6);
+                                        const imageRecord = await this.getImageFromDB(imageId);
+                                        if (imageRecord && imageRecord.blob) {
+                                            img.src = URL.createObjectURL(imageRecord.blob);
+                                        }
+                                    } catch(e) { console.error('Failed to load image card from DB', e); }
+                                } else {
+                                    img.src = url;
+                                }
+                            };
+                            setImageSrc(card.url);
+                        }
+                    });
+
+                    // 2. Update text card background images
+                    container.querySelectorAll('.preview-card[data-card-id]').forEach(cardEl => {
+                        const cardId = cardEl.dataset.cardId;
+                        const blockWrapper = cardEl.closest('.preview-block-wrapper');
+                        if (!blockWrapper) return;
+
+                        const blockId = blockWrapper.dataset.blockId;
+                        const block = this.findBlock(blockId);
+                        const cardData = block?.cards.find(c => c.id === cardId);
+                        if(cardData){
+                            this.applyCardStyles(cardEl, cardData);
+                        }
+                    });
+                },
                 deepClone(obj){ return JSON.parse(JSON.stringify(obj)) },
                 escapeHTML(str){ return (str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]) },
                 sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)) },
@@ -4756,7 +4796,6 @@ Monitor of this License or out of the use or inability to use the
                     this.elements.body.classList.remove('storage-warning');
                 },
                 
-                // ++ NEW: Sanitize HTML function
                 sanitizeHTML(htmlString) {
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = htmlString;
