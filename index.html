@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Blokko v1.5.6 (Internal): -->
-    <title>Blokko-个人简介生成器！ (v1.5.6)-来玩《赛博朋克：2077》吧！</title>
+    <!-- Blokko v1.5.7 (Internal): -->
+    <title>Blokko-个人简介生成器！ (v1.5.7)-来玩《赛博朋克：2077》吧！</title>
     
     <script>
         // Anti-FOUC (Flash of Unstyled Content) 脚本，防止加载时样式闪烁
@@ -105,7 +105,7 @@
 
         .app-header { width: 100%; height: var(--header-height); background: var(--bg-editor); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: fixed; top: 0; left: 0; z-index: 100; box-shadow: 0 2px 8px var(--shadow-light); transition: all var(--transition-speed) ease; }
         .header-actions-wrapper { display: flex; align-items: center; gap: 15px; }
-        .app-header-title { font-size: 1.25rem; font-weight: 700; }
+        .app-header-title { font-size: 1.25rem; font-weight: 700; cursor: default; }
         .theme-switch-wrapper { display: flex; align-items: center; gap: 10px; }
         .app-container { display: flex; height: 100vh; padding-top: var(--header-height); position: relative; top: 0; transition: top 0.3s ease; }
 
@@ -297,6 +297,9 @@
         .input-group input[type="text"].color-hex-input { flex-grow: 1; border: none; border-left: 1px solid var(--border-input); border-radius: 0; padding-left: 10px; background-color: var(--bg-input); color: var(--text-primary); }
         .input-group input[type="text"].color-hex-input:focus { outline: none; box-shadow: none; }
         .input-group input[type="range"] { flex-grow: 1; height: 20px; cursor: pointer; min-width: 100px; }
+        .stepper-group { display: flex; align-items: center; gap: 5px; }
+        .stepper-group input[type="range"] { flex-grow: 1; }
+        .btn-stepper { display: none; flex-shrink: 0; width: 30px; height: 30px; padding: 0; font-size: 1.2rem; line-height: 30px; border-radius: 50%; }
         .radio-group { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: var(--bg-input); border: 1px solid var(--border-input); border-radius: 6px; padding: 10px; }
         .radio-group label { margin: 0; font-weight: normal; display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.9rem; }
         .color-control-row { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-start; min-width: 0; }
@@ -318,7 +321,7 @@
         #preview-bio { margin: 0; font-size: 0.9rem; line-height: 1.4; color: var(--text-primary); opacity: 0.8; transition: color var(--transition-speed) ease; white-space: pre-wrap; }
         #preview-subtitle:empty, #preview-bio:empty { display: none; }
         .tags-container { margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-        .tag-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 16px; transition: all var(--transition-speed) ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .tag-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 16px; transition: all var(--transition-speed) ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: grab; }
         .editor-block { background: var(--bg-editor); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px var(--shadow-light); transition: all var(--transition-speed) ease; opacity: 1; transform: scale(1); }
         .sortable-ghost { background: var(--bg-image-upload-hover) !important; border: 2px dashed var(--color-primary); box-shadow: none !important; opacity: 0.8 !important; }
         .editor-block.sortable-chosen { box-shadow: 0 4px 12px var(--shadow-medium); transform: scale(1.02); }
@@ -432,7 +435,7 @@
         .texture-name { font-size: 0.75rem; margin-top: 5px; color: var(--text-secondary); text-align: center; }
         #tag-manager-list, #font-manager-list { display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; padding: 10px; border: 1px solid var(--border-input); border-radius: 6px; background-color: var(--bg-input); margin-bottom: 15px; }
         .tag-manager-item, .font-manager-item { display: flex; align-items: center; gap: 8px; background-color: var(--bg-section); padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); }
-        .tag-manager-item { cursor: grab; }
+        .tag-manager-item .tag-drag-handle { cursor: grab; color: var(--text-placeholder); font-size: 1.5rem; padding: 0 8px; }
         .tag-manager-item .tag-icon-btn { flex-shrink: 0; width: 32px; height: 32px; padding: 0; font-size: 1.2rem; cursor: pointer; }
         .tag-manager-item .tag-text-input { flex-grow: 1; border: none; background: transparent; padding: 4px 6px; cursor: text; }
         .tag-manager-item .tag-delete-btn, .font-manager-item .font-delete-btn { flex-shrink: 0; width: 32px; height: 32px; padding: 0; cursor: pointer; }
@@ -497,6 +500,7 @@
             .color-control-row, .gradient-controls { flex-direction: column; gap: 10px; }
             .gradient-controls { grid-template-columns: 1fr; }
             .color-control-group { width: 100%; min-width: 0; }
+            .btn-stepper { display: inline-flex; align-items: center; justify-content: center; }
         }
     </style>
 </head>
@@ -507,7 +511,7 @@
 
     <header class="app-header">
         <button id="mobile-layer-toggle" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:layers-outline"></span> 内容</button>
-        <div class="app-header-title">Blokko (v1.5.6)</div>
+        <div class="app-header-title">Blokko (v1.5.7)</div>
         <div class="header-actions-wrapper">
             <button id="lock-mode-toggle" class="btn btn-default" style="width: auto; padding: 6px 12px;" title="切换编辑/预览模式">编辑中</button>
             <button id="show-help-btn" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:help-circle-outline"></span> 帮助</button>
@@ -604,7 +608,7 @@
             <div id="help-instructions" class="tab-content">
                 <h4>欢迎使用 Blokko！</h4>
                 <p><strong><span class="iconify" data-icon="mdi:cursor-default-click-outline" style="vertical-align: -0.2em;"></span> 双击编辑：</strong> 预览区域的大部分文本内容（如昵称、简介、卡片标题和内容）都可以通过双击直接进行编辑。</p>
-                <p><strong><span class="iconify" data-icon="mdi:drag" style="vertical-align: -0.2em;"></span> 拖拽排序：</strong> 在左侧“内容图层”面板，你可以拖动图层来进行排序。</p>
+                <p><strong><span class="iconify" data-icon="mdi:drag" style="vertical-align: -0.2em;"></span> 拖拽排序：</strong> 在左侧“内容图层”面板，你可以拖动图层来进行排序。现在，预览区的个人信息标签也可以直接拖拽排序了！</p>
                 <p><strong><span class="iconify" data-icon="mdi:view-dashboard-variant-outline" style="vertical-align: -0.2em;"></span> 瀑布流布局：</strong> 对于多列区块（双排/三排），可以在右侧检查器中勾选“启用瀑布流”，使卡片/图片高度自适应，布局更紧凑。</p>
                 <p><strong><span class="iconify" data-icon="mdi:lock-open-variant-outline" style="vertical-align: -0.2em;"></span> 锁定模式：</strong> 点击右上角的 "编辑中" 按钮可切换到 "预览中"，此模式下禁用双击编辑，方便在手机上顺畅滑动浏览。</p>
                 <p><strong><span class="iconify" data-icon="mdi:import" style="vertical-align: -0.2em;"></span> 导入/导出：</strong> 在右侧检查器的“全局与导出”设置中，可以导入/导出 .json 配置文件，方便备份和分享。</p>
@@ -988,21 +992,19 @@ Monitor of this License or out of the use or inability to use the
                 </div>
             </div>
             <div id="help-changelog" class="tab-content">
-                <h4>v1.5.6 更新日志</h4>
+                <h4>v1.5.7 更新日志</h4>
                 <ul>
-                    <li><strong>【核心】字体存储升级:</strong> 弃用 `localStorage`，全面改用 **`IndexedDB`** 存储字体文件，彻底解决了5MB的存储上限问题，现在您可以上传更多、更大的字体。</li>
-                    <li><strong>【新增】字体管理功能:</strong> 您现在可以在“全局样式” -> “字体”部分点击“管理上传的字体”来删除不再需要的字体。</li>
-                    <li><strong>【新增】智能存储警告:</strong> 当因极少数情况（如磁盘空间耗尽）导致存储失败时，会在页面顶部显示一个常驻警告条。一旦后续任何保存操作成功，该警告条会自动消失。</li>
-                    <li><strong>【新增】自定义导出比例:</strong> 在“自定义宽度”模式下，新增 **“锁定长宽比”** 选项。取消勾选后，您可以独立改变导出图片的宽度而保持高度不变，实现更自由的构图。</li>
-                    <li><strong>【优化】UI状态持久化:</strong> 修复了添加区块或撤销/重做时，左侧内容图层展开状态被重置的问题。</li>
-                    <li><strong>【优化】“高级”设置:</strong>
+                    <li><strong>【功能】预览区标签可拖拽排序:</strong> 现在可以直接在中间预览区域拖动个人信息标签来调整它们的顺序了。</li>
+                    <li><strong>【优化】移动端体验:</strong>
                         <ul>
-                            <li>默认使用“纯色”背景模式，界面更简洁。</li>
-                            <li>更多选项（如渐变、圆角、边框等）被归入“高级”折叠项中。</li>
-                            <li>应用会记住您对“高级”选项的展开/折叠偏好。</li>
+                            <li>修复了在手机上展开图层或样式面板后，点击空白区域无法收起面板的问题。</li>
+                            <li>为样式面板中的“标签管理器”增加了专门的拖拽锚点，解决了在手机上编辑标签时容易误触排序的问题。</li>
+                            <li>为大部分滑块（Slider）增加了“+”和“-”步进按钮（仅移动端显示），方便在触摸屏上精确调整数值。</li>
                         </ul>
                     </li>
-                    <li><strong>【优化】颜色输入器:</strong> 现在可以智能识别并自动补全3位 (`f0c`) 和无`#`的6位 (`ff00cc`) HEX颜色代码。</li>
+                    <li><strong>【修复】图层显隐功能:</strong> 修复了在左侧内容图层点击“眼睛”图标无法正常显示/隐藏区块的BUG。</li>
+                    <li><strong>【优化】界面布局:</strong> 调整并确认了“页面与头部样式”的设置顺序，使其更符合直觉。</li>
+                    <li><strong>【彩蛋】</strong> 我在某个地方藏了一个小彩蛋，试着多点点界面的某个角落？</li>
                 </ul>
             </div>
             <div id="help-about" class="tab-content">
@@ -1124,6 +1126,7 @@ Monitor of this License or out of the use or inability to use the
                 sortableLayers: null,
                 sortablePreview: null,
                 sortableTags: null,
+                sortablePreviewTags: null,
                 cardLayerSortables: {},
                 cardSortables: {},
                 imageCardSortables: {},
@@ -1138,9 +1141,11 @@ Monitor of this License or out of the use or inability to use the
                 colorThief: null,
                 longPressTimer: null,
                 lastPalette: [],
+                easterEggCounter: 0,
+                easterEggTimer: null,
 
                 init() {
-                    console.log("Blokko 初始化 v1.5.6 ...");
+                    console.log("Blokko 初始化 v1.5.7 ...");
                     this.elements = this.queryElements();
                     this.presets = this.getPresets();
                     this.state = this.getDefaultState();
@@ -1167,7 +1172,7 @@ Monitor of this License or out of the use or inability to use the
                         this.setSelection({ type: 'global' });
                         this.updateUndoRedoButtons();
                         
-                        const currentVersion = '1.5.6';
+                        const currentVersion = '1.5.7';
                         const lastVisitedVersion = localStorage.getItem('blokkoLastVersion');
                         if (currentVersion !== lastVisitedVersion) {
                             setTimeout(() => {
@@ -1342,8 +1347,12 @@ Monitor of this License or out of the use or inability to use the
                     this.elements.mobileInspectorToggle.addEventListener('click', () => this.togglePanelDrawer('inspector-panel'));
 
                     this.elements.previewPanel.addEventListener('click', (e) => {
-                        if (e.target.closest('.preview-wrapper') && this.elements.body.classList.contains('panels-open')) {
-                            this.togglePanelDrawer(false);
+                        if (this.elements.body.classList.contains('panels-open')) {
+                            if (!e.target.closest('[contenteditable="true"]')) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                this.togglePanelDrawer(false);
+                            }
                         }
                     });
 
@@ -1494,6 +1503,23 @@ Monitor of this License or out of the use or inability to use the
                             this.hideColorContextMenu();
                         }
                     });
+
+                    const titleEl = document.querySelector('.app-header-title');
+                    if (titleEl) {
+                        titleEl.addEventListener('click', () => {
+                            clearTimeout(this.easterEggTimer);
+                            this.easterEggCounter++;
+                            if (this.easterEggCounter >= 6) {
+                                window.open('https://www.bilibili.com/video/BV1m4411M7iy/', '_blank');
+                                this.showToast('🥚 你发现了一个彩蛋！', 'success');
+                                this.easterEggCounter = 0;
+                            } else {
+                                this.easterEggTimer = setTimeout(() => {
+                                    this.easterEggCounter = 0;
+                                }, 2000);
+                            }
+                        });
+                    }
                 },
                 
                 bindEditorEvents() {
@@ -1669,6 +1695,26 @@ Monitor of this License or out of the use or inability to use the
                     
                     panel.addEventListener('click', e => {
                         const target = e.target;
+
+                        const stepperBtn = e.target.closest('.btn-stepper');
+                        if (stepperBtn) {
+                            const rangeInput = stepperBtn.parentElement.querySelector('input[type="range"]');
+                            if (rangeInput) {
+                                const step = parseFloat(rangeInput.step) || 1;
+                                const currentValue = parseFloat(rangeInput.value);
+                                let newValue = stepperBtn.classList.contains('plus') ? currentValue + step : currentValue - step;
+                                
+                                const min = parseFloat(rangeInput.min);
+                                const max = parseFloat(rangeInput.max);
+                                if (!isNaN(min)) newValue = Math.max(min, newValue);
+                                if (!isNaN(max)) newValue = Math.min(max, newValue);
+                                
+                                rangeInput.value = newValue;
+                                rangeInput.dispatchEvent(new Event('input', { bubbles: true }));
+                                rangeInput.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+                            return;
+                        }
 
                         const legend = target.closest('.editor-section > legend');
                         if (legend) {
@@ -2175,10 +2221,21 @@ Monitor of this License or out of the use or inability to use the
                              <fieldset class="editor-section" id="page-styles-section">
                                 <legend>页面与头部样式</legend>
                                 <div class="section-content">
+								 <div class="tab-group-wrapper">
+                                 <div class="section-header" style="margin-bottom: 5px;">
+                                 <h4 style="margin: 0;">头部背景</h4>
+                                 <label class="checkbox-group advanced-toggle-label"><input type="checkbox" class="advanced-toggle"> 高级</label>
+                                    </div>
+                                        <div class="tabs"><button class="tab-btn" data-tab="header-bg-solid">纯色</button><button class="tab-btn advanced-setting" data-tab="header-bg-gradient">渐变</button></div>
+                                        <div id="header-bg-solid" class="tab-content"><div class="form-group"><label>头部背景颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.headerBgColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.headerBgColor"></div></div></div>
+                                        <div id="header-bg-gradient" class="tab-content advanced-setting"><div class="gradient-controls"><div class="form-group"><label>起始颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.headerBgGradientStart"><input type="text" class="color-hex-input" data-state-key="pageStyles.headerBgGradientStart"></div></div><div class="form-group"><label>结束颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.headerBgGradientEnd"><input type="text" class="color-hex-input" data-state-key="pageStyles.headerBgGradientEnd"></div></div><div class="gradient-angle-control form-group"><label>角度 (<span class="angle-value">135</span>°):</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="pageStyles.headerBgGradientAngle" min="0" max="360" step="1"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div></div></div>
+                                        <div class="form-group"><label>头部文字颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.headerTextColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.headerTextColor"></div></div>
+                                        <div class="form-group advanced-setting"><label>头部不透明度:</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="pageStyles.headerOpacity" min="0" max="1" step="0.05"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div>
+                                    </div>
+								<hr class="separator">
                                     <div class="tab-group-wrapper">
                                         <div class="section-header" style="margin-bottom: 5px;">
-                                            <h4 style="margin: 0;">页面背景</h4>
-                                            <label class="checkbox-group advanced-toggle-label"><input type="checkbox" class="advanced-toggle"> 高级</label>
+                                            <h4 style="margin: 0;">页面背景</h4>   
                                         </div>
                                         <div class="tabs"><button class="tab-btn" data-tab="page-bg-solid">纯色/图片</button><button class="tab-btn advanced-setting" data-tab="page-bg-gradient">渐变</button></div>
                                         <div id="page-bg-solid" class="tab-content">
@@ -2186,23 +2243,14 @@ Monitor of this License or out of the use or inability to use the
                                             <div class="form-group"><label>背景图 (可选):</label><div class="input-group simple"><input type="file" id="page-bg-upload" accept="image/*" style="width:100%"><button id="clear-page-bg-btn" class="btn btn-default btn-small">清除</button></div></div>
                                             <div id="page-image-controls" class="advanced-setting">
                                                 <div class="form-group"><label>图片遮罩颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageOverlayColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageOverlayColor"></div></div>
-                                                <div class="form-group"><label>图片遮罩不透明度:</label><input type="range" data-state-key="pageStyles.pageOverlayOpacity" min="0" max="1" step="0.05"></div>
+                                                <div class="form-group"><label>图片遮罩不透明度:</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="pageStyles.pageOverlayOpacity" min="0" max="1" step="0.05"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div>
                                             </div>
                                         </div>
-                                        <div id="page-bg-gradient" class="tab-content advanced-setting"><div class="gradient-controls"><div class="form-group"><label>起始颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageBgGradientStart"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageBgGradientStart"></div></div><div class="form-group"><label>结束颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageBgGradientEnd"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageBgGradientEnd"></div></div><div class="gradient-angle-control form-group"><label>角度 (<span class="angle-value">135</span>°):</label><input type="range" data-state-key="pageStyles.pageBgGradientAngle" min="0" max="360" step="1"></div></div></div>
+                                        <div id="page-bg-gradient" class="tab-content advanced-setting"><div class="gradient-controls"><div class="form-group"><label>起始颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageBgGradientStart"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageBgGradientStart"></div></div><div class="form-group"><label>结束颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageBgGradientEnd"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageBgGradientEnd"></div></div><div class="gradient-angle-control form-group"><label>角度 (<span class="angle-value">135</span>°):</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="pageStyles.pageBgGradientAngle" min="0" max="360" step="1"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div></div></div>
                                         <div class="advanced-setting" style="margin-top: 10px;">
                                             <div class="form-group"><button id="show-texture-picker-btn" class="btn btn-default">🎨 添加纹理</button></div>
-                                            <div id="page-texture-controls" class="inset-controls"><div class="form-group"><label>当前纹理: <span id="current-texture-name">无</span></label><button id="clear-texture-btn" class="btn btn-default btn-small">清除纹理</button></div><div class="color-control-row"><div class="color-control-group"><label>纹理颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageBgPatternColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageBgPatternColor"></div></div><div class="color-control-group"><label>纹理不透明度:</label><input type="range" data-state-key="pageStyles.pageBgPatternOpacity" min="0" max="1" step="0.05"></div></div><div class="form-group"><label>纹理密度:</label><input type="range" data-state-key="pageStyles.pageBgPatternDensity" min="10" max="100" step="2"></div></div>
+                                            <div id="page-texture-controls" class="inset-controls"><div class="form-group"><label>当前纹理: <span id="current-texture-name">无</span></label><button id="clear-texture-btn" class="btn btn-default btn-small">清除纹理</button></div><div class="color-control-row"><div class="color-control-group"><label>纹理颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.pageBgPatternColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.pageBgPatternColor"></div></div><div class="color-control-group"><label>纹理不透明度:</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="pageStyles.pageBgPatternOpacity" min="0" max="1" step="0.05"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div></div><div class="form-group"><label>纹理密度:</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="pageStyles.pageBgPatternDensity" min="10" max="100" step="2"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div></div>
                                         </div>
-                                    </div>
-                                    <hr class="separator">
-                                    <div class="tab-group-wrapper">
-                                        <h4>头部背景</h4>
-                                        <div class="tabs"><button class="tab-btn" data-tab="header-bg-solid">纯色</button><button class="tab-btn advanced-setting" data-tab="header-bg-gradient">渐变</button></div>
-                                        <div id="header-bg-solid" class="tab-content"><div class="form-group"><label>头部背景颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.headerBgColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.headerBgColor"></div></div></div>
-                                        <div id="header-bg-gradient" class="tab-content advanced-setting"><div class="gradient-controls"><div class="form-group"><label>起始颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.headerBgGradientStart"><input type="text" class="color-hex-input" data-state-key="pageStyles.headerBgGradientStart"></div></div><div class="form-group"><label>结束颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.headerBgGradientEnd"><input type="text" class="color-hex-input" data-state-key="pageStyles.headerBgGradientEnd"></div></div><div class="gradient-angle-control form-group"><label>角度 (<span class="angle-value">135</span>°):</label><input type="range" data-state-key="pageStyles.headerBgGradientAngle" min="0" max="360" step="1"></div></div></div>
-                                        <div class="form-group"><label>头部文字颜色:</label><div class="input-group"><input type="color" data-state-key="pageStyles.headerTextColor"><input type="text" class="color-hex-input" data-state-key="pageStyles.headerTextColor"></div></div>
-                                        <div class="form-group advanced-setting"><label>头部不透明度:</label><input type="range" data-state-key="pageStyles.headerOpacity" min="0" max="1" step="0.05"></div>
                                     </div>
                                 </div>
                             </fieldset>
@@ -2223,15 +2271,15 @@ Monitor of this License or out of the use or inability to use the
                                     </div>
                                     <div class="tabs"><button class="tab-btn" data-tab="card-bg-solid">纯色</button><button class="tab-btn advanced-setting" data-tab="card-bg-gradient">渐变</button></div>
                                     <div id="card-bg-solid" class="tab-content"><div class="color-control-row"><div class="color-control-group"><label>背景色:</label><div class="input-group"><input type="color" data-state-key="globalCardStyles.bgColor"><input type="text" class="color-hex-input" data-state-key="globalCardStyles.bgColor"></div></div><div class="color-control-group"><label>文字颜色:</label><div class="input-group"><input type="color" data-state-key="globalCardStyles.textColor"><input type="text" class="color-hex-input" data-state-key="globalCardStyles.textColor"></div></div></div></div>
-                                    <div id="card-bg-gradient" class="tab-content advanced-setting"><div class="gradient-controls"><div class="form-group"><label>起始颜色:</label><div class="input-group"><input type="color" data-state-key="globalCardStyles.bgGradientStart"><input type="text" class="color-hex-input" data-state-key="globalCardStyles.bgGradientStart"></div></div><div class="form-group"><label>结束颜色:</label><div class="input-group"><input type="color" data-state-key="globalCardStyles.bgGradientEnd"><input type="text" class="color-hex-input" data-state-key="globalCardStyles.bgGradientEnd"></div></div><div class="gradient-angle-control form-group"><label>角度 (<span class="angle-value">135</span>°):</label><input type="range" data-state-key="globalCardStyles.bgGradientAngle" min="0" max="360" step="1"></div></div></div>
-                                    <div class="form-group"><label>不透明度:</label><input type="range" data-state-key="globalCardStyles.opacity" min="0" max="1" step="0.05"></div>
-                                    <div class="form-group advanced-setting"><label>圆角 (px): <span id="gCardRadiusValue">12</span></label><input type="range" data-state-key="globalCardStyles.radius" min="0" max="40" step="1"></div>
-                                    <div class="advanced-setting"><hr class="separator"><label>卡片边框（预览区会出现空隙，导出是正常的）:</label><div class="form-group inset-controls"><div class="form-group"><label>样式:</label><select data-state-key="globalCardStyles.borderStyle"><option value="none">无</option><option value="solid">实线</option><option value="dashed">虚线</option><option value="dotted">点状</option><option value="double">双实线</option></select></div><div class="color-control-row"><div class="color-control-group"><label>粗细(px):</label><div class="input-group simple"><input type="range" data-state-key="globalCardStyles.borderWidth" min="0" max="10" step="1"></div></div><div class="color-control-group"><label>颜色:</label><div class="input-group"><input type="color" data-state-key="globalCardStyles.borderColor"><input type="text" class="color-hex-input" data-state-key="globalCardStyles.borderColor"></div></div></div></div></div>
+                                    <div id="card-bg-gradient" class="tab-content advanced-setting"><div class="gradient-controls"><div class="form-group"><label>起始颜色:</label><div class="input-group"><input type="color" data-state-key="globalCardStyles.bgGradientStart"><input type="text" class="color-hex-input" data-state-key="globalCardStyles.bgGradientStart"></div></div><div class="form-group"><label>结束颜色:</label><div class="input-group"><input type="color" data-state-key="globalCardStyles.bgGradientEnd"><input type="text" class="color-hex-input" data-state-key="globalCardStyles.bgGradientEnd"></div></div><div class="gradient-angle-control form-group"><label>角度 (<span class="angle-value">135</span>°):</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="globalCardStyles.bgGradientAngle" min="0" max="360" step="1"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div></div></div>
+                                    <div class="form-group"><label>不透明度:</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="globalCardStyles.opacity" min="0" max="1" step="0.05"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div>
+                                    <div class="form-group advanced-setting"><label>圆角 (px): <span id="gCardRadiusValue">12</span></label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="globalCardStyles.radius" min="0" max="40" step="1"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div>
+                                    <div class="advanced-setting"><hr class="separator"><label>卡片边框（预览区会出现空隙，导出是正常的）:</label><div class="form-group inset-controls"><div class="form-group"><label>样式:</label><select data-state-key="globalCardStyles.borderStyle"><option value="none">无</option><option value="solid">实线</option><option value="dashed">虚线</option><option value="dotted">点状</option><option value="double">双实线</option></select></div><div class="color-control-row"><div class="color-control-group"><label>粗细(px):</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="globalCardStyles.borderWidth" min="0" max="10" step="1"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div><div class="color-control-group"><label>颜色:</label><div class="input-group"><input type="color" data-state-key="globalCardStyles.borderColor"><input type="text" class="color-hex-input" data-state-key="globalCardStyles.borderColor"></div></div></div></div></div>
                                     <hr class="separator"><div class="form-group"><label>对齐:</label><div class="radio-group"><label><input type="radio" name="gCardAlign" value="left" data-state-key="globalCardStyles.textAlign">居左</label><label><input type="radio" name="gCardAlign" value="center" data-state-key="globalCardStyles.textAlign">居中</label><label><input type="radio" name="gCardAlign" value="right" data-state-key="globalCardStyles.textAlign">居右</label></div></div>
                                     <div class="form-group"><label>行高:</label><div class="radio-group"><label><input type="radio" name="gCardLineHeight" value="1.4" data-state-key="globalCardStyles.lineHeight">紧凑</label><label><input type="radio" name="gCardLineHeight" value="1.5" data-state-key="globalCardStyles.lineHeight">中等</label><label><input type="radio" name="gCardLineHeight" value="1.6" data-state-key="globalCardStyles.lineHeight">宽松</label></div></div>
                                     <hr class="separator"><div class="form-group"><label>字体:</label><div class="font-controls"><input type="text" id="font-search-input" placeholder="搜索本地字体..." style="margin-bottom: 5px;"><select id="font-family-select" data-state-key="globalCardStyles.fontFamily"></select><div class="buttons"><button id="load-local-fonts-btn" class="btn btn-default">加载本地</button><button id="upload-font-btn" class="btn btn-default">上传字体</button><button id="manage-fonts-btn" class="btn btn-default">管理</button></div><input type="file" id="font-upload-input" accept=".ttf,.woff,.woff2,.otf" style="display: none;"></div></div>
                                     <div class="form-group"> <label>字号:</label> <select data-state-key="globalCardStyles.fontSize"> <option value="0.9rem">小</option> <option value="1rem" selected>中 (默认)</option> <option value="1.1rem">大</option> </select> </div>
-                                    <div class="advanced-setting"><div class="color-control-row"><div class="color-control-group"><label>文字描边(px):</label><div class="input-group simple"><input type="range" data-state-key="globalCardStyles.textStrokeWidth" min="0" max="5" step="0.5"></div></div><div class="color-control-group"><label>描边颜色:</label><div class="input-group"><input type="color" data-state-key="globalCardStyles.textStrokeColor"><input type="text" class="color-hex-input" data-state-key="globalCardStyles.textStrokeColor"></div></div></div></div>
+                                    <div class="advanced-setting"><div class="color-control-row"><div class="color-control-group"><label>文字描边(px):</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="globalCardStyles.textStrokeWidth" min="0" max="5" step="0.5"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div><div class="color-control-group"><label>描边颜色:</label><div class="input-group"><input type="color" data-state-key="globalCardStyles.textStrokeColor"><input type="text" class="color-hex-input" data-state-key="globalCardStyles.textStrokeColor"></div></div></div></div>
                                 </div>
                             </fieldset>
                             <fieldset class="editor-section" id="export-section">
@@ -2269,10 +2317,10 @@ Monitor of this License or out of the use or inability to use the
                                     </div>
                                     <div class="form-group"><label>头像上传 (点击左侧预览区的头像也可上传):</label><input type="file" id="avatar-upload" accept="image/*"></div>
                                     <div class="form-group advanced-setting"><label>头像形状:</label><div class="radio-group"><label><input type="radio" name="avatarShape" value="50%" data-state-key="personalInfo.avatarShape">圆形</label><label><input type="radio" name="avatarShape" value="16px" data-state-key="personalInfo.avatarShape">圆角</label><label><input type="radio" name="avatarShape" value="0px" data-state-key="personalInfo.avatarShape">方形</label></div></div>
-                                    <div class="form-group advanced-setting"><label>头像边框:</label><div class="color-control-row"><div class="color-control-group"><label>粗细(px):</label><div class="input-group simple"><input type="range" data-state-key="personalInfo.avatarBorderSize" min="0" max="10" step="1"></div></div><div class="color-control-group"><label>颜色:</label><div class="input-group"><input type="color" data-state-key="personalInfo.avatarBorderColor"><input type="text" class="color-hex-input" data-state-key="personalInfo.avatarBorderColor"></div></div></div></div>
+                                    <div class="form-group advanced-setting"><label>头像边框:</label><div class="color-control-row"><div class="color-control-group"><label>粗细(px):</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="personalInfo.avatarBorderSize" min="0" max="10" step="1"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div><div class="color-control-group"><label>颜色:</label><div class="input-group"><input type="color" data-state-key="personalInfo.avatarBorderColor"><input type="text" class="color-hex-input" data-state-key="personalInfo.avatarBorderColor"></div></div></div></div>
                                     <hr class="separator advanced-setting">
-                                    <div class="form-group advanced-setting"><label>头像大小 (%): <span class="avatar-size-value">100</span></label><input type="range" data-state-key="personalInfo.avatarSize" min="50" max="200" step="1"></div>
-                                    <div class="form-group advanced-setting"><label>头像水平位置:</label><input type="range" data-state-key="personalInfo.avatarOffsetX" min="-100" max="100" step="1"></div>
+                                    <div class="form-group advanced-setting"><label>头像大小 (%): <span class="avatar-size-value">100</span></label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="personalInfo.avatarSize" min="50" max="200" step="1"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div>
+                                    <div class="form-group advanced-setting"><label>头像水平位置:</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="personalInfo.avatarOffsetX" min="-100" max="100" step="1"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div>
                                     <div class="form-group advanced-setting"><button id="reset-avatar-transform-btn" class="btn btn-default btn-small">恢复默认位置与大小</button></div>
                                     <hr class="separator">
                                     <div class="form-group"><label>昵称:</label><input type="text" data-state-key="personalInfo.nickname" data-preview-target="#preview-nickname"></div>
@@ -2282,7 +2330,7 @@ Monitor of this License or out of the use or inability to use the
                                     <div class="form-group"><label>简介 (可选):</label><textarea data-state-key="personalInfo.bio" rows="3" data-preview-target="#preview-bio"></textarea></div>
                                     <div class="form-group advanced-setting"><label>简介颜色:</label><div class="input-group"><input type="color" data-state-key="personalInfo.bioColor"><input type="text" class="color-hex-input" data-state-key="personalInfo.bioColor"><button class="btn btn-default btn-small" data-reset-key="personalInfo.bioColor">重置</button></div></div>
                                     <hr class="separator">
-                                    <div class="form-group"><label>标签管理器 (可拖拽排序):</label><div id="tag-manager-list"></div><div class="input-group simple" style="margin-top: 10px;"><input type="text" id="new-tag-text-input" placeholder="输入新标签文字..."><button id="add-new-tag-btn" class="btn btn-default btn-small">添加标签</button></div></div>
+                                    <div class="form-group"><label>标签管理器 (可点击标签前拖拽排序):</label><div id="tag-manager-list"></div><div class="input-group simple" style="margin-top: 10px;"><input type="text" id="new-tag-text-input" placeholder="输入新标签文字..."><button id="add-new-tag-btn" class="btn btn-default btn-small">添加标签</button></div></div>
                                     <div class="form-group advanced-setting"><label>标签样式:</label><div class="color-control-row"><div class="color-control-group"><label>背景</label><div class="input-group"><input type="color" data-state-key="personalInfo.tagBgColor"><input type="text" class="color-hex-input" data-state-key="personalInfo.tagBgColor"><button class="btn btn-default btn-small" data-reset-key="personalInfo.tagBgColor">重置</button></div></div><div class="color-control-group"><label>文字</label><div class="input-group"><input type="color" data-state-key="personalInfo.tagTextColor"><input type="text" class="color-hex-input" data-state-key="personalInfo.tagTextColor"><button class="btn btn-default btn-small" data-reset-key="personalInfo.tagTextColor">重置</button></div></div></div></div>
                                 </div>
                             </fieldset>
@@ -2325,10 +2373,10 @@ Monitor of this License or out of the use or inability to use the
                     } else if (block.type === 'separator') {
                         const s = block.settings;
                         const iconHTML = s.icon ? `<span class="iconify" data-icon="${s.icon}"></span>` : '选择图标';
-                        content = `<div class="form-group"><label>样式:</label><div class="radio-group"><label><input type="radio" name="sep-style-${block.id}" data-setting-key="style" value="solid" ${s.style==='solid'?'checked':''}>实线</label><label><input type="radio" name="sep-style-${block.id}" data-setting-key="style" value="dashed" ${s.style==='dashed'?'checked':''}>虚线</label><label><input type="radio" name="sep-style-${block.id}" data-setting-key="style" value="dotted" ${s.style==='dotted'?'checked':''}>点状</label></div></div><div class="color-control-row"><div class="color-control-group"><label>线条颜色:</label><div class="input-group"><input type="color" data-setting-key="color" value="${s.color}"><input type="text" class="color-hex-input" data-setting-key="color" value="${s.color}"><button class="btn btn-default btn-small" data-reset-block-key="color">重置</button></div></div><div class="color-control-group"><label>粗细(px):</label><div class="input-group simple"><input type="range" data-setting-key="thickness" min="1" max="10" value="${s.thickness}"></div></div></div><div class="form-group"><label>垂直间距(px):</label><div class="input-group simple"><input type="range" data-setting-key="margin" min="0" max="50" value="${s.margin}"></div></div><hr class="separator"><div class="form-group"><label>嵌入文本 (可选):</label><div class="input-group"><input type="text" data-setting-key="text" value="${this.escapeHTML(s.text || '')}" style="border-right: none;"><button class="btn btn-default select-icon-btn" data-separator-icon-btn="true" style="width: auto; flex-shrink: 0; border-radius: 0 6px 6px 0;">${iconHTML}</button></div></div><div class="form-group"><label>文本颜色:</label><div class="input-group"><input type="color" data-setting-key="textColor" value="${s.textColor}"><input type="text" class="color-hex-input" data-setting-key="textColor" value="${s.textColor}"><button class="btn btn-default btn-small" data-reset-block-key="textColor">重置</button></div></div>`;
+                        content = `<div class="form-group"><label>样式:</label><div class="radio-group"><label><input type="radio" name="sep-style-${block.id}" data-setting-key="style" value="solid" ${s.style==='solid'?'checked':''}>实线</label><label><input type="radio" name="sep-style-${block.id}" data-setting-key="style" value="dashed" ${s.style==='dashed'?'checked':''}>虚线</label><label><input type="radio" name="sep-style-${block.id}" data-setting-key="style" value="dotted" ${s.style==='dotted'?'checked':''}>点状</label></div></div><div class="color-control-row"><div class="color-control-group"><label>线条颜色:</label><div class="input-group"><input type="color" data-setting-key="color" value="${s.color}"><input type="text" class="color-hex-input" data-setting-key="color" value="${s.color}"><button class="btn btn-default btn-small" data-reset-block-key="color">重置</button></div></div><div class="color-control-group"><label>粗细(px):</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-setting-key="thickness" min="1" max="10" value="${s.thickness}"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div></div><div class="form-group"><label>垂直间距(px):</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-setting-key="margin" min="0" max="50" value="${s.margin}"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div><hr class="separator"><div class="form-group"><label>嵌入文本 (可选):</label><div class="input-group"><input type="text" data-setting-key="text" value="${this.escapeHTML(s.text || '')}" style="border-right: none;"><button class="btn btn-default select-icon-btn" data-separator-icon-btn="true" style="width: auto; flex-shrink: 0; border-radius: 0 6px 6px 0;">${iconHTML}</button></div></div><div class="form-group"><label>文本颜色:</label><div class="input-group"><input type="color" data-setting-key="textColor" value="${s.textColor}"><input type="text" class="color-hex-input" data-setting-key="textColor" value="${s.textColor}"><button class="btn btn-default btn-small" data-reset-block-key="textColor">重置</button></div></div>`;
                     } else if (block.type === 'spacer') {
                         const s = block.settings;
-                        content = `<div class="form-group"><label>高度 (px): <span class="spacer-height-value">${s.height}</span></label><div class="input-group simple"><input type="range" data-setting-key="height" min="1" max="200" value="${s.height}"></div></div>`;
+                        content = `<div class="form-group"><label>高度 (px): <span class="spacer-height-value">${s.height}</span></label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-setting-key="height" min="1" max="200" value="${s.height}"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div>`;
                     }
 
                     return `<h3 class="panel-header">区块设置 ${backBtn}</h3><div class="editor-block" data-block-id="${block.id}"><div class="editor-block-header"><input type="text" class="editor-block-title-input" data-block-id-for-title="${block.id}" value="${this.escapeHTML(block.title || '')}" placeholder="区块标题 (可编辑)"><div class="block-actions"><button class="btn btn-danger btn-small block-delete-btn">删除</button></div></div><div class="editor-block-content">${content}</div></div>`;
@@ -2412,7 +2460,7 @@ Monitor of this License or out of the use or inability to use the
                             </div>
                             <hr class="separator">
                             <div class="form-group"><label>背景图:</label><div class="input-group simple"><input type="file" class="card-bg-upload" accept="image/*"><button class="btn btn-default btn-small card-clear-bg-btn">清除</button></div></div>
-                            <div class="card-overlay-controls" style="${card.bgImageDataUrl ? '' : 'display:none;'}"><label>图片蒙版:</label><div class="color-control-row"><div class="color-control-group"><label>颜色:</label><div class="input-group"><input type="color" data-card-key="overlayColor" value="${card.overlayColor || '#ffffff'}"><input class="color-hex-input" type="text" data-card-key="overlayColor" value="${card.overlayColor || '#ffffff'}"></div></div><div class="color-control-group"><label>不透明度:</label><input type="range" data-card-key="overlayOpacity" min="0" max="1" step="0.05" value="${card.overlayOpacity ?? 0.5}"></div></div></div>
+                            <div class="card-overlay-controls" style="${card.bgImageDataUrl ? '' : 'display:none;'}"><label>图片蒙版:</label><div class="color-control-row"><div class="color-control-group"><label>颜色:</label><div class="input-group"><input type="color" data-card-key="overlayColor" value="${card.overlayColor || '#ffffff'}"><input class="color-hex-input" type="text" data-card-key="overlayColor" value="${card.overlayColor || '#ffffff'}"></div></div><div class="color-control-group"><label>不透明度:</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-card-key="overlayOpacity" min="0" max="1" step="0.05" value="${card.overlayOpacity ?? 0.5}"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div></div></div>
                         </div>`;
                 },
 
@@ -2908,6 +2956,7 @@ Monitor of this License or out of the use or inability to use the
                     const wrapper = this.elements.previewBlocksContainer.querySelector(`.preview-block-wrapper[data-block-id="${blockId}"]`);
                     const block = this.findBlock(blockId);
                     if (block && wrapper) {
+                        wrapper.classList.toggle('is-hidden', block.isVisible === false);
                         wrapper.innerHTML = this.createPreviewBlockHTML(block);
                         this.initMasonryForBlock(blockId);
                     }
@@ -3802,6 +3851,7 @@ Monitor of this License or out of the use or inability to use the
                 initAllSortables(){
                     this.initLayerSortables();
                     this.initSortablePreviewBlocks();
+                    this.initSortablePreviewTags();
                 },
                 
                 initLayerSortables() {
@@ -3871,6 +3921,7 @@ Monitor of this License or out of the use or inability to use the
                         this.sortableTags = new Sortable(list, {
                             animation: 150,
                             ghostClass: 'sortable-ghost',
+                            handle: '.tag-drag-handle',
                             onEnd: e => {
                                 if (e.oldIndex === e.newIndex) return;
                                 this.pushHistory();
@@ -3878,6 +3929,25 @@ Monitor of this License or out of the use or inability to use the
                                 this.state.personalInfo.tags.splice(e.newIndex, 0, movedTag);
                                 this.debouncedSaveToLocal();
                                 this.renderPersonalInfo();
+                            }
+                        });
+                    }
+                },
+
+                initSortablePreviewTags() {
+                    const container = this.elements.previewTagsContainer;
+                    if (container) {
+                        if (this.sortablePreviewTags) this.sortablePreviewTags.destroy();
+                        this.sortablePreviewTags = new Sortable(container, {
+                            animation: 150,
+                            ghostClass: 'sortable-ghost',
+                            onEnd: (e) => {
+                                if (e.oldIndex === e.newIndex) return;
+                                this.pushHistory();
+                                const [movedTag] = this.state.personalInfo.tags.splice(e.oldIndex, 1);
+                                this.state.personalInfo.tags.splice(e.newIndex, 0, movedTag);
+                                this.debouncedSaveToLocal();
+                                this.renderTagManager();
                             }
                         });
                     }
@@ -3961,6 +4031,7 @@ Monitor of this License or out of the use or inability to use the
                     if (this.sortableLayers) this.sortableLayers.option('disabled', shouldDisable);
                     if (this.sortablePreview) this.sortablePreview.option('disabled', shouldDisable);
                     if (this.sortableTags) this.sortableTags.option('disabled', shouldDisable);
+                    if (this.sortablePreviewTags) this.sortablePreviewTags.option('disabled', shouldDisable);
                     Object.values(this.cardLayerSortables).forEach(s => { if (s) s.option('disabled', shouldDisable); });
                     Object.values(this.cardSortables).forEach(s => { if (s) s.option('disabled', shouldDisable); });
                     Object.values(this.imageCardSortables).forEach(s => { if (s) s.option('disabled', shouldDisable); });
@@ -3977,6 +4048,7 @@ Monitor of this License or out of the use or inability to use the
                     container.innerHTML = tags.map(tag => {
                         const iconHTML = tag.icon ? `<span class="iconify" data-icon="${tag.icon}"></span>` : '无';
                         return `<div class="tag-manager-item" data-tag-id="${tag.id}">
+                            <span class="tag-drag-handle iconify" data-icon="mdi:drag-horizontal-variant"></span>
                             <button class="btn btn-default btn-icon tag-icon-btn">${iconHTML}</button>
                             <input type="text" class="tag-text-input" value="${this.escapeHTML(tag.text)}">
                             <button class="btn btn-danger btn-icon tag-delete-btn"><span class="iconify" data-icon="mdi:delete"></span></button>
