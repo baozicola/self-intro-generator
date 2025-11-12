@@ -103,13 +103,13 @@
             height: calc(100vh - var(--header-height) - 35px);
         }
 
-        。app-header { width: 100%; height: var(--header-height); background: var(--bg-editor); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: fixed; top: 0; left: 0; z-index: 100; box-shadow: 0 2px 8px var(--shadow-light); transition: all var(--transition-speed) ease; }
-        。header-actions-wrapper { display: flex; align-items: center; gap: 15px; }
-        。app-header-title { font-size: 1.25rem; font-weight: 700; }
-        。theme-switch-wrapper { display: flex; align-items: center; gap: 10px; }
-        。app-container { display: flex; height: 100vh; padding-top: var(--header-height); position: relative; top: 0; transition: top 0.3s ease; }
+        .app-header { width: 100%; height: var(--header-height); background: var(--bg-editor); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: fixed; top: 0; left: 0; z-index: 100; box-shadow: 0 2px 8px var(--shadow-light); transition: all var(--transition-speed) ease; }
+        .header-actions-wrapper { display: flex; align-items: center; gap: 15px; }
+        .app-header-title { font-size: 1.25rem; font-weight: 700; }
+        .theme-switch-wrapper { display: flex; align-items: center; gap: 10px; }
+        .app-container { display: flex; height: 100vh; padding-top: var(--header-height); position: relative; top: 0; transition: top 0.3s ease; }
 
-        。layer-panel, .inspector-panel {
+        .layer-panel, .inspector-panel {
             background: var(--bg-editor);
             height: calc(100vh - var(--header-height));
             overflow-y: auto;
@@ -117,12 +117,12 @@
             transition: all var(--transition-speed) ease;
             position: relative;
         }
-        。layer-panel {
+        .layer-panel {
             width: var(--layer-panel-width);
             border-right: 1px solid var(--border-color);
             padding: 15px;
         }
-        。inspector-panel {
+        .inspector-panel {
             width: var(--inspector-panel-width);
             min-width: 350px;
             max-width: 60vw;
@@ -4570,13 +4570,13 @@ Monitor of this License or out of the use or inability to use the
                     }
                     
                     listEl.innerHTML = fonts.map(font => `
-                        <div class="font-manager-item" data-font-family="${this。escapeHTML(font。family)}">
-                            <span class="font-manager-item-name">${this。escapeHTML(font。fullName)}</span>
+                        <div class="font-manager-item" data-font-family="${this.escapeHTML(font.family)}">
+                            <span class="font-manager-item-name">${this.escapeHTML(font.fullName)}</span>
                             <button class="btn btn-danger btn-icon font-delete-btn" title="删除字体">
                                 <span class="iconify" data-icon="mdi:delete"></span>
                             </button>
                         </div>
-                    `)。join('');
+                    `).join('');
                 },
                 async deleteFont(fontFamily) {
                     if (await this.showConfirm('删除字体', `确定要删除字体 "${fontFamily}" 吗？此操作不可撤销。`)) {
