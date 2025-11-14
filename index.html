@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Blokko v1.6.0 (Internal): -->
-    <title>Blokko-个人简介生成器！ (v1.6.0)-来玩《赛博朋克：2077》吧！</title>
+    <!-- Blokko v1.6.1 (Internal): -->
+    <title>Blokko-个人简介生成器！ (v1.6.1)-来玩《赛博朋克：2077》吧！</title>
     
     <script>
         // Anti-FOUC (Flash of Unstyled Content) 脚本，防止加载时样式闪烁
@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
     <!-- FEATURE: Rich Text Editor - Quill.js CSS -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+    <!-- 新增：为移动端引入 Quill Bubble 主题的 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.bubble.css" rel="stylesheet">
 
 
     <!-- 推荐字体 CDN -->
@@ -245,6 +247,7 @@
         .preview-block-wrapper.is-hidden { display: none; }
         
         body.export-mode .preview-panel { justify-content: flex-start; }
+        body.export-mode .mobile-edit-pencil { display: none !important; } /* FIX: Hide pencil on export */
         .preview-wrapper { width: 100%; max-width: 600px; min-height: fit-content; border-radius: 20px; box-shadow: 0 4px 16px var(--shadow-medium); padding: 20px; padding-bottom: 40px; transition: all var(--transition-speed) ease; position: relative; overflow: hidden; font-family: var(--active-card-font-family); font-size: var(--active-card-font-size); }
         .preview-wrapper::before { content: none; }
         .preview-overlay { display: none; }
@@ -526,10 +529,16 @@
         }
         
         /* --- FEATURE: Rich Text Editor --- */
-        #rich-text-editor-modal .modal-container { max-width: 800px; }
-        #rich-text-editor-container { height: 35vh; margin-bottom: 15px; background-color: var(--bg-preview-page); }
-        #rich-text-editor-container .ql-editor { color: var(--text-primary); }
+        #rich-text-editor-modal .modal-container { max-width: 800px; display: flex; flex-direction: column; }
+        #rich-text-editor-modal .modal-container h3 { order: 1; }
+        #rich-text-editor-container { height: 35vh; margin-bottom: 15px; background-color: var(--bg-preview-page); order: 2; flex-grow: 1; }
+        #rich-text-editor-modal .modal-actions { order: 3; }
+        
+        #rich-text-editor-container { display: flex; flex-direction: column; }
         #rich-text-editor-container .ql-toolbar { border-color: var(--border-color); }
+        #rich-text-editor-container .ql-container { display: flex; flex-direction: column; flex-grow: 1; }
+        #rich-text-editor-container .ql-editor { color: var(--text-primary); flex-grow: 1; }
+
         #rich-text-editor-container .ql-toolbar .ql-picker-label,
         #rich-text-editor-container .ql-toolbar .ql-stroke {
              color: var(--text-secondary) !important;
@@ -537,6 +546,16 @@
         }
         html.dark-mode #rich-text-editor-container .ql-picker-options { background-color: var(--bg-card); border-color: var(--border-color); }
         /* --- END FEATURE --- */
+        
+        /* NEW: Export Modal Styles */
+        .export-option { border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; cursor: pointer; transition: all var(--transition-short); }
+        .export-option:hover { background-color: var(--bg-input); border-color: var(--color-primary); }
+        .export-option h4 { margin: 0 0 5px 0; }
+        .export-option p { margin: 0; font-size: 0.9rem; color: var(--text-secondary); }
+        /* END NEW */
+
+        /* FIX: Confirm Modal Z-index */
+        #confirm-modal { z-index: 1001; }
         
         @keyframes toast-in { to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { to { opacity: 0; transform: translateX(100%); } }
@@ -594,7 +613,7 @@
                 border-radius: 50%;
                 border: 2px solid var(--bg-preview-page);
                 box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-                z-index: 10;
+                z-index: 2; /* FIX: Lowered z-index to prevent conflict with drag-and-drop */
                 cursor: pointer;
                 opacity: 0.8;
                 transition: all var(--transition-short);
@@ -603,6 +622,21 @@
             .mobile-edit-pencil:hover {
                 transform: scale(1.1);
                 opacity: 1;
+            }
+
+            /* NEW: Sticky Inspector Headers for Mobile */
+            .inspector-panel .editor-section > legend {
+                position: -webkit-sticky; /* For Safari compatibility */
+                position: sticky;
+                top: 0;
+                background-color: var(--bg-editor);
+                z-index: 10;
+                /* Optional: Add a subtle shadow to indicate elevation */
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+            /* Optional: Dark mode adjustment for the shadow */
+            html.dark-mode .inspector-panel .editor-section > legend {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             }
         }
     </style>
@@ -614,7 +648,7 @@
 
     <header class="app-header">
         <button id="mobile-layer-toggle" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:layers-outline"></span> 内容</button>
-        <div class="app-header-title">Blokko (v1.6.0)</div>
+        <div class="app-header-title">Blokko (v1.6.1)</div>
         <div class="header-actions-wrapper">
             <button id="lock-mode-toggle" class="btn btn-default" style="width: auto; padding: 6px 12px;" title="切换编辑/预览模式">编辑中</button>
             <button id="show-help-btn" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:help-circle-outline"></span> 帮助</button>
@@ -686,6 +720,47 @@
             </div>
         </div>
     </div>
+    
+    <!-- NEW: Export Modal -->
+    <div class="modal-overlay" id="export-modal">
+        <div class="modal-container" style="max-width: 600px;">
+            <h3>选择导出模式</h3>
+            <p style="color: var(--text-secondary); margin-top: -15px; margin-bottom: 20px;">
+                选择一种方式来备份或分享您的创作。
+            </p>
+            <div class="export-options-container" style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="export-option" data-action="standard">
+                    <h4 style="margin: 0 0 5px 0;">标准导出 (.json)</h4>
+                    <p style="margin: 0; font-size: 0.9rem;">
+                        导出包含文本、颜色和布局的配置文件。不包含图片文件，适合在同一台设备上快速备份。
+                    </p>
+                </div>
+                <div class="export-option" data-action="enhanced" style="border-color: var(--color-primary); position: relative;">
+                     <span style="position: absolute; top: 10px; right: 10px; background: var(--color-primary); color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 8px;">推荐</span>
+                    <h4 style="margin: 0 0 5px 0;">强化导出 (.zip)</h4>
+                    <p style="margin: 0; font-size: 0.9rem;">
+                        将配置文件和所有图片打包成一个 .zip 文件。最建议的保存选项，可以方便的在多设备互通使用。
+                    </p>
+                </div>
+                <div class="export-option" data-action="template">
+                    <h4 style="margin: 0 0 5px 0;">模板导出 (.json)</h4>
+                    <p style="margin: 0; font-size: 0.9rem;">
+                        仅导出颜色、布局和卡片结构，不包含任何文字和图片。适合分享您的设计风格。
+                    </p>
+                </div>
+                <div class="export-option" data-action="legacy">
+                    <h4 style="margin: 0 0 5px 0;">过时导出 (.json) <span style="color: var(--color-danger); font-weight: normal;">(不推荐)</span></h4>
+                    <p style="margin: 0; font-size: 0.9rem;">
+                        将所有数据（包括图片）强行塞入一个巨大的 .json 文件。在图片多时极易导致浏览器崩溃。
+                    </p>
+                </div>
+            </div>
+            <div class="modal-actions" style="margin-top: 25px; justify-content: center;">
+                <button id="export-modal-close-btn" class="btn btn-default">取消</button>
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal-overlay" id="help-modal">
         <div class="modal-container" style="max-width: 700px;">
@@ -753,6 +828,7 @@
                         <li><a href="https://sortablejs.github.io/Sortable/" target="_blank" rel="noopener noreferrer"><strong>SortableJS</strong></a> - (MIT License) 提供了流畅的拖拽排序体验。</li>
                         <li><a href="https://masonry.desandro.com/" target="_blank" rel="noopener noreferrer"><strong>Masonry.js</strong></a> - (MIT License) 提供了强大的瀑布流/砌体布局功能。</li>
                         <li><a href="https://quilljs.com/" target="_blank" rel="noopener noreferrer"><strong>Quill.js</strong></a> - (BSD 3-Clause License) 提供了强大、稳定且易于扩展的富文本编辑功能。</li>
+                        <li><a href="https://stuk.github.io/jszip/" target="_blank" rel="noopener noreferrer"><strong>JSZip</strong></a> - (MIT License) 提供了在浏览器端创建、读取和编辑 .zip 文件的功能，是“强化导出”功能的核心。</li>
                     </ul>
                     <details>
                         <summary>查看 MIT 许可证原文</summary>
@@ -1135,13 +1211,26 @@ Monitor of this License or out of the use or inability to use the
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
+   See the specific language governing permissions and
    limitations under the License.
     </pre>
 </details>
                 </div>
             </div>
             <div id="help-changelog" class="tab-content">
+                <h4>v1.6.1 更新日志</h4>
+                <ul>
+                    <li><strong>【重要】健壮性提升:</strong> 新增了应用初始化失败时的紧急备份功能。现在，即使程序无法启动，您也可以在错误弹窗中选择“下载备份”，以`.zip`包的形式抢救包括图片在内的所有数据。</li>
+                    <li><strong>【重要】性能优化:</strong> 重构了图片处理的核心流程，大幅提升了移动端的图片上传速度和稳定性。通过避免内存密集型操作，有效解决了在处理大图时可能出现的界面卡顿或内容变黑的问题。</li>
+                    <li><strong>【体验】移动端富文本编辑优化:</strong> 移动端的富文本编辑器现在会自动切换为“气泡(Bubble)”模式。当您选中文本时，一个精简的工具栏会浮现在选区旁，彻底解决了系统自带菜单遮挡固定工具栏的问题。</li>
+                    <li><strong>【新增】导出中心:</strong> 将多种导出功能整合至一个独立的模态框，提供标准、强化(.zip)、模板和过时四种导出模式，满足不同备份和分享需求。</li>
+                    <li><strong>【修复】导出图片显示问题:</strong> 修复了在执行“导出为图片”功能时，预览图上会错误地显示移动端编辑铅笔图标的问题。</li>
+                    <li><strong>【修复】移动端交互冲突:</strong> 修正了移动端编辑铅笔图标的显示层级，解决了其可能与拖拽排序功能产生冲突的BUG。</li>
+                    <li><strong>【修复】图层可见性图标:</strong> 修复了在左侧内容图层中切换区块可见性时，“眼睛”图标状态不会实时更新的BUG。</li>
+                    <li><strong>【优化】数据稳定性:</strong> 在成功导入配置文件后，会自动执行一次保存，防止因刷新页面导致导入的数据丢失。</li>
+                    <li><strong>【合规】许可证更新:</strong> 在“感谢信息”页面中，添加了对新引入的 JSZip 库的致谢。</li>
+                </ul>
+                <hr class="separator">
                 <h4>v1.6.0 更新日志</h4>
                 <ul>
                     <li><strong>【新增】富文本编辑:</strong>
@@ -1263,11 +1352,140 @@ Monitor of this License or out of the use or inability to use the
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js" defer></script>
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" defer></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js" defer></script>
+    <!-- NEW: JSZip library for enhanced export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
     <!-- FEATURE: Rich Text Editor - Quill.js JS -->
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
     
     <script>
+        /**
+         * 创建一个紧急备份 .zip 包，该函数独立于主应用初始化流程。
+         * 它会直接尝试读取 localStorage 和 IndexedDB。
+         */
+        async function createEmergencyBackup() {
+            const backupBtn = document.getElementById('fatal-backup-btn');
+            const resetBtn = document.getElementById('fatal-reset-btn');
+            
+            if (backupBtn) {
+                backupBtn.disabled = true;
+                backupBtn.textContent = '正在打包...';
+            }
+
+            // 1. 检查 JSZip 是否可用
+            if (typeof JSZip === 'undefined') {
+                alert('错误：备份所需的 JSZip 库未能加载。请检查您的网络连接，刷新页面后在初始化失败时重试。');
+                if (backupBtn) backupBtn.textContent = '备份失败 (缺少组件)';
+                return;
+            }
+
+            // 2. 尝试从 localStorage 读取主要状态
+            const rawState = localStorage.getItem('blokkoState');
+            if (!rawState) {
+                alert('未在浏览器中找到可备份的数据。');
+                if (backupBtn) backupBtn.textContent = '无数据可备份';
+                return;
+            }
+
+            try {
+                const zip = new JSZip();
+                let stateClone = JSON.parse(rawState);
+                let db;
+
+                // 3. 尝试独立连接到 IndexedDB
+                try {
+                    db = await new Promise((resolve, reject) => {
+                        const request = indexedDB.open('BlokkoDB', 2);
+                        request.onsuccess = e => resolve(e.target.result);
+                        request.onerror = e => reject(e.target.error);
+                    });
+                } catch (dbError) {
+                    console.error("紧急备份时无法连接到IndexedDB:", dbError);
+                    alert("警告：无法访问数据库，备份将只包含文本和配置，不包含图片。");
+                }
+
+                // 4. 如果数据库连接成功，则处理图片
+                if (db) {
+                    const imageMap = new Map();
+                    
+                    const getImageFromEmergencyDB = (id) => {
+                        return new Promise((resolve, reject) => {
+                            const transaction = db.transaction(['images'], 'readonly');
+                            const store = transaction.objectStore('images');
+                            const request = store.get(id);
+                            request.onsuccess = () => resolve(request.result);
+                            request.onerror = reject;
+                        });
+                    };
+
+                    const processObject = async (obj) => {
+                        for (const key in obj) {
+                            if (typeof obj[key] === 'string' && obj[key].startsWith('idb://')) {
+                                const imageId = obj[key].substring(6);
+                                if (!imageMap.has(imageId)) {
+                                    try {
+                                        const record = await getImageFromEmergencyDB(imageId);
+                                        if (record && record.blob) {
+                                            const fileExtension = record.blob.type.split('/')[1] || 'png';
+                                            const filename = `img-${imageId}.${fileExtension}`;
+                                            const path = `images/${filename}`;
+                                            zip.file(path, record.blob);
+                                            imageMap.set(imageId, { path });
+                                            obj[key] = path;
+                                        }
+                                    } catch (e) {
+                                        console.warn(`无法从DB备份图片ID ${imageId}:`, e);
+                                    }
+                                } else if (imageMap.has(imageId)) {
+                                    obj[key] = imageMap.get(imageId).path;
+                                }
+                            } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                                await processObject(obj[key]);
+                            }
+                        }
+                    };
+
+                    await processObject(stateClone);
+                }
+
+                zip.file("config.json", JSON.stringify(stateClone, null, 2));
+                zip.file("readme-EMERGENCY-BACKUP.txt", `Blokko 紧急备份\n\n此 .zip 文件是在应用初始化失败时生成的紧急备份。\n它包含了您的配置文件 (config.json) 和尽可能多地从数据库中抢救出的图片资源。\n\n导出时间: ${new Date().toLocaleString()}`);
+
+                const blob = await zip.generateAsync({ type: "blob" });
+                
+                const downloadLink = document.createElement('a');
+                downloadLink.href = URL.createObjectURL(blob);
+                const date = new Date();
+                const dateString = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`;
+                downloadLink.download = `Blokko-Emergency-Backup-${dateString}.zip`;
+                
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(downloadLink.href);
+
+                if (backupBtn) backupBtn.textContent = '备份已下载！';
+                if (resetBtn) resetBtn.textContent = '现在可以安全重置';
+                
+            } catch (error) {
+                console.error("创建紧急备份失败:", error);
+                alert(`创建备份时发生严重错误: ${error.message}\n\n我们将尝试为您下载纯文本配置。`);
+                try {
+                    const blob = new Blob([rawState], { type: 'application/json' });
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = URL.createObjectURL(blob);
+                    downloadLink.download = `Blokko-Emergency-Config-Backup.json`;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                    URL.revokeObjectURL(downloadLink.href);
+                    if (backupBtn) backupBtn.textContent = 'JSON备份已下载';
+                } catch(e) {
+                    if (backupBtn) backupBtn.textContent = '备份彻底失败';
+                }
+            }
+        }
+
         // Hero Patterns data. Source: https://heropatterns.com/
         const HeroPatterns = [
             { name: 'Jigsaw', svg: (c, o) => `<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M41.512 41.512c.976.976 2.256.488 2.256-1.024v-6.728c0-1.512.732-2.256 2.256-2.256h6.728c1.512 0 2.016-.244 1.024-2.256-3.904-7.808-7.808-11.712-11.712-11.712-3.904 0-7.808 3.904-11.712 11.712-.992 2.012-.504 2.256 1.024 2.256h6.728c1.512 0 2.256.732 2.256 2.256v6.728c0 1.512.244 2.016 2.256 1.024zM59 60c.504 0 1-.488 1-1V38.864c0-1.512.732-2.256 2.256-2.256h10.128c1.008 0 1.512.22 1.512 1.248 0 4.88-3.904 9.76-11.712 9.76-7.808 0-11.712-4.88-11.712-9.76 0-1.028.504-1.248 1.512-1.248h10.128c1.512 0 2.256.732 2.256 2.256V59c0 .512.488 1 1 1h16.336c.512 0 1-.488 1-1V38.864c0-1.512.732-2.256 2.256-2.256h10.128c1.008 0 1.512.22 1.512 1.248 0 4.88-3.904 9.76-11.712 9.76-7.808 0-11.712-4.88-11.712-9.76 0-1.028.504-1.248 1.512-1.248h10.128c1.512 0 2.256.732 2.256 2.256V59c0 .512.488 1 1 1H59z" fill="${c}" fill-opacity="${o}" fill-rule="evenodd"/></svg>` },
@@ -1329,7 +1547,7 @@ Monitor of this License or out of the use or inability to use the
                 tooltipTimeout: null,
 
                 init() {
-                    console.log("Blokko 初始化 v1.6.0 ...");
+                    console.log("Blokko 初始化 v1.6.1 ...");
                     this.elements = this.queryElements();
                     this.presets = this.getPresets();
                     this.state = this.getDefaultState();
@@ -1356,9 +1574,19 @@ Monitor of this License or out of the use or inability to use the
                         this.setSelection({ type: 'global' });
                         this.updateUndoRedoButtons();
                         
-                        const currentVersion = '1.6.0';
+                        const currentVersion = '1.6.1';
                         const lastVisitedVersion = localStorage.getItem('blokkoLastVersion');
-                        if (currentVersion !== lastVisitedVersion) {
+                        const hasSeenTutorial = localStorage.getItem('blokkoHasSeenTutorial');
+
+                        if (!hasSeenTutorial) {
+                            setTimeout(() => {
+                                this.elements.helpModal.classList.add('visible');
+                                const helpContainer = this.elements.helpModal.querySelector('.modal-container');
+                                helpContainer.querySelector('.tab-btn[data-tab="help-tutorial"]').click();
+                                localStorage.setItem('blokkoHasSeenTutorial', 'true');
+                                localStorage.setItem('blokkoLastVersion', currentVersion);
+                            }, 1000);
+                        } else if (currentVersion !== lastVisitedVersion) {
                             setTimeout(() => {
                                 this.showToast(`已更新到 v${currentVersion}！点击“帮助”查看更新日志。`, 'success');
                             }, 1500);
@@ -1393,14 +1621,14 @@ Monitor of this License or out of the use or inability to use the
                             tagBgColor: lightTheme.pTagBgColor, tagTextColor: lightTheme.pTagTextColor
                         },
                         pageStyles: {
-                            pageBgMode: 'solid', // 默认纯色
+                            pageBgMode: 'solid', 
                             pageBgSolidColor: lightTheme.pageBgSolidColor, pageBgImageDataUrl: null, 
                             pageBgGradientStart: lightTheme.pageBgGradientStart, pageBgGradientEnd: lightTheme.pageBgGradientEnd,
                             pageBgGradientAngle: 135,
                             pageOverlayColor: "#000000", pageOverlayOpacity: 0.3,
                             pageBgPattern: '', pageBgPatternColor: '#000000', pageBgPatternOpacity: 0.1, pageBgPatternDensity: 30,
-                            headerBgMode: 'solid', // 默认纯色
-                            headerBorderRadius: 16, // NEW: Header border radius
+                            headerBgMode: 'solid',
+                            headerBorderRadius: 16,
                             headerBgColor: lightTheme.headerBgColor, headerTextColor: lightTheme.headerTextColor, headerOpacity: 1.0, 
                             headerBgGradientStart: lightTheme.headerBgGradientStart, headerBgGradientEnd: lightTheme.headerBgGradientEnd,
                             headerBgGradientAngle: 135,
@@ -1418,7 +1646,7 @@ Monitor of this License or out of the use or inability to use the
                             { id: this.generateId('b'), type: 'spacer', title: "留白块", isVisible: true, isExpanded: false, settings: { height: 20 }},
                         ],
                         globalCardStyles: { 
-                            bgMode: 'solid', // 默认纯色
+                            bgMode: 'solid',
                             bgColor: lightTheme.gCardBgColor, textColor: lightTheme.gCardTextColor, opacity: 1.0,
                             bgGradientStart: lightTheme.gCardBgGradientStart, bgGradientEnd: lightTheme.gCardBgGradientEnd,
                             bgGradientAngle: 135,
@@ -1514,12 +1742,12 @@ Monitor of this License or out of the use or inability to use the
                         colorContextMenu: q('#color-context-menu'),
                         fontManagerModal: q('#font-manager-modal'),
                         storageWarningBanner: q('#storage-warning-banner'),
-                        // --- FEATURE: Rich Text Editor ---
                         richTextEditorModal: q('#rich-text-editor-modal'),
                         richTextEditorContainer: q('#rich-text-editor-container'),
                         richTextSaveBtn: q('#rich-text-save-btn'),
                         richTextCancelBtn: q('#rich-text-cancel-btn'),
-                        // --- END FEATURE ---
+                        showExportModalBtn: q('#show-export-modal-btn'),
+                        exportModal: q('#export-modal'),
                     };
                 },
 
@@ -1551,8 +1779,7 @@ Monitor of this License or out of the use or inability to use the
                     this.elements.helpModalCloseBtn.addEventListener('click', () => this.elements.helpModal.classList.remove('visible'));
                     
                     this.elements.storageWarningBanner.querySelector('#storage-warning-export-link').addEventListener('click', () => {
-                        this.setSelection({ type: 'global' });
-                        setTimeout(() => this.exportConfig(false), 50);
+                        this.elements.exportModal.classList.add('visible');
                     });
                     
                     let aboutClickCount = 0;
@@ -1600,10 +1827,26 @@ Monitor of this License or out of the use or inability to use the
                     this.elements.iconUploadInput.addEventListener('change', e => this.handleIconUpload(e));
                     this.elements.lockModeToggle.addEventListener('click', () => this.toggleLockMode());
                     
-                    // --- FEATURE: Rich Text Editor ---
                     this.elements.richTextSaveBtn.addEventListener('click', () => this.saveRichText());
                     this.elements.richTextCancelBtn.addEventListener('click', () => this.hideRichTextEditor());
-                    // --- END FEATURE ---
+
+                    this.elements.exportModal.addEventListener('click', async e => {
+                        if (e.target.closest('#export-modal-close-btn') || e.target === this.elements.exportModal) {
+                            this.elements.exportModal.classList.remove('visible');
+                            return;
+                        }
+                        const option = e.target.closest('.export-option');
+                        if (option && option.dataset.action) {
+                            const action = option.dataset.action;
+                            switch (action) {
+                                case 'standard': this.exportConfig(false); break;
+                                case 'enhanced': await this.exportEnhancedPackage(); break;
+                                case 'template': this.exportConfig(true); break;
+                                case 'legacy': await this.exportLegacyConfig(); break;
+                            }
+                            this.elements.exportModal.classList.remove('visible');
+                        }
+                    });
 
                     this.elements.layerList.addEventListener('click', e => {
                         const layerItemContainer = e.target.closest('.layer-item-container');
@@ -1612,7 +1855,6 @@ Monitor of this License or out of the use or inability to use the
                         const layerItem = layerItemContainer.querySelector('.layer-item');
                         const cardItem = e.target.closest('.card-layer-item');
                         
-                        // Action buttons on main layer item
                         const actionBtn = e.target.closest('.layer-actions button, .layer-toggle');
                         if (actionBtn) {
                             const blockId = layerItem.dataset.id;
@@ -1627,10 +1869,9 @@ Monitor of this License or out of the use or inability to use the
                             } else if (actionBtn.matches('.layer-toggle')) {
                                 this.toggleLayerExpansion(blockId);
                             }
-                            return; // Prevent selection change on button click
+                            return; 
                         }
 
-                        // Click on a sub-card item
                         if (cardItem) {
                             const blockId = cardItem.closest('.layer-item-container').dataset.blockId;
                             const cardId = cardItem.dataset.cardId;
@@ -1640,7 +1881,6 @@ Monitor of this License or out of the use or inability to use the
                                 cardEditorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             }
                         } 
-                        // Click on a main layer item
                         else {
                             const { type, id } = layerItem.dataset;
                             this.setSelection({ type, id });
@@ -1718,7 +1958,6 @@ Monitor of this License or out of the use or inability to use the
                     }
 
                     document.addEventListener('keydown', e => {
-                        // --- FIX: Prevent shortcuts when Rich Text Editor is active ---
                         if (this.richTextEditor && this.richTextEditor.hasFocus()) {
                             return;
                         }
@@ -1911,7 +2150,6 @@ Monitor of this License or out of the use or inability to use the
                     panel.addEventListener('click', e => {
                         const target = e.target;
                         
-                        // NEW: Rich Text Editor Trigger
                         const richTextTrigger = target.closest('.rich-text-editor-trigger, .edit-content-btn');
                         if (richTextTrigger) {
                             const cardEl = richTextTrigger.closest('.editor-card');
@@ -1958,8 +2196,7 @@ Monitor of this License or out of the use or inability to use the
                             '#undo-btn': () => this.undo(),
                             '#redo-btn': () => this.redo(),
                             '#import-btn': () => panel.querySelector('#config-file-input')?.click(),
-                            '#export-btn': () => this.exportConfig(false),
-                            '#export-template-btn': () => this.exportConfig(true),
+                            '#show-export-modal-btn': () => this.elements.exportModal.classList.add('visible'),
                             '#export-png-btn': () => this.exportPNG(),
                             '#load-local-fonts-btn': () => this.loadLocalFonts(),
                             '#upload-font-btn': () => panel.querySelector('#font-upload-input')?.click(),
@@ -2064,7 +2301,6 @@ Monitor of this License or out of the use or inability to use the
                         }
                     });
 
-                    // 字体管理器 Modal 的事件
                     const fontManagerModal = this.elements.fontManagerModal;
                     fontManagerModal.querySelector('#font-manager-close-btn').addEventListener('click', () => {
                         fontManagerModal.classList.remove('visible');
@@ -2096,9 +2332,9 @@ Monitor of this License or out of the use or inability to use the
                                 
                                 const triggerRect = trigger.getBoundingClientRect();
                                 tooltip.style.left = `${triggerRect.left + triggerRect.width / 2}px`;
-                                tooltip.style.top = `${triggerRect.top - 8}px`; // 在图标上方留出 8px 间距
+                                tooltip.style.top = `${triggerRect.top - 8}px`; 
                                 tooltip.style.opacity = '1';
-                            }, 300); // 延迟 300ms 显示
+                            }, 300); 
                         }
                     });
                 
@@ -2109,7 +2345,6 @@ Monitor of this License or out of the use or inability to use the
                             let tooltip = document.getElementById('floating-tooltip');
                             if (tooltip) {
                                 tooltip.style.opacity = '0';
-                                // 动画结束后再移除，避免闪烁
                                 setTimeout(() => {
                                     if(tooltip) tooltip.remove();
                                 }, 200);
@@ -2120,7 +2355,6 @@ Monitor of this License or out of the use or inability to use the
 
                 bindPreviewEvents(){
                      this.elements.previewPanel.addEventListener('click', e => {
-                        // NEW: Mobile edit pencil handling
                         const pencil = e.target.closest('.mobile-edit-pencil');
                         if (pencil) {
                             e.preventDefault();
@@ -2174,10 +2408,8 @@ Monitor of this License or out of the use or inability to use the
                      });
 
                      this.elements.previewWrapper.addEventListener('dblclick', e => {
-                        // if (window.innerWidth <= 1024) return; // Allow dblclick on mobile
                         if (this.elements.previewBlocksContainer.classList.contains('locked-mode')) return;
 
-                        // --- FEATURE: Rich Text Editor ---
                         const cardContentTarget = e.target.closest('.preview-card-content[data-card-key="content"]');
                         if (cardContentTarget) {
                             this.showRichTextEditor(cardContentTarget);
@@ -2329,7 +2561,7 @@ Monitor of this License or out of the use or inability to use the
                                 if (imageRecord && imageRecord.blob) {
                                     this.elements.previewAvatar.src = URL.createObjectURL(imageRecord.blob);
                                 } else {
-                                    this.elements.previewAvatar.src = this.getDefaultState().personalInfo.avatarDataUrl; // Fallback
+                                    this.elements.previewAvatar.src = this.getDefaultState().personalInfo.avatarDataUrl; 
                                 }
                             } catch (e) {
                                 console.error('Failed to load avatar from DB', e);
@@ -2433,7 +2665,6 @@ Monitor of this License or out of the use or inability to use the
                         this.elements.previewHeader.style.background = this.hexToRgba(styles.headerBgColor, styles.headerOpacity);
                     }
                     
-                    // --- FEATURE: Header Border Radius ---
                     this.elements.previewHeader.style.borderRadius = `${styles.headerBorderRadius}px`;
 
                     this.elements.previewNickname.style.color = this.state.personalInfo.nicknameColor;
@@ -2636,7 +2867,7 @@ Monitor of this License or out of the use or inability to use the
                                     <div class="advanced-setting"><hr class="separator"><label>卡片边框:<span class="tooltip-trigger" data-tooltip="边框在编辑器预览区可能显示不完美（如产生缝隙），但在最终导出的图片中是正常的。"><span class="iconify" data-icon="mdi:help-circle-outline"></span></span></label><div class="form-group inset-controls"><div class="form-group"><label>样式:</label><select data-state-key="globalCardStyles.borderStyle"><option value="none">无</option><option value="solid">实线</option><option value="dashed">虚线</option><option value="dotted">点状</option><option value="double">双实线</option></select></div><div class="color-control-row"><div class="color-control-group"><label>粗细(px):</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="globalCardStyles.borderWidth" min="0" max="10" step="1"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div><div class="color-control-group"><label>颜色:</label><div class="input-group"><input type="color" data-state-key="globalCardStyles.borderColor"><input type="text" class="color-hex-input" data-state-key="globalCardStyles.borderColor"></div></div></div></div></div>
                                     <hr class="separator"><div class="form-group"><label>对齐:</label><div class="radio-group"><label><input type="radio" name="gCardAlign" value="left" data-state-key="globalCardStyles.textAlign">居左</label><label><input type="radio" name="gCardAlign" value="center" data-state-key="globalCardStyles.textAlign">居中</label><label><input type="radio" name="gCardAlign" value="right" data-state-key="globalCardStyles.textAlign">居右</label></div></div>
                                     <div class="form-group"><label>行高:</label><div class="radio-group"><label><input type="radio" name="gCardLineHeight" value="1.4" data-state-key="globalCardStyles.lineHeight">紧凑</label><label><input type="radio" name="gCardLineHeight" value="1.5" data-state-key="globalCardStyles.lineHeight">中等</label><label><input type="radio" name="gCardLineHeight" value="1.6" data-state-key="globalCardStyles.lineHeight">宽松</label></div></div>
-                                    <hr class="separator"><div class="form-group"><label>字体:</label><div class="font-controls"><input type="text" id="font-search-input" placeholder="搜索本地字体..." style="margin-bottom: 5px;"><select id="font-family-select" data-state-key="globalCardStyles.fontFamily"></select><div class="buttons"><button id="load-local-fonts-btn" class="btn btn-default">加载本地</button><button id="upload-font-btn" class="btn btn-default">上传字体</button><button id="manage-fonts-btn" class="btn btn-default">管理</button></div><input type="file" id="font-upload-input" accept=".ttf,.woff,.woff2,.otf" style="display: none;"></div></div>
+                                    <hr class="separator"><div class="form-group"><label>字体:</label><div class="font-controls"><input type="text" id="font-search-input" placeholder="搜索本地字体..." style="margin-bottom: 5px;"><select id="font-family-select" data-state-key="globalCardStyles.fontFamily"></select><div class="buttons"><button id="load-local-fonts-btn" class="btn btn-default">加载本地</button><button id="upload-font-btn" class="btn btn-default">上传字体</button><button id="manage-fonts-btn" class="btn btn-default">管理</button></div><input type="file" id="font-upload-input" accept=".ttf,.woff,.woff2,.otf" multiple style="display: none;"></div></div>
                                     <div class="form-group"> <label>字号:</label> <select data-state-key="globalCardStyles.fontSize"> <option value="0.9rem">小</option> <option value="1rem" selected>中 (默认)</option> <option value="1.1rem">大</option> </select> </div>
                                     <div class="advanced-setting"><label>文字描边:<span class="tooltip-trigger" data-tooltip="为文字添加边框，建议宽度不超过2px，以保证可读性。"><span class="iconify" data-icon="mdi:help-circle-outline"></span></span></label><div class="color-control-row"><div class="color-control-group"><label>粗细(px):</label><div class="input-group simple stepper-group"><button class="btn btn-default btn-stepper minus" aria-label="减少">-</button><input type="range" data-state-key="globalCardStyles.textStrokeWidth" min="0" max="5" step="0.5"><button class="btn btn-default btn-stepper plus" aria-label="增加">+</button></div></div><div class="color-control-group"><label>颜色:</label><div class="input-group"><input type="color" data-state-key="globalCardStyles.textStrokeColor"><input type="text" class="color-hex-input" data-state-key="globalCardStyles.textStrokeColor"></div></div></div></div>
                                 </div>
@@ -2645,7 +2876,7 @@ Monitor of this License or out of the use or inability to use the
                                 <legend>操作</legend>
                                 <div class="section-content">
                                     <div class="form-group" style="display: flex; gap: 10px;"> <button id="undo-btn" class="btn btn-default" disabled>撤回</button> <button id="redo-btn" class="btn btn-default" disabled>重做</button> </div>
-                                    <div class="form-group" style="display: flex; gap: 10px;"> <button id="import-btn" class="btn btn-secondary">导入配置</button> <button id="export-btn" class="btn btn-secondary">导出配置</button> <button id="export-template-btn" class="btn btn-secondary">存为模板</button></div>
+                                    <div class="form-group" style="display: flex; gap: 10px;"> <button id="import-btn" class="btn btn-secondary">导入配置</button> <button id="show-export-modal-btn" class="btn btn-secondary">导出数据...</button> </div>
                                     <div class="form-group">
                                         <div class="checkbox-group" style="margin-bottom: 10px;"><label><input type="checkbox" id="hd-export-toggle"> 超清导出 (1800px)</label></div>
                                         <div class="checkbox-group" style="margin-bottom: 10px;"><label><input type="checkbox" id="custom-width-toggle"> 自定义宽度</label><input type="number" id="custom-width-input" value="1200" style="width: 80px; padding: 4px 8px;" disabled></div>
@@ -2655,7 +2886,7 @@ Monitor of this License or out of the use or inability to use the
                                     </div>
                                     <hr class="separator"><div class="form-group"><label>预设主题:</label><div class="input-group simple"> <button data-preset="light" class="btn btn-default btn-small">明亮</button> <button data-preset="dark" class="btn btn-default btn-small">暗黑</button> <button data-preset="mint" class="btn btn-default btn-small">薄荷</button> <button data-preset="coffee" class="btn btn-default btn-small">咖啡</button> </div></div>
                                     <div class="form-group"><button id="reset-btn" class="btn btn-danger">恢复默认模板</button></div>
-                                    <input type="file" id="config-file-input" accept=".json" style="display: none;">
+                                    <input type="file" id="config-file-input" accept=".json,.zip" style="display: none;">
                                 </div>
                             </fieldset>
                         </div>
@@ -2783,7 +3014,7 @@ Monitor of this License or out of the use or inability to use the
                     
                     cardEl.innerHTML = `<div class="preview-card-inner">
                             <h3 class="preview-card-title" data-card-key="title" style="justify-content: ${justifyContent};">${iconHTML}${this.escapeHTML(card.title || '')}</h3>
-                            <div class="preview-card-content" data-card-key="content">${card.content || ''}</div>
+                            <div class="preview-card-content" data-card-key="content">${this.sanitizeHTML(card.content || '')}</div>
                         </div>`;
                     return cardEl.outerHTML;
                 },
@@ -2930,7 +3161,6 @@ Monitor of this License or out of the use or inability to use the
                 },
 
                 triggerRender(keyPath) {
-                    // --- NEW: Flicker Reduction Logic ---
                     const styles = this.state.pageStyles;
                     const gCard = this.state.globalCardStyles;
                     const info = this.state.personalInfo;
@@ -2974,9 +3204,8 @@ Monitor of this License or out of the use or inability to use the
 
                     if (directUpdateMap[keyPath]) {
                         directUpdateMap[keyPath]();
-                        return; // Exit after direct update
+                        return;
                     }
-                    // --- END OF Flicker Reduction Logic ---
                     
                     const mainKey = keyPath.split('.')[0];
                     const keyParts = keyPath.split('.');
@@ -3027,7 +3256,7 @@ Monitor of this License or out of the use or inability to use the
                         const blockIndex = parseInt(keyParts[1], 10);
                         const block = this.state.blocks[blockIndex];
                         if (!block) return;
-
+ 
                         const updatedProperty = keyParts[2];
                         
                         if (updatedProperty === 'title') {
@@ -3041,6 +3270,8 @@ Monitor of this License or out of the use or inability to use the
                             const layerItemContainer = this.elements.layerList.querySelector(`.layer-item-container[data-block-id="${block.id}"]`);
                             if(layerItemContainer) {
                                 layerItemContainer.querySelector('.layer-item').classList.toggle('is-hidden', block.isVisible === false);
+                                const eyeIcon = layerItemContainer.querySelector('.toggle-visibility-btn .iconify');
+                                if (eyeIcon) eyeIcon.dataset.icon = block.isVisible === false ? 'mdi:eye-off' : 'mdi:eye';
                                 layerItemContainer.classList.toggle('is-expanded', block.isExpanded === true);
                             }
                             return;
@@ -3171,7 +3402,6 @@ Monitor of this License or out of the use or inability to use the
                 async loadFromLocal() { 
                     const json = localStorage.getItem('blokkoState'); 
                     if (!json) {
-                        this.showToast('欢迎使用 Blokko！已为您加载默认模板。', 'info');
                         await this.loadFontsFromDB();
                         return;
                     };
@@ -3211,7 +3441,7 @@ Monitor of this License or out of the use or inability to use the
                                     }
                                 }
                                 delete this.state.uploadedFonts;
-                                this.saveToLocal(); // Save back without old font data
+                                this.saveToLocal();
                             }
                         }
                     } catch (e) { 
@@ -3264,7 +3494,7 @@ Monitor of this License or out of the use or inability to use the
 
                             if (input.type === 'range') {
                                 const valueDisplay = input.closest('.form-group').querySelector('.angle-value, .spacer-height-value, #gCardRadiusValue, .avatar-size-value, .header-radius-value');
-                                if (valueDisplay) valueDisplay.textContent = value;
+                        if (valueDisplay) valueDisplay.textContent = value;
                             }
                         });
                     } catch (e) {
@@ -3446,66 +3676,65 @@ Monitor of this License or out of the use or inability to use the
                 },
 
                 async handleImageUpload(event, target, cardInfo = null){
-                     const file = event.target.files[0];
-                     if (!file) return;
-                     this.showLoading('正在处理图片...');
-                     try {
-                         const reader = new FileReader();
-                         reader.onload = async e => {
-                             const dataUrl = e.target.result;
-                             if(target === 'colorThief') {
-                                 this.analyzeColorsFromImage(dataUrl); 
-                                 return;
-                             }
-                             const compressedUrl = await this.compressImage(dataUrl, 0.9, 1200);
-                             if (['avatar', 'pageBg', 'cardBg', 'imageCard'].includes(target)) {
-                                 this.showCropper(compressedUrl, { type: target, ...cardInfo, originalType: file.type });
-                             } else {
-                                this.hideLoading();
-                             }
-                         };
-                         reader.onerror = (err) => {
-                             this.showErrorModal('图片读取失败', err.message);
-                             this.hideLoading();
-                         };
-                         reader.readAsDataURL(file);
-                     } catch(err) {
-                         this.showErrorModal('图片处理失败', err.message);
-                         this.hideLoading();
-                     } finally {
-                         event.target.value = '';
-                     }
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    this.showLoading('正在处理图片...');
+
+                    const objectUrl = URL.createObjectURL(file);
+
+                    try {
+                        if(target === 'colorThief') {
+                            const dataUrl = await this.readFileAsDataURL(file);
+                            this.analyzeColorsFromImage(dataUrl);
+                            URL.revokeObjectURL(objectUrl);
+                            return;
+                        }
+
+                        const compressedUrl = await this.compressImage(objectUrl, 0.9, 1200);
+                        
+                        if (['avatar', 'pageBg', 'cardBg', 'imageCard'].includes(target)) {
+                            this.showCropper(compressedUrl, { type: target, ...cardInfo, originalType: file.type });
+                        } else {
+                            this.hideLoading();
+                        }
+                    } catch(err) {
+                        this.showErrorModal('图片处理失败', err.message);
+                        this.hideLoading();
+                    } finally {
+                        event.target.value = '';
+                    }
                 },
                 
                 handleCardBgUpload(event, blockId, cardId){
                     this.handleImageUpload(event, 'cardBg', { blockId, cardId });
                 },
                 async handleImageGalleryUpload(blockId, files){
-                     const block = this.findBlock(blockId); 
-                        if (!block || !files.length) return; 
-                        this.showLoading(`正在上传 ${files.length} 张图片...`);
-                        try {
-                            this.pushHistory(`添加 ${files.length} 张图片`); 
-                            const newCards = [];
-                            for(const file of files) {
-                                const url = await this.readFileAsDataURL(file).then(url => this.compressImage(url, 0.9, 1200, file.type));
-                                const blob = this.dataURLToBlob(url);
-                                const imageId = this.generateId('img');
-                                await this.saveImageToDB({ id: imageId, blob });
-                                newCards.push({ id: this.generateId('ic'), url: `idb://${imageId}`, title: '', description: '' });
-                            }
-                            block.cards.push(...newCards);
-                            this.debouncedSaveToLocal();
-                            this.renderInspector(); 
-                            this.renderLayerPanel();
-                            this.renderPreviewBlockById(blockId); 
-                        } catch (err) {
-                            this.showErrorModal('图片上传失败', err.message);
-                        } finally {
-                            this.hideLoading();
-                            const input = this.elements.inspectorPanel.querySelector(`.editor-block[data-block-id="${blockId}"] .image-upload-input`);
-                            if (input) input.value = '';
+                    const block = this.findBlock(blockId); 
+                    if (!block || !files.length) return; 
+                    this.showLoading(`正在上传 ${files.length} 张图片...`);
+                    try {
+                        this.pushHistory(`添加 ${files.length} 张图片`); 
+                        const newCards = [];
+                        for(const file of files) {
+                            const objectUrl = URL.createObjectURL(file);
+                            const compressedUrl = await this.compressImage(objectUrl, 0.9, 1200, file.type);
+                            const blob = this.dataURLToBlob(compressedUrl);
+                            const imageId = this.generateId('img');
+                            await this.saveImageToDB({ id: imageId, blob });
+                            newCards.push({ id: this.generateId('ic'), url: `idb://${imageId}`, title: '', description: '' });
                         }
+                        block.cards.push(...newCards);
+                        this.debouncedSaveToLocal();
+                        this.renderInspector(); 
+                        this.renderLayerPanel();
+                        this.renderPreviewBlockById(blockId); 
+                    } catch (err) {
+                        this.showErrorModal('图片上传失败', err.message);
+                    } finally {
+                        this.hideLoading();
+                        const input = this.elements.inspectorPanel.querySelector(`.editor-block[data-block-id="${blockId}"] .image-upload-input`);
+                        if (input) input.value = '';
+                    }
                 },
                 async cropImage(blockId, cardId){
                     const block = this.findBlock(blockId);
@@ -3629,7 +3858,6 @@ Monitor of this License or out of the use or inability to use the
                      if(this.cropper) this.cropper.setAspectRatio(parseFloat(document.querySelector('input[name="crop-ratio"]:checked').value)); 
                 },
                 
-                // --- FEATURE: Rich Text Editor ---
                 showRichTextEditor(targetElement) {
                     if (!targetElement) return;
 
@@ -3647,9 +3875,29 @@ Monitor of this License or out of the use or inability to use the
                     const card = block.cards.find(c => c.id === this.currentRichTextTarget.cardId);
 
                     if (this.richTextEditor) {
-                        this.richTextEditor.root.innerHTML = card.content || '';
+                        this.richTextEditor = null;
+                        this.elements.richTextEditorContainer.innerHTML = '';
+                    }
+
+                    const isMobile = window.innerWidth <= 768; 
+                    let quillOptions;
+
+                    if (isMobile) {
+                        quillOptions = {
+                            theme: 'bubble',
+                            modules: {
+                                toolbar: [
+                                    ['bold', 'italic', 'underline', 'strike'],      // 基础样式
+                                    [{ 'color': [] }, { 'background': [] }],      // 颜色选项
+                                    [{ 'header': 1 }, { 'header': 2 }],           // 标题
+                                    [{ 'list': 'ordered'}, { 'list': 'bullet' }], // 列表
+                                    ['link', 'clean']                             // 链接和清除格式
+                                ]
+                            },
+                        };
                     } else {
-                        this.richTextEditor = new Quill('#rich-text-editor-container', {
+                        quillOptions = {
+                            theme: 'snow',
                             modules: {
                                 toolbar: [
                                     [{ 'header': [1, 2, 3, false] }],
@@ -3660,10 +3908,12 @@ Monitor of this License or out of the use or inability to use the
                                     ['clean']
                                 ]
                             },
-                            theme: 'snow'
-                        });
-                        this.richTextEditor.root.innerHTML = card.content || '';
+                        };
                     }
+
+                    this.richTextEditor = new Quill('#rich-text-editor-container', quillOptions);
+                    
+                    this.richTextEditor.root.innerHTML = card.content || '';
                     
                     this.elements.richTextEditorModal.classList.add('visible');
                     this.richTextEditor.focus();
@@ -3684,7 +3934,6 @@ Monitor of this License or out of the use or inability to use the
                     this.hideRichTextEditor();
                     this.showToast('内容已保存', 'success');
                 },
-                // --- END FEATURE ---
 
                 async loadLocalFonts(){
                      if (!window.queryLocalFonts) {
@@ -3705,15 +3954,20 @@ Monitor of this License or out of the use or inability to use the
                         }
                 },
                 async handleFontUpload(event){
-                     const file = event.target.files[0];
-                        if (!file) return;
-                        this.showLoading('正在上传并加载字体...');
+                    const files = event.target.files;
+                    if (!files.length) return;
+                    this.showLoading(`正在上传 ${files.length} 个字体...`);
+
+                    let successCount = 0;
+                    let lastUploadedFontFamily = null;
+
+                    for (const file of files) {
                         try {
                             const fontData = await this.readFileAsArrayBuffer(file);
                             const fontName = file.name.replace(/\.[^/.]+$/, "");
                             if (this.uploadedFonts.some(f => f.family === fontName) || this.localFonts.some(f => f.family === fontName)) {
-                                this.showErrorModal('字体已存在', `字体 "${fontName}" 已存在!`);
-                                return;
+                                console.warn(`字体 "${fontName}" 已存在，跳过。`);
+                                continue;
                             }
                             
                             await this.saveFontToDB({ family: fontName, fullName: `${fontName} (上传)`, data: fontData });
@@ -3723,16 +3977,25 @@ Monitor of this License or out of the use or inability to use the
                             document.fonts.add(fontFace);
                             
                             this.uploadedFonts.push({ family: fontName, fullName: `${fontName} (上传)`, type: 'uploaded' });
-                            this.populateFontList();
-                            this.updateState('globalCardStyles.fontFamily', fontName, true, `上传字体 ${fontName}`);
-                            this.showToast(`字体 "${fontName}" 上传成功`, 'success');
+                            lastUploadedFontFamily = fontName;
+                            successCount++;
+
                         } catch (error) {
-                            console.error('字体上传失败:', error);
-                            this.showErrorModal('字体上传失败', '字体文件无效或加载失败。');
-                        } finally {
-                            event.target.value = '';
-                            this.hideLoading();
+                            console.error(`字体 "${file.name}" 上传失败:`, error);
+                            this.showErrorModal(`字体 "${file.name}" 上传失败`, '字体文件无效或加载失败。');
                         }
+                    }
+
+                    event.target.value = '';
+                    this.hideLoading();
+                    
+                    if (successCount > 0) {
+                        this.populateFontList();
+                        if (lastUploadedFontFamily) {
+                            this.updateState('globalCardStyles.fontFamily', lastUploadedFontFamily, true, `上传 ${successCount} 个字体`);
+                        }
+                        this.showToast(`${successCount} 个字体上传成功！`, 'success');
+                    }
                 },
                 
                 populateFontList(searchTerm = ''){
@@ -3861,7 +4124,8 @@ Monitor of this License or out of the use or inability to use the
                         reader.onerror = reject;
                         reader.readAsArrayBuffer(file);
                     })},
-                compressImage(dataUrl, quality = 0.9, maxWidth = 1024, originalType = 'image/jpeg'){return new Promise((resolve, reject) => {
+                compressImage(imageUrl, quality = 0.9, maxWidth = 1024, originalType = 'image/jpeg'){
+                    return new Promise((resolve, reject) => {
                         const img = new Image();
                         img.onload = () => {
                             let { width, height } = img;
@@ -3874,12 +4138,23 @@ Monitor of this License or out of the use or inability to use the
                             canvas.height = height;
                             const ctx = canvas.getContext('2d');
                             ctx.drawImage(img, 0, 0, width, height);
+
+                            if (imageUrl.startsWith('blob:')) {
+                                URL.revokeObjectURL(imageUrl);
+                            }
+
                             const outputType = originalType === 'image/png' ? 'image/png' : 'image/jpeg';
                             resolve(canvas.toDataURL(outputType, quality));
                         };
-                        img.onerror = (err) => reject(new Error('图片加载失败，请检查文件是否损坏。'));
-                        img.src = dataUrl;
-                    })},
+                        img.onerror = (err) => {
+                            if (imageUrl.startsWith('blob:')) {
+                                URL.revokeObjectURL(imageUrl);
+                            }
+                            reject(new Error('图片加载失败，请检查文件是否损坏。'));
+                        };
+                        img.src = imageUrl;
+                    })
+                },
                 
                 toggleTheme(){
                     const isDark = document.documentElement.classList.toggle('dark-mode'); 
@@ -3919,7 +4194,7 @@ Monitor of this License or out of the use or inability to use the
                     return `${nickname}-${dateString}-${type}-${randomString}`;
                 },
                 
-                async exportConfig(isTemplate = false){
+                exportConfig(isTemplate = false){
                      let stateToSave = this.deepClone(this.state);
                         
                         if (isTemplate) {
@@ -3955,81 +4230,239 @@ Monitor of this License or out of the use or inability to use the
                         const filename = this.generateFilename(isTemplate ? 'Template' : 'Config') + '.json';
                         this.showDownloadModal(URL.createObjectURL(blob), filename, isTemplate ? '模板已生成' : '配置已生成');
                 },
+
+                async exportEnhancedPackage() {
+                    if (typeof JSZip === 'undefined') {
+                        this.showErrorModal('导出失败', 'JSZip 库未能加载，请检查网络连接或刷新页面后重试。');
+                        return;
+                    }
+
+                    this.showLoading('正在打包 .zip 文件...');
+                    try {
+                        const zip = new JSZip();
+                        const stateClone = this.deepClone(this.state);
+                        const imageMap = new Map();
+                        
+                        const processObject = async (obj) => {
+                            for (const key in obj) {
+                                if (typeof obj[key] === 'string' && obj[key].startsWith('idb://')) {
+                                    const imageId = obj[key].substring(6);
+                                    if (imageMap.has(imageId)) {
+                                        obj[key] = imageMap.get(imageId).path;
+                                    } else {
+                                        const record = await this.getImageFromDB(imageId);
+                                        if (record && record.blob) {
+                                            const fileExtension = record.blob.type.split('/')[1] || 'png';
+                                            const filename = `img-${this.generateId('p')}.${fileExtension}`;
+                                            const path = `images/${filename}`;
+                                            zip.file(path, record.blob);
+                                            imageMap.set(imageId, { path });
+                                            obj[key] = path;
+                                        }
+                                    }
+                                } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                                    await processObject(obj[key]);
+                                }
+                            }
+                        };
+                        
+                        await processObject(stateClone);
+                        
+                        zip.file("config.json", JSON.stringify(stateClone, null, 2));
+                        zip.file("readme.txt", `Blokko 强化导出备份\n版本: 1.6.1\n导出时间: ${new Date().toLocaleString()}\n\n此 .zip 文件包含了您的配置文件 (config.json) 和所有图片资源 (images/ 文件夹)。`);
+                        
+                        const blob = await zip.generateAsync({ type: "blob" });
+                        const filename = this.generateFilename('Enhanced-Backup') + '.zip';
+                        this.showDownloadModal(URL.createObjectURL(blob), filename, '强化导出包已生成');
+                        this.showToast('强化导出成功！', 'success');
+                    } catch (error) {
+                        this.showErrorModal('强化导出失败', `打包 .zip 文件时出错: ${error.message}`);
+                    } finally {
+                        this.hideLoading();
+                    }
+                },
+                
+                async exportLegacyConfig() {
+                    const confirmed = await this.showConfirm(
+                        '⚠️ 性能警告：不推荐的操作',
+                        '“过时导出”会将所有图片数据直接写入一个巨大的JSON文件。如果您的图片较多或较大，此操作极有可能导致浏览器卡死甚至崩溃。强烈推荐使用“强化导出(.zip)”。您真的确定要继续吗？'
+                    );
+
+                    if (!confirmed) return;
+
+                    this.showLoading('正在生成过时配置文件(可能需要很长时间)...');
+                    try {
+                        const stateClone = this.deepClone(this.state);
+                        
+                        const processObject = async (obj) => {
+                            for (const key in obj) {
+                                if (typeof obj[key] === 'string' && obj[key].startsWith('idb://')) {
+                                    const imageId = obj[key].substring(6);
+                                    const record = await this.getImageFromDB(imageId);
+                                    if (record && record.blob) {
+                                        obj[key] = await this.blobToDataURL(record.blob);
+                                    }
+                                } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                                    await processObject(obj[key]);
+                                }
+                            }
+                        };
+
+                        await processObject(stateClone);
+
+                        const jsonString = JSON.stringify(stateClone, null, 2);
+                        const blob = new Blob([jsonString], { type: 'application/json' });
+                        const filename = this.generateFilename('Legacy-Config') + '.json';
+                        this.showDownloadModal(URL.createObjectURL(blob), filename, '过时配置文件已生成');
+                        this.showToast('过时导出成功！', 'success');
+
+                    } catch (error) {
+                        this.showErrorModal('过时导出失败', `处理数据时出错: ${error.message}`);
+                    } finally {
+                        this.hideLoading();
+                    }
+                },
+
+                async handleZipImport(file) {
+                    if (typeof JSZip === 'undefined') {
+                        this.showErrorModal('导入失败', '必需的 JSZip 库未能加载，请检查网络或刷新页面后重试。');
+                        return;
+                    }
+                    this.showLoading('正在解压并导入 .zip...');
+                    try {
+                        const zip = await JSZip.loadAsync(file);
+                        const configFile = zip.file("config.json");
+                        if (!configFile) {
+                            throw new Error("压缩包中未找到 config.json 文件。");
+                        }
+                        const configContent = await configFile.async("string");
+                        let importedState = JSON.parse(configContent);
+                        if (!importedState || !importedState.personalInfo) throw new Error('无效的 config.json 格式');
+
+                        const processObject = async (obj) => {
+                            for (const key in obj) {
+                                if (typeof obj[key] === 'string' && obj[key].startsWith('images/')) {
+                                    const imagePath = obj[key];
+                                    const imageFile = zip.file(imagePath);
+                                    if (imageFile) {
+                                        const blob = await imageFile.async("blob");
+                                        const imageId = this.generateId('img');
+                                        await this.saveImageToDB({ id: imageId, blob: blob });
+                                        obj[key] = `idb://${imageId}`;
+                                    } else {
+                                        obj[key] = null;
+                                    }
+                                } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                                    await processObject(obj[key]);
+                                }
+                            }
+                        };
+
+                        this.showLoading('正在导入图片资源...');
+                        await processObject(importedState);
+
+                        this.state = this.mergeDeep(this.getDefaultState(), importedState);
+                        this.saveToLocal();
+                        this.history = [{ state: this.deepClone(this.state), description: '导入ZIP配置' }];
+                        this.historyIndex = 0;
+                        this.setSelection({type: 'global'});
+                        this.renderAll(true);
+                        this.syncAllControls();
+                        this.populateFontList();
+                        this.initAllSortables();
+                        this.updateExportSizePreview();
+                        this.showToast('ZIP 包导入成功！', 'success');
+
+                    } catch (err) {
+                        this.showErrorModal('ZIP 导入失败', `处理文件时出错: ${err.message}`);
+                        console.error(err);
+                    } finally {
+                        this.hideLoading();
+                    }
+                },
                 
                 async handleConfigFile(e){
                     const file = e.target.files[0]; 
-                        if (!file) return;
+                    if (!file) return;
 
-                        const confirmed = await this.showConfirm('导入配置', '此操作将覆盖当前所有内容（字体除外），确定要继续吗？');
-                        if (!confirmed) {
-                            e.target.value = '';
-                            return;
-                        }
+                    const confirmed = await this.showConfirm('导入配置', '此操作将覆盖当前所有内容（字体除外），确定要继续吗？');
+                    if (!confirmed) {
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    if (file.name.toLowerCase().endsWith('.zip')) {
+                        await this.handleZipImport(file);
+                        e.target.value = '';
+                        return;
+                    }
 
-                        this.showLoading('正在导入配置...');
-                        await this.sleep(100); 
-                        
-                        const reader = new FileReader(); 
-                        reader.onload = async (re) => { 
-                            try { 
-                                let importedState = JSON.parse(re.target.result); 
-                                if (!importedState || !importedState.personalInfo || !importedState.blocks) throw new Error('无效的文件格式'); 
-                                
-                                importedState = await this.processStateForImageMigration(importedState);
+                    this.showLoading('正在导入配置...');
+                    await this.sleep(100); 
+                    
+                    const reader = new FileReader(); 
+                    reader.onload = async (re) => { 
+                        try { 
+                            let importedState = JSON.parse(re.target.result); 
+                            if (!importedState || !importedState.personalInfo || !importedState.blocks) throw new Error('无效的文件格式'); 
+                            
+                            importedState = await this.processStateForImageMigration(importedState);
 
-                                if (typeof importedState.personalInfo.tags === 'string') {
-                                    importedState.personalInfo.tags = importedState.personalInfo.tags.split(/[,，、]/).map(t => t.trim()).filter(Boolean)
-                                        .map(text => ({ id: this.generateId('t'), icon: null, text }));
-                                    this.showToast('旧版配置已导入并自动升级。', 'info');
-                                }
-
-                                let migrated = false;
-                                importedState.blocks.forEach(block => {
-                                    if (block.type === 'image' && block.images && !block.cards) {
-                                        block.cards = block.images.map(img => ({ ...img, id: this.generateId('ic') }));
-                                        delete block.images;
-                                        migrated = true;
-                                    }
-                                });
-                                if (migrated) this.showToast('旧版图片区块已自动升级', 'info');
-
-                                this.state = this.mergeDeep(this.getDefaultState(), importedState);
-                                
-                                if (importedState.uploadedFonts) {
-                                    this.showToast('检测到旧版字体数据，正在尝试迁移...', 'info');
-                                    for (const font of importedState.uploadedFonts) {
-                                        if (font.data) {
-                                            try {
-                                               const fontBuffer = this.base64ToArrayBuffer(font.data);
-                                               await this.saveFontToDB({ family: font.family, fullName: font.fullName, data: fontBuffer });
-                                            } catch(fontError) { console.error(`迁移字体 ${font.family} 失败:`, fontError); }
-                                        }
-                                    }
-                                    await this.loadFontsFromDB();
-                                }
-
-                                this.history = [{ state: this.deepClone(this.state), description: '导入配置' }];
-                                this.historyIndex = 0;
-                                this.setSelection({type: 'global'});
-                                this.renderAll(true); 
-                                this.syncAllControls(); 
-                                this.populateFontList();
-                                this.initAllSortables();
-                                this.updateExportSizePreview();
-                                this.showToast('配置导入成功', 'success');
-                            } catch(err) { 
-                                this.showErrorModal('导入失败', '配置文件格式不正确或已损坏。请确保您导入的是由本工具生成的 .json 文件。');
-                                console.error(err);
-                            } finally {
-                                this.hideLoading();
+                            if (typeof importedState.personalInfo.tags === 'string') {
+                                importedState.personalInfo.tags = importedState.personalInfo.tags.split(/[,，、]/).map(t => t.trim()).filter(Boolean)
+                                    .map(text => ({ id: this.generateId('t'), icon: null, text }));
+                                this.showToast('旧版配置已导入并自动升级。', 'info');
                             }
-                        }; 
-                        reader.readAsText(file); 
-                        e.target.value = ''; 
+
+                            let migrated = false;
+                            importedState.blocks.forEach(block => {
+                                if (block.type === 'image' && block.images && !block.cards) {
+                                    block.cards = block.images.map(img => ({ ...img, id: this.generateId('ic') }));
+                                    delete block.images;
+                                    migrated = true;
+                                }
+                            });
+                            if (migrated) this.showToast('旧版图片区块已自动升级', 'info');
+
+                            this.state = this.mergeDeep(this.getDefaultState(), importedState);
+                            this.saveToLocal();
+                            
+                            if (importedState.uploadedFonts) {
+                                this.showToast('检测到旧版字体数据，正在尝试迁移...', 'info');
+                                for (const font of importedState.uploadedFonts) {
+                                    if (font.data) {
+                                        try {
+                                           const fontBuffer = this.base64ToArrayBuffer(font.data);
+                                           await this.saveFontToDB({ family: font.family, fullName: font.fullName, data: fontBuffer });
+                                        } catch(fontError) { console.error(`迁移字体 ${font.family} 失败:`, fontError); }
+                                    }
+                                }
+                                await this.loadFontsFromDB();
+                                this.showToast('旧字体数据迁移完成！', 'success');
+                            }
+
+                            this.history = [{ state: this.deepClone(this.state), description: '导入配置' }];
+                            this.historyIndex = 0;
+                            this.setSelection({type: 'global'});
+                            this.renderAll(true); 
+                            this.syncAllControls(); 
+                            this.populateFontList();
+                            this.initAllSortables();
+                            this.updateExportSizePreview();
+                            this.showToast('配置导入成功', 'success');
+                        } catch(err) { 
+                            this.showErrorModal('导入失败', '配置文件格式不正确或已损坏。请确保您导入的是由本工具生成的 .json 文件。');
+                            console.error(err);
+                        } finally {
+                            this.hideLoading();
+                        }
+                    }; 
+                    reader.readAsText(file); 
+                    e.target.value = ''; 
                 },
                 
                 async bakeOverlaysForExport(clone) {
-                    // This function remains complex and is assumed to be correct
+                    // This function is assumed to be correct
                 },
                 
                 async exportPNG(){
@@ -4205,6 +4638,14 @@ Monitor of this License or out of the use or inability to use the
                         }
                         return bytes.buffer;
                 },
+                blobToDataURL(blob) {
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = e => resolve(e.target.result);
+                        reader.onerror = e => reject(e.target.error);
+                        reader.readAsDataURL(blob);
+                    });
+                },
                 
                 showDownloadModal(url, filename, title){
                     this.elements.downloadModalTitle.textContent = title; 
@@ -4230,17 +4671,23 @@ Monitor of this License or out of the use or inability to use the
                     modal.innerHTML = `
                         <h3>${title}</h3>
                         <p>${message}</p>
+                        <p style="font-size: 0.9rem; color: var(--color-danger);"><b>在重置前，强烈建议您先尝试下载一份紧急备份，软件会尽可能保留您的创作记录！</b></p>
                         <details style="margin-top: 10px;">
                             <summary style="font-size:0.8rem; cursor:pointer;">错误详情</summary>
-                            <pre style="white-space:pre-wrap; font-size:0.7rem; background: var(--bg-input); padding: 5px; border-radius: 4px; max-height: 100px; overflow-y: auto;">${error ? error.toString() : '无'}</pre>
+                            <pre style="white-space:pre-wrap; font-size:0.7rem; background: var(--bg-input); padding: 5px; border-radius: 4px; max-height: 100px; overflow-y: auto;">${error ? this.escapeHTML(error.toString()) : '无'}</pre>
                         </details>
-                        <button id="fatal-reset-btn" class="btn btn-danger" style="margin-top: 15px;">重置并重载</button>
+                        <div class="modal-actions" style="margin-top: 20px;">
+                             <button id="fatal-backup-btn" class="btn btn-secondary">下载备份 (.zip)</button>
+                             <button id="fatal-reset-btn" class="btn btn-danger">重置并重载</button>
+                        </div>
                     `;
                     document.body.appendChild(modal);
+
+                    modal.querySelector('#fatal-backup-btn').addEventListener('click', createEmergencyBackup);
+                    
                     modal.querySelector('#fatal-reset-btn').addEventListener('click', async () => {
                         try {
-                            localStorage.removeItem('blokkoState');
-                            localStorage.removeItem('blokkoTheme');
+                            localStorage.clear();
                             const dbs = await indexedDB.databases();
                             dbs.forEach(db => indexedDB.deleteDatabase(db.name));
                             window.location.reload();
@@ -4993,7 +5440,6 @@ Monitor of this License or out of the use or inability to use the
                         const currentExpansion = this.state.blocks[blockIndex].isExpanded;
                         const newExpansion = forceOpen === null ? !currentExpansion : forceOpen;
                         if (currentExpansion !== newExpansion) {
-                           // This is a UI-only state, no need to push history
                            this.state.blocks[blockIndex].isExpanded = newExpansion;
                            this.renderLayerPanel();
                         }
@@ -5072,7 +5518,6 @@ Monitor of this License or out of the use or inability to use the
                     return randomState;
                 },
 
-                // --- IndexedDB & Migration ---
                 initDB() {
                     return new Promise((resolve, reject) => {
                         const request = indexedDB.open('BlokkoDB', 2);
@@ -5258,6 +5703,7 @@ Monitor of this License or out of the use or inability to use the
                 },
                 
                 sanitizeHTML(htmlString) {
+                    if (!htmlString) return '';
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = htmlString;
                     tempDiv.querySelectorAll('script, style, link, object, embed, iframe').forEach(el => el.remove());
@@ -5272,13 +5718,11 @@ Monitor of this License or out of the use or inability to use the
                 },
 
                 renderMobileEditPencils() {
-                    // Remove existing pencils
                     this.elements.previewWrapper.querySelectorAll('.mobile-edit-pencil').forEach(p => p.remove());
 
                     const isLocked = this.elements.previewBlocksContainer.classList.contains('locked-mode');
                     if (isLocked) return;
 
-                    // Add new pencils
                     this.elements.previewWrapper.querySelectorAll('[data-state-key], [data-card-key], [data-separator-text-key], .tag-pill span[data-tag-id]').forEach(el => {
                         const pencil = document.createElement('div');
                         pencil.className = 'mobile-edit-pencil';
