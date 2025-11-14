@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Blokko v1.6.1 (Internal): -->
-    <title>Blokko-个人简介生成器！ (v1.6.1)-来玩《赛博朋克：2077》吧！</title>
+    <!-- Blokko v1.6.2 (Internal): -->
+    <title>Blokko-个人简介生成器！ (v1.6.2)-来玩《赛博朋克：2077》吧！</title>
     
+    <!-- 性能优化: 预连接到关键域名，减少后续请求的连接建立时间 -->
+    <link rel="preconnect" href="https://fontsapi.zeoseven.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin>
+    <link rel="preconnect" href="https://code.iconify.design" crossorigin>
+
     <script>
         // Anti-FOUC (Flash of Unstyled Content) 脚本，防止加载时样式闪烁
         try {
@@ -17,19 +22,24 @@
         }
     </script>
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
-    <!-- FEATURE: Rich Text Editor - Quill.js CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
-    <!-- 新增：为移动端引入 Quill Bubble 主题的 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.bubble.css" rel="stylesheet">
+    <!-- CDN 优化: 更换为对中国大陆友好的 BootCDN -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+    <link href="https://cdn.bootcdn.net/ajax/libs/quill/2.0.2/quill.snow.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/quill/2.0.2/quill.bubble.min.css" rel="stylesheet">
 
-
-    <!-- 推荐字体 CDN -->
-    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/69/main/result.css">
-    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/285/main/result.css">
-    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/47/main/result.css">
-    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/265/main/result.css">
-	<link rel="stylesheet" href="https://fontsapi.zeoseven.com/292/main/result.css">
+    <!-- 性能优化: 将阻塞渲染的字体CSS改为异步加载，消除白屏 -->
+    <link rel="preload" href="https://fontsapi.zeoseven.com/69/main/result.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fontsapi.zeoseven.com/285/main/result.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fontsapi.zeoseven.com/47/main/result.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fontsapi.zeoseven.com/265/main/result.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fontsapi.zeoseven.com/292/main/result.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://fontsapi.zeoseven.com/69/main/result.css">
+        <link rel="stylesheet" href="https://fontsapi.zeoseven.com/285/main/result.css">
+        <link rel="stylesheet" href="https://fontsapi.zeoseven.com/47/main/result.css">
+        <link rel="stylesheet" href="https://fontsapi.zeoseven.com/265/main/result.css">
+        <link rel="stylesheet" href="https://fontsapi.zeoseven.com/292/main/result.css">
+    </noscript>
 
     <style>
         /* CSS 变量 */
@@ -648,7 +658,7 @@
 
     <header class="app-header">
         <button id="mobile-layer-toggle" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:layers-outline"></span> 内容</button>
-        <div class="app-header-title">Blokko (v1.6.1)</div>
+        <div class="app-header-title">Blokko (v1.6.2)</div>
         <div class="header-actions-wrapper">
             <button id="lock-mode-toggle" class="btn btn-default" style="width: auto; padding: 6px 12px;" title="切换编辑/预览模式">编辑中</button>
             <button id="show-help-btn" class="btn btn-default btn-icon" style="width: auto; padding: 6px 12px;"><span class="iconify" data-icon="mdi:help-circle-outline"></span> 帮助</button>
@@ -1218,58 +1228,16 @@ Monitor of this License or out of the use or inability to use the
                 </div>
             </div>
             <div id="help-changelog" class="tab-content">
-                <h4>v1.6.1 更新日志</h4>
+                <h4>v1.6.2 更新日志</h4>
                 <ul>
-                    <li><strong>【重要】健壮性提升:</strong> 新增了应用初始化失败时的紧急备份功能。现在，即使程序无法启动，您也可以在错误弹窗中选择“下载备份”，以`.zip`包的形式抢救包括图片在内的所有数据。</li>
-                    <li><strong>【重要】性能优化:</strong> 重构了图片处理的核心流程，大幅提升了移动端的图片上传速度和稳定性。通过避免内存密集型操作，有效解决了在处理大图时可能出现的界面卡顿或内容变黑的问题。</li>
-                    <li><strong>【体验】移动端富文本编辑优化:</strong> 移动端的富文本编辑器现在会自动切换为“气泡(Bubble)”模式。当您选中文本时，一个精简的工具栏会浮现在选区旁，彻底解决了系统自带菜单遮挡固定工具栏的问题。</li>
-                    <li><strong>【新增】导出中心:</strong> 将多种导出功能整合至一个独立的模态框，提供标准、强化(.zip)、模板和过时四种导出模式，满足不同备份和分享需求。</li>
-                    <li><strong>【修复】导出图片显示问题:</strong> 修复了在执行“导出为图片”功能时，预览图上会错误地显示移动端编辑铅笔图标的问题。</li>
-                    <li><strong>【修复】移动端交互冲突:</strong> 修正了移动端编辑铅笔图标的显示层级，解决了其可能与拖拽排序功能产生冲突的BUG。</li>
-                    <li><strong>【修复】图层可见性图标:</strong> 修复了在左侧内容图层中切换区块可见性时，“眼睛”图标状态不会实时更新的BUG。</li>
-                    <li><strong>【优化】数据稳定性:</strong> 在成功导入配置文件后，会自动执行一次保存，防止因刷新页面导致导入的数据丢失。</li>
-                    <li><strong>【合规】许可证更新:</strong> 在“感谢信息”页面中，添加了对新引入的 JSZip 库的致谢。</li>
-                </ul>
-                <hr class="separator">
-                <h4>v1.6.0 更新日志</h4>
-                <ul>
-                    <li><strong>【新增】富文本编辑:</strong>
-                        <ul>
-                            <li>集成了 Quill.js 富文本编辑器。现在双击卡片内容会弹出一个功能强大的编辑器，支持加粗、斜体、列表、链接、颜色等。</li>
-                            <li>为了交互统一，在右侧样式检查器的卡片内容区增加了**“编辑内容”按钮**，PC和移动端均可轻松打开编辑器。</li>
-                        </ul>
-                    </li>
-                    <li><strong>【优化】移动端:</strong>
-                        <ul>
-                            <li>在“编辑中”模式下，移动端预览区的所有可编辑文本（昵称、简介、卡片内容等）右上角都会出现一个**铅笔图标 ✏️**，解决了可能存在的双击不灵敏的问题。</li>
-                        </ul>
-                    </li>
-                    <li><strong>【优化/新增】提示:</strong>
-                        <ul>
-                            <li>在“启用瀑布流”、“文字描边”等高级设置旁增加了 `(?)` 图标，鼠标悬停即可查看功能说明，降低了学习成本。</li>
-                        </ul>
-                    </li>
-                    <li><strong>【体验优化】带描述的撤销/重做:</strong>
-                        <ul>
-                            <li>现在鼠标悬停在“撤销”或“重做”按钮上时，会提示具体的操作历史（如“撤销: 添加卡片”），让操作更安全、更可控。</li>
-                        </ul>
-                    </li>
-                     <li><strong>【功能新增】头部圆角设置:</strong>
-                        <ul>
-                            <li>在“页面与头部样式”的高级设置中，增加了“头部圆角”调节滑块，可以自由定义头部背景的圆角大小。</li>
-                        </ul>
-                    </li>
-                    <li><strong>【修复】内容编辑逻辑:</strong>
-                        <ul>
-                            <li>修复了在某些情况下，直接在预览区编辑卡片内容时，瀑布流布局不会自动刷新的问题。</li>
-                            <li>增强了对富文本内容的安全过滤，防止粘贴不必要的样式代码。</li>
-                        </ul>
-                    </li>
-                    <li><strong>【合规】许可证更新:</strong>
-                        <ul>
-                            <li>在“感谢信息”页面中，已添加对新引入的 Quill.js (BSD-3-Clause License) 的致谢。</li>
-                        </ul>
-                    </li>
+                    <li><strong>【性能】启动速度优化:</strong> 将推荐字体的加载方式改为异步非阻塞，大幅缩短了初始白屏时间，让页面内容能够更快地展现。</li>
+                    <li><strong>【性能】CDN更换:</strong> 将核心的第三方JS/CSS库的CDN替换为对中国大陆更友好的服务，显著提升了资源加载速度和稳定性。</li>
+                    <li><strong>【修复】富文本编辑器:</strong> 彻底修复了在PC端反复打开同一个卡片的编辑器时，顶部工具栏会不断重复叠加的BUG。</li>
+                    <li><strong>【修复】数据丢失:</strong> 修复了一个严重BUG，该BUG曾导致在导入配置（.json或.zip）后若立即刷新页面，所有导入的数据会丢失。现在导入后会立即强制保存。</li>
+                    <li><strong>【修复】存储泄漏:</strong> 增加了图片垃圾回收机制。现在当删除卡片、区块或清除、替换图片时，程序会自动从浏览器数据库中删除无用的旧图片数据，有效防止存储空间被长期占用。</li>
+                    <li><strong>【体验】移动端交互:</strong> 优化了移动端侧边栏的关闭逻辑，现在只有直接点击遮罩层才会关闭面板，解决了在预览区上下滑动内容时可能导致的误触关闭问题。</li>
+                    <li><strong>【健壮性】批量上传:</strong> 重构了图片批量上传功能。现在即使上传的文件中包含损坏或无法处理的图片，也不会中断整个上传流程，程序会跳过问题文件并完成其余图片的上传。</li>
+					<li><strong>【调整】历史更新日志:</strong> 将历史更新日志链接迁移至语雀文档。</li>
                 </ul>
             </div>
             <div id="help-about" class="tab-content">
@@ -1279,7 +1247,7 @@ Monitor of this License or out of the use or inability to use the
                 <p>如果你在使用中遇到BUG，可以通过链接私信我！如果觉得好用，也希望能点击链接去置顶评论区留下评论或转发，或者是在自己的制作的图评论区或正文里贴上原博链接（就是置顶那一条，当然这些都不是强制要求的，但是如果可以的话会让我很开心！），最后感谢您使用Blokko,希望你可以做出你满意的效果ദ്ദി˶•̀֊•́)✧</p>
                 <p style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <a href="https://weibo.com/u/5095783616" target="_blank" rel="noopener noreferrer" class="btn btn-default" style="width: auto; text-decoration: none;">我的微博主页</a>
-                    <a href="https://weibo.com/5095783616/QcM8qwmLs" target="_blank" rel="noopener noreferrer" class="btn btn-default" style="width: auto; text-decoration: none;">查看历史更新日志</a>
+                    <a href="https://www.yuque.com/yuqueyonghu-mmbk8u/lg49o7/ppvt3k3q4epmsbg7?singleDoc# 《Blokko更新日志》" target="_blank" rel="noopener noreferrer" class="btn btn-default" style="width: auto; text-decoration: none;">查看历史更新日志</a>
                 </p>
             </div>
             <div class="modal-actions" style="justify-content: center; margin-top: 20px;">
@@ -1346,22 +1314,21 @@ Monitor of this License or out of the use or inability to use the
         </ul>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js" defer></script>
-    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" defer></script>
+    <!-- CDN 优化: 更换为对中国大陆友好的 BootCDN -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/color-thief/2.3.2/color-thief.umd.min.js" defer></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/cropperjs/1.6.1/cropper.min.js" defer></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/Sortable/1.15.2/Sortable.min.js" defer></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js" defer></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js" defer></script>
-    <!-- NEW: JSZip library for enhanced export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
-    <!-- FEATURE: Rich Text Editor - Quill.js JS -->
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/quill/2.0.2/quill.min.js"></script>
 
     
     <script>
         /**
-         * 创建一个紧急备份 .zip 包，该函数独立于主应用初始化流程。
-         * 它会直接尝试读取 localStorage 和 IndexedDB。
+         * @description 创建一个紧急备份 .zip 包，该函数独立于主应用初始化流程。
+         * 它会直接尝试读取 localStorage 和 IndexedDB，用于在应用无法启动时抢救数据。
          */
         async function createEmergencyBackup() {
             const backupBtn = document.getElementById('fatal-backup-btn');
@@ -1372,14 +1339,14 @@ Monitor of this License or out of the use or inability to use the
                 backupBtn.textContent = '正在打包...';
             }
 
-            // 1. 检查 JSZip 是否可用
+            // 1. 检查 JSZip 库是否已加载
             if (typeof JSZip === 'undefined') {
                 alert('错误：备份所需的 JSZip 库未能加载。请检查您的网络连接，刷新页面后在初始化失败时重试。');
                 if (backupBtn) backupBtn.textContent = '备份失败 (缺少组件)';
                 return;
             }
 
-            // 2. 尝试从 localStorage 读取主要状态
+            // 2. 尝试从 localStorage 读取主要状态数据
             const rawState = localStorage.getItem('blokkoState');
             if (!rawState) {
                 alert('未在浏览器中找到可备份的数据。');
@@ -1404,7 +1371,7 @@ Monitor of this License or out of the use or inability to use the
                     alert("警告：无法访问数据库，备份将只包含文本和配置，不包含图片。");
                 }
 
-                // 4. 如果数据库连接成功，则处理图片
+                // 4. 如果数据库连接成功，则遍历状态树，将图片数据打包进 zip
                 if (db) {
                     const imageMap = new Map();
                     
@@ -1417,7 +1384,8 @@ Monitor of this License or out of the use or inability to use the
                             request.onerror = reject;
                         });
                     };
-
+                    
+                    // 递归处理状态对象，查找并替换图片路径
                     const processObject = async (obj) => {
                         for (const key in obj) {
                             if (typeof obj[key] === 'string' && obj[key].startsWith('idb://')) {
@@ -1453,6 +1421,7 @@ Monitor of this License or out of the use or inability to use the
 
                 const blob = await zip.generateAsync({ type: "blob" });
                 
+                // 创建并触发下载链接
                 const downloadLink = document.createElement('a');
                 downloadLink.href = URL.createObjectURL(blob);
                 const date = new Date();
@@ -1470,6 +1439,7 @@ Monitor of this License or out of the use or inability to use the
             } catch (error) {
                 console.error("创建紧急备份失败:", error);
                 alert(`创建备份时发生严重错误: ${error.message}\n\n我们将尝试为您下载纯文本配置。`);
+                // 降级方案：只下载 JSON 文件
                 try {
                     const blob = new Blob([rawState], { type: 'application/json' });
                     const downloadLink = document.createElement('a');
@@ -1486,7 +1456,7 @@ Monitor of this License or out of the use or inability to use the
             }
         }
 
-        // Hero Patterns data. Source: https://heropatterns.com/
+        // Hero Patterns SVG 背景纹理数据. 来源: https://heropatterns.com/
         const HeroPatterns = [
             { name: 'Jigsaw', svg: (c, o) => `<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M41.512 41.512c.976.976 2.256.488 2.256-1.024v-6.728c0-1.512.732-2.256 2.256-2.256h6.728c1.512 0 2.016-.244 1.024-2.256-3.904-7.808-7.808-11.712-11.712-11.712-3.904 0-7.808 3.904-11.712 11.712-.992 2.012-.504 2.256 1.024 2.256h6.728c1.512 0 2.256.732 2.256 2.256v6.728c0 1.512.244 2.016 2.256 1.024zM59 60c.504 0 1-.488 1-1V38.864c0-1.512.732-2.256 2.256-2.256h10.128c1.008 0 1.512.22 1.512 1.248 0 4.88-3.904 9.76-11.712 9.76-7.808 0-11.712-4.88-11.712-9.76 0-1.028.504-1.248 1.512-1.248h10.128c1.512 0 2.256.732 2.256 2.256V59c0 .512.488 1 1 1h16.336c.512 0 1-.488 1-1V38.864c0-1.512.732-2.256 2.256-2.256h10.128c1.008 0 1.512.22 1.512 1.248 0 4.88-3.904 9.76-11.712 9.76-7.808 0-11.712-4.88-11.712-9.76 0-1.028.504-1.248 1.512-1.248h10.128c1.512 0 2.256.732 2.256 2.256V59c0 .512.488 1 1 1H59z" fill="${c}" fill-opacity="${o}" fill-rule="evenodd"/></svg>` },
             { name: 'Overlapping Circles', svg: (c, o) => `<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><g fill="${c}" fill-opacity="${o}" fill-rule="evenodd"><circle cx="5" cy="5" r="5"/><circle cx="15" cy="5" r="5"/><circle cx="5" cy="15" r="5"/><circle cx="15" cy="15" r="5"/></g></svg>` },
@@ -1508,22 +1478,38 @@ Monitor of this License or out of the use or inability to use the
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
+            /**
+             * @description Blokko 主应用对象，封装了所有状态管理和UI逻辑。
+             * @type {object}
+             */
             const App = {
-                db: null, // IndexedDB 数据库实例
-                isStorageFull: false, // 标记存储是否已满
+                // 数据库实例
+                db: null,
+                // 标记浏览器存储空间是否已满
+                isStorageFull: false,
+                // 应用的核心状态对象，包含所有用户数据和设置
                 state: {},
+                // 当前选中的编辑目标 (例如: 全局, 某个区块, 某个卡片)
                 selection: { type: 'global', cardId: null },
+                // 操作历史记录，用于实现撤销/重做
                 history: [],
+                // 当前历史记录的指针
                 historyIndex: -1,
+                // 标记是否正在从历史记录中恢复状态，防止触发不必要的回调
                 isRestoringState: false,
+                // 标记是否正在进行内联文本编辑，防止冲突
                 isEditingText: false,
+                // Cropper.js 实例
                 cropper: null,
+                // 当前裁剪操作的目标信息
                 currentCropTarget: null,
+                // 当前图标选择器的目标信息
                 currentIconTarget: null, 
-                // --- FEATURE: Rich Text Editor ---
+                // Quill.js 富文本编辑器实例
                 richTextEditor: null,
+                // 当前富文本编辑器的目标信息
                 currentRichTextTarget: null,
-                // --- END FEATURE ---
+                // SortableJS 实例
                 sortableLayers: null,
                 sortablePreview: null,
                 sortableTags: null,
@@ -1531,23 +1517,42 @@ Monitor of this License or out of the use or inability to use the
                 cardLayerSortables: {},
                 cardSortables: {},
                 imageCardSortables: {},
+                // Masonry 瀑布流布局实例
                 masonryInstances: {},
+                // 防抖处理后的本地保存函数
                 debouncedSaveToLocal: null,
+                // 从用户本地系统加载的字体列表
                 localFonts: [],
-                uploadedFonts: [], // 现在只存储字体元信息 { family, fullName }
+                // 用户上传的字体元信息列表
+                uploadedFonts: [],
+                // 内置的预设主题
                 presets: {},
+                // 自定义上传的图标列表
                 icons: [], 
+                // 标记纹理选择器是否已初始化
                 texturePickerInitialized: false,
+                // 标记图标选择器是否已初始化
                 iconPickerInitialized: false,
+                // ColorThief 实例
                 colorThief: null,
+                // 移动端长按计时器
                 longPressTimer: null,
+                // 上一次从图片提取的调色板
                 lastPalette: [],
+                // 彩蛋点击计数器
                 easterEggCounter: 0,
+                // 彩蛋计时器
                 easterEggTimer: null,
+                // 提示框 (Tooltip) 的显示计时器
                 tooltipTimeout: null,
 
+                /**
+                 * @description 应用初始化入口函数。
+                 */
                 init() {
-                    console.log("Blokko 初始化 v1.6.1 ...");
+                    console.log("Blokko 初始化 v1.6.2 ...");
+                    // 注意：根据用户要求，此处不添加 showLoading/hideLoading 和延迟初始化逻辑。
+                    
                     this.elements = this.queryElements();
                     this.presets = this.getPresets();
                     this.state = this.getDefaultState();
@@ -1574,7 +1579,7 @@ Monitor of this License or out of the use or inability to use the
                         this.setSelection({ type: 'global' });
                         this.updateUndoRedoButtons();
                         
-                        const currentVersion = '1.6.1';
+                        const currentVersion = '1.6.2';
                         const lastVisitedVersion = localStorage.getItem('blokkoLastVersion');
                         const hasSeenTutorial = localStorage.getItem('blokkoHasSeenTutorial');
 
@@ -1602,6 +1607,10 @@ Monitor of this License or out of the use or inability to use the
                     });
                 },
 
+                /**
+                 * @description 获取应用的默认初始状态。
+                 * @returns {object} - 默认状态对象。
+                 */
                 getDefaultState() {
                     const lightTheme = this.getPresets().light;
                     return {
@@ -1658,6 +1667,10 @@ Monitor of this License or out of the use or inability to use the
                     };
                 },
                 
+                /**
+                 * @description 获取内置的预设主题颜色配置。
+                 * @returns {object} - 包含多个主题的对象。
+                 */
                 getPresets() {
                     return {
                         light: {
@@ -1699,9 +1712,14 @@ Monitor of this License or out of the use or inability to use the
                     };
                 },
 
+                /**
+                 * @description 查询并缓存所有需要操作的DOM元素。
+                 * @returns {object} - 包含所有DOM元素引用的对象。
+                 */
                 queryElements() {
                     const q = (selector) => document.querySelector(selector);
                     return {
+					    appContainer: q('.app-container'),
                         layerPanel: q('#layer-panel'),
                         inspectorPanel: q('#inspector-panel'),
                         layerList: q('#layer-list'),
@@ -1751,6 +1769,9 @@ Monitor of this License or out of the use or inability to use the
                     };
                 },
 
+                /**
+                 * @description 绑定应用的核心事件监听器 (例如: 主题切换, 添加区块等)。
+                 */
                 bindCoreEvents() {
                     this.elements.themeToggleBtn.addEventListener('click', () => this.toggleTheme());
                     this.elements.addTextBlockBtn.addEventListener('click', () => this.addBlock('text'));
@@ -1765,13 +1786,10 @@ Monitor of this License or out of the use or inability to use the
                     this.elements.mobileLayerToggle.addEventListener('click', () => this.togglePanelDrawer('layer-panel'));
                     this.elements.mobileInspectorToggle.addEventListener('click', () => this.togglePanelDrawer('inspector-panel'));
 
-                    this.elements.previewPanel.addEventListener('click', (e) => {
-                        if (this.elements.body.classList.contains('panels-open')) {
-                            if (!e.target.closest('[contenteditable="true"]')) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                this.togglePanelDrawer(false);
-                            }
+                    // 优化: 移动端点击遮罩层关闭面板的逻辑，仅当直接点击背景时触发
+                    this.elements.appContainer.addEventListener('click', (e) => {
+                        if (e.target === this.elements.appContainer && this.elements.body.classList.contains('panels-open')) {
+                            this.togglePanelDrawer(false);
                         }
                     });
 
@@ -1782,6 +1800,7 @@ Monitor of this License or out of the use or inability to use the
                         this.elements.exportModal.classList.add('visible');
                     });
                     
+                    // 帮助弹窗内的 Tab 切换逻辑
                     let aboutClickCount = 0;
                     let aboutClickTimer = null;
                     this.elements.helpModal.querySelector('.tabs').addEventListener('click', (e) => {
@@ -1796,6 +1815,7 @@ Monitor of this License or out of the use or inability to use the
 
                             this.elements.helpModalCloseBtn.textContent = (tabBtn.dataset.tab === 'help-tutorial') ? "我已了解，开始使用" : "关闭";
 
+                            // 连续点击"关于"标签5次以上，激活调试模式
                             if (tabBtn.dataset.tab === 'help-about') {
                                 clearTimeout(aboutClickTimer);
                                 aboutClickCount++;
@@ -1809,6 +1829,7 @@ Monitor of this License or out of the use or inability to use the
                         }
                     });
                     
+                    // 图标选择器相关事件
                     this.elements.iconPickerCloseBtn.addEventListener('click', () => this.hideIconPicker());
                     this.elements.removeIconBtn.addEventListener('click', () => this.selectIcon(null));
                     this.elements.iconSearch.addEventListener('input', this.debounce((e) => this.renderIconGrid(e.target.value), 300));
@@ -1825,11 +1846,15 @@ Monitor of this License or out of the use or inability to use the
                     
                     this.elements.uploadIconBtn.addEventListener('click', () => this.elements.iconUploadInput.click());
                     this.elements.iconUploadInput.addEventListener('change', e => this.handleIconUpload(e));
+                    
+                    // 锁定模式切换
                     this.elements.lockModeToggle.addEventListener('click', () => this.toggleLockMode());
                     
+                    // 富文本编辑器模态框事件
                     this.elements.richTextSaveBtn.addEventListener('click', () => this.saveRichText());
                     this.elements.richTextCancelBtn.addEventListener('click', () => this.hideRichTextEditor());
-
+                    
+                    // 导出模态框事件
                     this.elements.exportModal.addEventListener('click', async e => {
                         if (e.target.closest('#export-modal-close-btn') || e.target === this.elements.exportModal) {
                             this.elements.exportModal.classList.remove('visible');
@@ -1848,6 +1873,7 @@ Monitor of this License or out of the use or inability to use the
                         }
                     });
 
+                    // 左侧图层面板的事件委托
                     this.elements.layerList.addEventListener('click', e => {
                         const layerItemContainer = e.target.closest('.layer-item-container');
                         if (!layerItemContainer) return;
@@ -1855,6 +1881,7 @@ Monitor of this License or out of the use or inability to use the
                         const layerItem = layerItemContainer.querySelector('.layer-item');
                         const cardItem = e.target.closest('.card-layer-item');
                         
+                        // 处理图层上的动作按钮 (可见性, 复制, 添加卡片, 展开/折叠)
                         const actionBtn = e.target.closest('.layer-actions button, .layer-toggle');
                         if (actionBtn) {
                             const blockId = layerItem.dataset.id;
@@ -1872,6 +1899,7 @@ Monitor of this License or out of the use or inability to use the
                             return; 
                         }
 
+                        // 处理点击卡片子图层
                         if (cardItem) {
                             const blockId = cardItem.closest('.layer-item-container').dataset.blockId;
                             const cardId = cardItem.dataset.cardId;
@@ -1881,12 +1909,14 @@ Monitor of this License or out of the use or inability to use the
                                 cardEditorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             }
                         } 
+                        // 处理点击区块主图层
                         else {
                             const { type, id } = layerItem.dataset;
                             this.setSelection({ type, id });
                         }
                     });
 
+                    // 纹理选择器事件
                     this.elements.texturePickerCloseBtn.addEventListener('click', () => this.elements.texturePickerModal.classList.remove('visible'));
                     this.elements.removeTextureBtn.addEventListener('click', () => this.selectTexture(null));
                     this.elements.textureGrid.addEventListener('click', e => {
@@ -1894,6 +1924,7 @@ Monitor of this License or out of the use or inability to use the
                         if (item) this.selectTexture(item.dataset.textureName);
                     });
 
+                    // 双击图层名称进行重命名
                     this.elements.layerList.addEventListener('dblclick', e => {
                         const layerNameEl = e.target.closest('.layer-name');
                         const layerItem = e.target.closest('.layer-item');
@@ -1928,6 +1959,7 @@ Monitor of this License or out of the use or inability to use the
                         layerNameEl.addEventListener('keydown', handleKeydown);
                     });
                     
+                    // 颜色右键菜单事件
                     this.elements.colorContextMenu.addEventListener('click', e => {
                         const action = e.target.dataset.action;
                         const color = this.elements.colorContextMenu.dataset.color;
@@ -1940,6 +1972,7 @@ Monitor of this License or out of the use or inability to use the
                         }
                     });
 
+                    // 彩蛋: 连续点击标题6次
                     const titleEl = document.querySelector('.app-header-title');
                     if (titleEl) {
                         titleEl.addEventListener('click', () => {
@@ -1957,6 +1990,7 @@ Monitor of this License or out of the use or inability to use the
                         });
                     }
 
+                    // 全局快捷键: 撤销/重做
                     document.addEventListener('keydown', e => {
                         if (this.richTextEditor && this.richTextEditor.hasFocus()) {
                             return;
@@ -1979,28 +2013,37 @@ Monitor of this License or out of the use or inability to use the
                     });
                 },
                 
+                /**
+                 * @description 绑定右侧检查器面板内的所有事件。
+                 */
                 bindEditorEvents() {
                     const panel = this.elements.inspectorPanel;
 
+                    // 使用事件委托处理所有输入控件的 `input` 事件
                     panel.addEventListener('input', e => {
                         if (this.isRestoringState) return;
                         const target = e.target;
                         
+                        // 处理标签管理器中的文本输入
                         if (target.matches('.tag-manager-item .tag-text-input')) {
                             const tagItem = target.closest('.tag-manager-item');
                             if (tagItem) this.updateTag(tagItem.dataset.tagId, 'text', target.value, false);
                         }
 
+                        // 处理字体搜索
                         if (target.matches('#font-search-input')) {
                             this.populateFontList(target.value);
                             return;
                         }
 
+                        // 找到触发事件的控件的最近的数据源祖先元素
                         const updateSource = target.closest('[data-state-key], [data-setting-key], [data-card-key], [data-color-sync-key], [data-block-id-for-title]');
                         if (!updateSource) return;
 
+                        // 获取控件的值
                         let value = target.type === 'checkbox' ? target.checked : (target.type === 'number' || target.type === 'range') ? parseFloat(target.value) : target.value;
                         
+                        // 同步颜色选择器和十六进制文本框
                         if (target.matches('.color-hex-input')) {
                             let hexValue = target.value.replace(/[^#0-9a-fA-F]/g, '');
                             const colorInput = target.previousElementSibling;
@@ -2030,6 +2073,7 @@ Monitor of this License or out of the use or inability to use the
                         const cardKey = keySource.dataset.cardKey;
                         const blockIdForTitle = updateSource.dataset.blockIdForTitle;
                         
+                        // 根据数据源更新相应的状态
                         if (stateKey) {
                             this.updateState(stateKey, value, false);
                         } else if (blockIdForTitle) {
@@ -2041,12 +2085,14 @@ Monitor of this License or out of the use or inability to use the
                             if (cardEl) this.updateCard(blockEl.dataset.blockId, cardEl.dataset.cardId, cardKey, value, false);
                         }
 
+                        // 更新 range 输入条旁边的数值显示
                         if (target.type === 'range') {
                             const valueDisplay = target.closest('.form-group').querySelector('.angle-value, .spacer-height-value, #gCardRadiusValue, .avatar-size-value, .header-radius-value');
                             if (valueDisplay) valueDisplay.textContent = value;
                         }
                     });
 
+                    // 校验并格式化十六进制颜色输入框
                     panel.addEventListener('blur', e => {
                         const target = e.target;
                         if (target.matches('.color-hex-input')) {
@@ -2062,10 +2108,12 @@ Monitor of this License or out of the use or inability to use the
                         }
                     }, true);
 
+                    // 使用事件委托处理所有输入控件的 `change` 事件
                     panel.addEventListener('change', e => {
                         if (this.isRestoringState) return;
                         const target = e.target;
                         
+                        // "高级设置" 开关
                         if (target.matches('.advanced-toggle')) {
                             const section = target.closest('.editor-section, .editor-card-content');
                             const isOpen = section.classList.toggle('show-advanced');
@@ -2074,7 +2122,8 @@ Monitor of this License or out of the use or inability to use the
                             }
                             return;
                         }
-
+                        
+                        // 如果是状态相关的修改，则推入历史记录
                         if (target.dataset.stateKey || target.closest('.editor-block') || target.dataset.colorSyncKey || target.matches('.tag-manager-item .tag-text-input')) {
                             let description = '修改样式';
                             if (target.dataset.stateKey) description = `修改 ${target.dataset.stateKey}`;
@@ -2082,10 +2131,12 @@ Monitor of this License or out of the use or inability to use the
                             this.pushHistory(description);
                         }
                         
+                        // 如果切换了卡片内的单选按钮，重新渲染检查器以更新UI
                         if (target.type === 'radio' && target.closest('.editor-card')) {
                             this.renderInspector();
                         }
-
+                        
+                        // 处理文件上传
                         const fileInputs = {
                             '#avatar-upload': 'avatar',
                             '#page-bg-upload': 'pageBg',
@@ -2108,12 +2159,11 @@ Monitor of this License or out of the use or inability to use the
                             }
                         }
                         
+                        // 处理导出选项的联动
                         if (target.matches('#hd-export-toggle, #custom-width-toggle, #custom-width-input, #export-rounded-corners-toggle, #export-corner-radius-input')) {
                             const customWidthToggle = panel.querySelector('#custom-width-toggle');
                             const customWidthInput = panel.querySelector('#custom-width-input');
                             const hdExportToggle = panel.querySelector('#hd-export-toggle');
-                            const exportRoundedToggle = panel.querySelector('#export-rounded-corners-toggle');
-                            const cornerRadiusInput = panel.querySelector('#export-corner-radius-input');
     
                             if (target.id === 'custom-width-toggle') {
                                 customWidthInput.disabled = !target.checked;
@@ -2126,12 +2176,13 @@ Monitor of this License or out of the use or inability to use the
                             }
     
                             if (target.id === 'export-rounded-corners-toggle') {
-                                cornerRadiusInput.disabled = !target.checked;
+                                panel.querySelector('#export-corner-radius-input').disabled = !target.checked;
                             }
     
                             this.updateExportSizePreview();
                         }
 
+                        // 处理布局切换时，是否显示瀑布流选项
                         if (target.matches('[name^="block-layout"]')) {
                             const blockEl = target.closest('.editor-block');
                             if (blockEl) {
@@ -2141,15 +2192,18 @@ Monitor of this License or out of the use or inability to use the
                             this.renderInspector();
                         }
 
+                        // 处理卡片不透明度是否跟随全局的切换
                         if (target.matches('[data-card-key="followGlobalOpacity"]')) {
                             const opacitySliderGroup = target.closest('.editor-card-content').querySelector('.advanced-setting.opacity-control');
                             if (opacitySliderGroup) opacitySliderGroup.style.display = target.checked ? 'none' : 'block';
                         }
                     });
                     
+                    // 使用事件委托处理所有 `click` 事件
                     panel.addEventListener('click', e => {
                         const target = e.target;
                         
+                        // 触发富文本编辑器
                         const richTextTrigger = target.closest('.rich-text-editor-trigger, .edit-content-btn');
                         if (richTextTrigger) {
                             const cardEl = richTextTrigger.closest('.editor-card');
@@ -2163,6 +2217,7 @@ Monitor of this License or out of the use or inability to use the
                             return;
                         }
 
+                        // +/- 微调按钮
                         const stepperBtn = e.target.closest('.btn-stepper');
                         if (stepperBtn) {
                             const rangeInput = stepperBtn.parentElement.querySelector('input[type="range"]');
@@ -2183,12 +2238,14 @@ Monitor of this License or out of the use or inability to use the
                             return;
                         }
 
+                        // 可折叠区域的标题
                         const legend = target.closest('.editor-section > legend');
                         if (legend) {
                             legend.parentElement.classList.toggle('collapsed');
                             return; 
                         }
 
+                        // 各种功能按钮
                         const actionButton = target.closest('button, .back-to-global-btn');
                         if (!actionButton) return;
                         
@@ -2207,7 +2264,9 @@ Monitor of this License or out of the use or inability to use the
                             '.back-to-global-btn': () => this.setSelection({type: 'global'}),
                             '#reset-btn': () => this.resetToDefault(),
                             '#clear-page-bg-btn': () => {
+                                const oldImageUrl = this.state.pageStyles.pageBgImageDataUrl;
                                 this.updateState('pageStyles.pageBgImageDataUrl', null, true, '清除页面背景图');
+                                this.deleteImageByUrl(oldImageUrl);
                                 this.showToast('背景图已清除', 'info');
                             },
                             '#pick-color-btn': () => panel.querySelector('#color-thief-upload')?.click(),
@@ -2224,9 +2283,11 @@ Monitor of this License or out of the use or inability to use the
                                 return;
                             }
                         }
-
+                        
+                        // 应用预设主题
                         if (actionButton.dataset.preset) this.applyPreset(this.presets[actionButton.dataset.preset]);
                         
+                        // 重置颜色
                         if (actionButton.dataset.resetKey) {
                             const keyPath = actionButton.dataset.resetKey;
                             const keyMap = { nicknameColor: 'pNicknameColor', subtitleColor: 'pSubtitleColor', bioColor: 'pBioColor', tagBgColor: 'pTagBgColor', tagTextColor: 'pTagTextColor' };
@@ -2237,12 +2298,14 @@ Monitor of this License or out of the use or inability to use the
                             this.showToast('颜色已重置', 'info');
                         }
                         
+                        // 标签管理器内的按钮
                         const tagItem = target.closest('.tag-manager-item');
                         if (tagItem) {
                             if (target.closest('.tag-icon-btn')) { this.initIconPicker(); this.showIconPicker('tag', tagItem.dataset.tagId); }
                             if (target.closest('.tag-delete-btn')) this.deleteTag(tagItem.dataset.tagId);
                         }
                         
+                        // 区块编辑器内的按钮
                         const blockEl = target.closest('.editor-block');
                         if (blockEl) {
                             const blockId = blockEl.dataset.blockId;
@@ -2250,12 +2313,16 @@ Monitor of this License or out of the use or inability to use the
                             else if (target.closest('.add-card-btn')) this.addCard(blockId);
                             else if (target.closest('.add-image-btn')) this.addImageCard(blockId);
                             
+                            // 卡片编辑器内的按钮
                             const cardEl = target.closest('.editor-card');
                             if (cardEl) {
                                 const cardId = cardEl.dataset.cardId;
                                 if (target.closest('.card-delete-btn')) this.deleteCard(blockId, cardId);
                                 else if (target.closest('.card-clear-bg-btn')) {
+                                    const card = this.findBlock(blockId)?.cards.find(c => c.id === cardId);
+                                    const oldImageUrl = card?.bgImageDataUrl;
                                     this.updateCard(blockId, cardId, 'bgImageDataUrl', null, true, '清除卡片背景图');
+                                    this.deleteImageByUrl(oldImageUrl);
                                     this.showToast('卡片背景图已清除', 'info');
                                 }
                                 else if (target.closest('.crop-image-btn')) this.cropImage(blockId, cardId);
@@ -2278,6 +2345,7 @@ Monitor of this License or out of the use or inability to use the
                             }
                         }
                         
+                        // Tab 切换
                         const tabBtn = target.closest('.tabs .tab-btn');
                         if (tabBtn) {
                             const parent = tabBtn.closest('.tab-group-wrapper, .editor-section > .section-content');
@@ -2301,6 +2369,7 @@ Monitor of this License or out of the use or inability to use the
                         }
                     });
 
+                    // 字体管理器事件
                     const fontManagerModal = this.elements.fontManagerModal;
                     fontManagerModal.querySelector('#font-manager-close-btn').addEventListener('click', () => {
                         fontManagerModal.classList.remove('visible');
@@ -2315,6 +2384,7 @@ Monitor of this License or out of the use or inability to use the
                         }
                     });
                     
+                    // 悬浮提示框 (Tooltip)
                     panel.addEventListener('mouseover', e => {
                         const trigger = e.target.closest('.tooltip-trigger');
                         if (trigger) {
@@ -2353,8 +2423,12 @@ Monitor of this License or out of the use or inability to use the
                     });
                 },
 
+                /**
+                 * @description 绑定中间预览区域的所有交互事件。
+                 */
                 bindPreviewEvents(){
                      this.elements.previewPanel.addEventListener('click', e => {
+                        // 处理移动端的铅笔编辑图标
                         const pencil = e.target.closest('.mobile-edit-pencil');
                         if (pencil) {
                             e.preventDefault();
@@ -2368,6 +2442,7 @@ Monitor of this License or out of the use or inability to use the
                             return;
                         }
 
+                        // 处理点击头像更换
                         if (e.target.closest('#preview-avatar')) {
                             if (this.selection.type !== 'personalInfo') {
                                 this.setSelection({ type: 'personalInfo' });
@@ -2380,15 +2455,18 @@ Monitor of this License or out of the use or inability to use the
                             }, 50);
                             return;
                         }
-
+                        
+                        // 如果正在编辑文本，则忽略点击事件
                         if (this.isEditingText) return;
                         
+                        // 点击头部区域，选中个人信息
                         const header = e.target.closest('.preview-header');
                         if (header) {
                             this.setSelection({ type: 'personalInfo' });
                             return;
                         }
 
+                        // 点击区块或卡片，进行选中
                         const blockWrapper = e.target.closest('.preview-block-wrapper');
                         if (blockWrapper && blockWrapper.dataset.blockId) {
                             const cardWrapper = e.target.closest('.preview-card, figure');
@@ -2401,27 +2479,32 @@ Monitor of this License or out of the use or inability to use the
                                 }
                             }
                         } else {
+                            // 点击预览区空白处，选中全局
                             if (e.target.closest('.preview-wrapper')) {
                                 this.setSelection({ type: 'global' });
                             }
                         }
                      });
 
+                     // 双击预览区内容进行内联编辑
                      this.elements.previewWrapper.addEventListener('dblclick', e => {
                         if (this.elements.previewBlocksContainer.classList.contains('locked-mode')) return;
 
+                        // 双击卡片内容，打开富文本编辑器
                         const cardContentTarget = e.target.closest('.preview-card-content[data-card-key="content"]');
                         if (cardContentTarget) {
                             this.showRichTextEditor(cardContentTarget);
                             return;
                         }
                         
+                        // 双击其他可编辑文本
                         const target = e.target.closest('[data-state-key], [data-card-key], [data-tag-text-id], [data-separator-text-key]');
                         if (target) {
                            this.triggerInlineEdit(target);
                         }
                     });
                     
+                    // 内联编辑时，实时更新 state
                     this.elements.previewWrapper.addEventListener('input', e => {
                         const target = e.target;
                         if (target.contentEditable === 'true') {
@@ -2431,6 +2514,7 @@ Monitor of this License or out of the use or inability to use the
                             const tagId = target.dataset.tagTextId;
                             const value = target.innerText;
 
+                            // 辅助函数，用于通过路径字符串更新 state 对象
                             const updateStateObject = (path, val) => {
                                 let obj = this.state;
                                 const keys = path.split('.');
@@ -2470,6 +2554,10 @@ Monitor of this License or out of the use or inability to use the
                     });
                 },
 
+                /**
+                 * @description 激活预览区内的文本进行内联编辑。
+                 * @param {HTMLElement} target - 需要编辑的DOM元素。
+                 */
                 triggerInlineEdit(target) {
                     if (!target || this.isEditingText) return;
                     this.isEditingText = true;
@@ -2485,6 +2573,7 @@ Monitor of this License or out of the use or inability to use the
                         
                         this.pushHistory('编辑文本');
 
+                        // 如果在瀑布流布局中，编辑后需要重新计算布局
                         const blockEl = target.closest('.preview-block-wrapper');
                         if (blockEl && this.masonryInstances[blockEl.dataset.blockId]) {
                             this.masonryInstances[blockEl.dataset.blockId].layout();
@@ -2492,6 +2581,7 @@ Monitor of this License or out of the use or inability to use the
                     };
                     
                     const handleKeydown = (ev) => {
+                        // 按 Enter 结束编辑
                         if (ev.key === 'Enter' && !ev.shiftKey) {
                             ev.preventDefault();
                             target.blur();
@@ -2502,6 +2592,9 @@ Monitor of this License or out of the use or inability to use the
                     target.addEventListener('keydown', handleKeydown);
                 },
 
+                /**
+                 * @description 初始化右侧面板的拖拽缩放功能。
+                 */
                 initResizer() {
                      const resizer = this.elements.resizer;
                         const inspectorPanel = this.elements.inspectorPanel;
@@ -2535,11 +2628,18 @@ Monitor of this License or out of the use or inability to use the
                         };
                 },
 
+                /**
+                 * @description 重新计算所有瀑布流布局。
+                 */
                 relayoutAllMasonry() {
                     Object.values(this.masonryInstances).forEach(m => m && m.layout());
                     this.updateExportSizePreview();
                 },
 
+                /**
+                 * @description 渲染所有UI组件，isInitial用于标记是否是首次渲染。
+                 * @param {boolean} isInitial - 是否是首次渲染。
+                 */
                 renderAll(isInitial = false) {
                     this.updateGlobalCardStyleVars();
                     this.renderPersonalInfo();
@@ -2550,9 +2650,13 @@ Monitor of this License or out of the use or inability to use the
                     this.renderMobileEditPencils();
                 },
                 
+                /**
+                 * @description 渲染个人信息区域 (头像, 昵称, 简介, 标签等)。
+                 */
                 async renderPersonalInfo() {
                     const info = this.state.personalInfo;
                     
+                    // 异步从 IndexedDB 加载并设置头像
                     const setAvatarSrc = async (url) => {
                         if (url && url.startsWith('idb://')) {
                             try {
@@ -2561,10 +2665,11 @@ Monitor of this License or out of the use or inability to use the
                                 if (imageRecord && imageRecord.blob) {
                                     this.elements.previewAvatar.src = URL.createObjectURL(imageRecord.blob);
                                 } else {
+                                    // 如果数据库中找不到图片，则使用默认头像
                                     this.elements.previewAvatar.src = this.getDefaultState().personalInfo.avatarDataUrl; 
                                 }
                             } catch (e) {
-                                console.error('Failed to load avatar from DB', e);
+                                console.error('从数据库加载头像失败:', e);
                                 this.elements.previewAvatar.src = this.getDefaultState().personalInfo.avatarDataUrl;
                             }
                         } else {
@@ -2581,19 +2686,20 @@ Monitor of this License or out of the use or inability to use the
                     this.elements.previewSubtitle.style.color = info.subtitleColor;
                     this.elements.previewBio.style.color = info.bioColor;
 
+                    // 设置头像大小、位置、形状和边框
                     const baseSize = 90;
                     const newSize = baseSize * ((info.avatarSize || 100) / 100);
                     const offsetX = info.avatarOffsetX || 0;
                     this.elements.previewAvatar.style.width = `${newSize}px`;
                     this.elements.previewAvatar.style.height = `${newSize}px`;
                     this.elements.previewAvatar.style.transform = `translateX(${offsetX}%)`;
-
                     this.elements.previewAvatar.style.borderRadius = info.avatarShape;
                     this.elements.previewAvatar.style.borderWidth = `${info.avatarBorderSize}px`;
                     this.elements.previewAvatar.style.borderColor = info.avatarBorderColor;
                     
                     this.elements.previewHeader.style.boxShadow = 'none';
 
+                    // 渲染标签
                     this.elements.previewTagsContainer.innerHTML = (info.tags || [])
                         .map(tag => {
                             const iconHTML = tag.icon ? `<span class="iconify" data-icon="${tag.icon}"></span>` : '';
@@ -2601,6 +2707,9 @@ Monitor of this License or out of the use or inability to use the
                         }).join('');
                 },
                 
+                /**
+                 * @description 渲染页面和头部的背景样式。
+                 */
                 async renderPageStyles() {
                     const styles = this.state.pageStyles;
                     const wrapper = this.elements.previewWrapper;
@@ -2610,6 +2719,7 @@ Monitor of this License or out of the use or inability to use the
                     let bgPositions = [];
                     let bgColor = 'transparent';
 
+                    // 1. 处理背景纹理
                     if (styles.pageBgPattern) {
                         const pattern = HeroPatterns.find(p => p.name === styles.pageBgPattern);
                         if(pattern) {
@@ -2621,6 +2731,7 @@ Monitor of this License or out of the use or inability to use the
                         }
                     }
 
+                    // 2. 处理背景图片
                     if (styles.pageBgImageDataUrl) {
                         let imageUrl = styles.pageBgImageDataUrl;
                         if (imageUrl.startsWith('idb://')) {
@@ -2630,9 +2741,10 @@ Monitor of this License or out of the use or inability to use the
                                 if (imageRecord && imageRecord.blob) {
                                     imageUrl = URL.createObjectURL(imageRecord.blob);
                                 }
-                            } catch(e) { console.error('Failed to load page background from DB', e); }
+                            } catch(e) { console.error('从数据库加载页面背景失败:', e); }
                         }
 
+                        // 添加图片遮罩层
                         const overlayOpacity = parseFloat(styles.pageOverlayOpacity);
                         if (overlayOpacity > 0) {
                             const finalOverlayColor = this.hexToRgba(styles.pageOverlayColor, overlayOpacity);
@@ -2645,6 +2757,7 @@ Monitor of this License or out of the use or inability to use the
                         bgPositions.push('center');
                     }
                     
+                    // 3. 处理背景颜色/渐变
                     if (styles.pageBgMode === 'gradient') {
                         bgLayers.push(`linear-gradient(${styles.pageBgGradientAngle}deg, ${styles.pageBgGradientStart}, ${styles.pageBgGradientEnd})`);
                         bgSizes.push('cover');
@@ -2653,11 +2766,13 @@ Monitor of this License or out of the use or inability to use the
                         bgColor = styles.pageBgSolidColor;
                     }
 
+                    // 应用最终的背景样式
                     wrapper.style.backgroundColor = bgColor;
                     wrapper.style.backgroundImage = bgLayers.join(', ');
                     wrapper.style.backgroundSize = bgSizes.join(', ');
                     wrapper.style.backgroundPosition = bgPositions.join(', ');
 
+                    // 处理头部背景
                     if (styles.headerBgMode === 'gradient') {
                         const gradient = `linear-gradient(${styles.headerBgGradientAngle}deg, ${this.hexToRgba(styles.headerBgGradientStart, styles.headerOpacity)}, ${this.hexToRgba(styles.headerBgGradientEnd, styles.headerOpacity)})`;
                         this.elements.previewHeader.style.background = gradient;
@@ -2667,15 +2782,20 @@ Monitor of this License or out of the use or inability to use the
                     
                     this.elements.previewHeader.style.borderRadius = `${styles.headerBorderRadius}px`;
 
+                    // 确保头部文字颜色正确
                     this.elements.previewNickname.style.color = this.state.personalInfo.nicknameColor;
                     this.elements.previewSubtitle.style.color = this.state.personalInfo.subtitleColor;
                     this.elements.previewBio.style.color = this.state.personalInfo.bioColor;
                 },
 
+                /**
+                 * @description 渲染左侧的内容图层面板。
+                 */
                 renderLayerPanel() {
                     const list = this.elements.layerList;
                     const {type, id, cardId} = this.selection;
                     
+                    // 个人信息图层
                     let html = `<div class="layer-item-container">
                                     <div class="layer-item ${type === 'personalInfo' ? 'selected' : ''}" data-type="personalInfo">
                                         <button class="layer-toggle"></button>
@@ -2683,7 +2803,8 @@ Monitor of this License or out of the use or inability to use the
                                         <span class="layer-name">个人信息</span>
                                     </div>
                                </div><hr>`;
-
+                    
+                    // 遍历所有区块并生成图层
                     html += this.state.blocks.map(b => {
                         const iconMap = { text: 'mdi:format-text-variant-outline', image: 'mdi:image-multiple-outline', separator: 'mdi:minus', spacer: 'mdi:arrow-expand-vertical' };
                         const isHidden = b.isVisible === false;
@@ -2691,6 +2812,7 @@ Monitor of this License or out of the use or inability to use the
                         const isExpanded = b.isExpanded ? 'is-expanded' : '';
                         const hasQuickAdd = (b.type === 'text' || b.type === 'image');
                         
+                        // 生成卡片子图层列表
                         const cardsListHTML = isExpandable ? `<ul class="card-layer-list" data-block-id="${b.id}">
                             ${b.cards.map(c => `<li class="card-layer-item ${cardId === c.id ? 'selected' : ''}" data-card-id="${c.id}">${this.escapeHTML(c.title) || '无标题卡片'}</li>`).join('')}
                         </ul>` : '';
@@ -2713,9 +2835,13 @@ Monitor of this License or out of the use or inability to use the
                     }).join('');
                     
                     list.innerHTML = html;
+                    // 初始化嵌套的卡片拖拽排序
                     this.initNestedSortables();
                 },
 
+                /**
+                 * @description 根据当前 selection 渲染右侧的检查器面板。
+                 */
                 renderInspector() {
                     const panel = this.elements.inspectorPanel;
                     const { type, id } = this.selection;
@@ -2735,6 +2861,7 @@ Monitor of this License or out of the use or inability to use the
 
                     panel.innerHTML = html;
 
+                    // 恢复"高级设置"的展开状态
                     panel.querySelectorAll('.editor-section').forEach(section => {
                         if (section.id) {
                             const isOpen = localStorage.getItem(`blokko-advanced-${section.id}`) === 'true';
@@ -2754,6 +2881,7 @@ Monitor of this License or out of the use or inability to use the
                         }
                     }
                     
+                    // 异步加载图片缩略图
                     panel.querySelectorAll('.thumbnail-wrapper img').forEach(img => {
                         const cardEl = img.closest('.editor-card');
                         if (!cardEl) return;
@@ -2776,10 +2904,12 @@ Monitor of this License or out of the use or inability to use the
                             setSrc(card.url);
                         }
                     });
-
+                    
+                    // 同步所有控件的值
                     this.syncAllControls();
                     this.updateUndoRedoButtons();
 
+                    // 初始化拖拽排序
                     if (type === 'block') {
                         const block = this.findBlock(id);
                         if (block.type === 'text') {
@@ -2793,6 +2923,7 @@ Monitor of this License or out of the use or inability to use the
                     }
                 },
 
+                // 以下 `create...HTML` 系列函数负责生成不同部分的检查器HTML字符串，代码较长，此处省略注释。
                 createGlobalInspectorHTML() {
                     const backBtn = this.selection.type !== 'global' ? `<button class="back-to-global-btn">← 返回全局</button>` : '';
                     const headerBorderRadiusHTML = `
@@ -2926,15 +3057,23 @@ Monitor of this License or out of the use or inability to use the
                         </div>
                     `;
                 },
-
+                
+                /**
+                 * @description 渲染所有区块的预览效果。
+                 */
                 renderPreviewBlocks() {
                     this.elements.previewBlocksContainer.innerHTML = this.state.blocks.length ? this.state.blocks.map(b => `<div class="preview-block-wrapper ${b.isVisible === false ? 'is-hidden' : ''}" data-block-id="${b.id}">${this.createPreviewBlockHTML(b)}</div>`).join('') : '<div class="empty-placeholder">(预览区) 无区块</div>';
+                    // 异步更新图片和卡片样式
                     this.postRenderAsyncUpdates(this.elements.previewBlocksContainer);
+                    // 初始化瀑布流
                     this.state.blocks.forEach(b => this.initMasonryForBlock(b.id));
+                    // 更新选中高亮
                     this.updateHighlights();
+                    // 渲染移动端编辑铅笔
                     this.renderMobileEditPencils();
                 },
 
+                // ... 省略 createEditorBlockHTML, createPreviewBlockHTML 等HTML生成函数，因为它们的内部逻辑没有变化 ...
                 createEditorBlockHTML(block) {
                     let content = '';
                     const backBtn = this.selection.type !== 'global' ? `<button class="back-to-global-btn">← 返回全局</button>` : '';
@@ -3093,7 +3232,12 @@ Monitor of this License or out of the use or inability to use the
                             </div>
                         </div>`;
                 },
-                
+
+                /**
+                 * @description 将卡片的样式（包括全局样式和独立样式）应用到指定的DOM元素上。
+                 * @param {HTMLElement} cardEl - 目标卡片的DOM元素。
+                 * @param {object} cardData - 卡片的状态数据。
+                 */
                 async applyCardStyles(cardEl, cardData) {
                     const g = this.state.globalCardStyles;
                     const use = (key, val) => (val === undefined || val === null || val === '') ? g[key] : val;
@@ -3104,6 +3248,7 @@ Monitor of this License or out of the use or inability to use the
                     const innerEl = cardEl.querySelector('.preview-card-inner');
                     if (!innerEl) return;
                     
+                    // 如果卡片完全透明，则简化样式
                     if (parseFloat(finalOpacity) < 0.01) {
                         innerEl.style.setProperty('--card-bg-final', 'transparent');
                         innerEl.style.boxShadow = 'none';
@@ -3111,6 +3256,8 @@ Monitor of this License or out of the use or inability to use the
                     } else {
                         const finalTextColor = use('textColor', cardData.textColor);
                         let finalBg;
+                        
+                        // 优先使用卡片独立背景图
                         if (cardData.bgImageDataUrl) {
                             let imageUrl = cardData.bgImageDataUrl;
                             if(imageUrl.startsWith('idb://')) {
@@ -3118,12 +3265,16 @@ Monitor of this License or out of the use or inability to use the
                                     const imageId = imageUrl.substring(6);
                                     const record = await this.getImageFromDB(imageId);
                                     if(record && record.blob) imageUrl = URL.createObjectURL(record.blob);
-                                } catch (e) { console.error('Failed to load card bg from DB', e); }
+                                } catch (e) { console.error('从数据库加载卡片背景失败:', e); }
                             }
                             finalBg = `url(${imageUrl})`;
-                        } else if (cardData.bgColor) {
+                        } 
+                        // 其次使用卡片独立背景色
+                        else if (cardData.bgColor) {
                             finalBg = this.hexToRgba(cardData.bgColor, finalOpacity);
-                        } else {
+                        } 
+                        // 最后使用全局背景样式
+                        else {
                             if (g.bgMode === 'gradient') {
                                 finalBg = `linear-gradient(${g.bgGradientAngle}deg, ${this.hexToRgba(g.bgGradientStart, finalOpacity)}, ${this.hexToRgba(g.bgGradientEnd, finalOpacity)})`;
                             } else {
@@ -3138,6 +3289,7 @@ Monitor of this License or out of the use or inability to use the
                         innerEl.style.setProperty('--card-font-weight', cardData.fontWeight || 'normal');
                         innerEl.style.setProperty('--active-card-text-shadow', 'none');
                         
+                        // 应用图片遮罩层样式
                         innerEl.style.setProperty('--card-overlay-color', cardData.overlayColor || '#FFF');
                         const overlayOpacity = cardData.bgImageDataUrl ? (cardData.overlayOpacity ?? 0.5) : 0;
                         innerEl.style.setProperty('--card-overlay-opacity', parseFloat(overlayOpacity) > 0 ? overlayOpacity : 0);
@@ -3147,25 +3299,39 @@ Monitor of this License or out of the use or inability to use the
                     }
                 },
 
+                /**
+                 * @description 更新 state 对象中的某个值。
+                 * @param {string} keyPath - 状态路径，例如 'personalInfo.nickname'。
+                 * @param {*} value - 新的值。
+                 * @param {boolean} pushHistory - 是否将此操作推入历史记录。
+                 * @param {string|null} historyDescription - 操作的历史描述。
+                 */
                 updateState(keyPath, value, pushHistory = true, historyDescription = null) {
                     if (pushHistory && !this.isRestoringState) {
                         this.pushHistory(historyDescription || '修改样式');
                     }
+                    // 通过路径字符串安全地更新深层嵌套的对象属性
                     let obj = this.state;
                     const keys = keyPath.split('.');
                     for (let i = 0; i < keys.length - 1; i++) { obj = obj?.[keys[i]]; }
                     if(obj) obj[keys[keys.length - 1]] = value;
+                    
                     this.debouncedSaveToLocal();
                     this.triggerRender(keyPath);
                     this.syncControl(keyPath);
                 },
 
+                /**
+                 * @description 根据更新的状态路径，触发最高效的局部UI渲染。
+                 * @param {string} keyPath - 被更新的状态路径。
+                 */
                 triggerRender(keyPath) {
                     const styles = this.state.pageStyles;
                     const gCard = this.state.globalCardStyles;
                     const info = this.state.personalInfo;
                     const r = document.documentElement.style;
 
+                    // 定义一个映射表，对于某些特定的状态更新，直接操作DOM，避免重渲染整个组件
                     const directUpdateMap = {
                         'pageStyles.headerBgColor': () => { if (styles.headerBgMode === 'solid') this.elements.previewHeader.style.background = this.hexToRgba(styles.headerBgColor, styles.headerOpacity); },
                         'pageStyles.headerBgGradientStart': () => { if (styles.headerBgMode === 'gradient') this.elements.previewHeader.style.background = `linear-gradient(${styles.headerBgGradientAngle}deg, ${this.hexToRgba(styles.headerBgGradientStart, styles.headerOpacity)}, ${this.hexToRgba(styles.headerBgGradientEnd, styles.headerOpacity)})`},
@@ -3209,43 +3375,34 @@ Monitor of this License or out of the use or inability to use the
                     
                     const mainKey = keyPath.split('.')[0];
                     const keyParts = keyPath.split('.');
-
+                    
+                    // 如果更新的是个人信息相关
                     if (mainKey === 'personalInfo') {
                         const subKey = keyParts[1];
-
                         if (subKey === 'tags' && keyParts.length > 3 && (keyParts[3] === 'text' || keyParts[3] === 'icon')) {
                             this.renderPersonalInfo();
                             return; 
                         }
-
                         switch (subKey) {
-                            case 'nickname':
-                                this.elements.previewNickname.textContent = this.state.personalInfo.nickname;
-                                break;
-                            case 'subtitle':
-                                this.elements.previewSubtitle.textContent = this.state.personalInfo.subtitle;
-                                break;
-                            case 'bio':
-                                this.elements.previewBio.textContent = this.state.personalInfo.bio;
-                                break;
-                            default:
-                                this.renderPersonalInfo();
-                                if (subKey === 'tags') this.renderTagManager();
+                            case 'nickname': this.elements.previewNickname.textContent = this.state.personalInfo.nickname; break;
+                            case 'subtitle': this.elements.previewSubtitle.textContent = this.state.personalInfo.subtitle; break;
+                            case 'bio': this.elements.previewBio.textContent = this.state.personalInfo.bio; break;
+                            default: this.renderPersonalInfo(); if (subKey === 'tags') this.renderTagManager();
                         }
                         this.renderMobileEditPencils();
                         return;
                     }
-
+                    
+                    // 如果更新的是页面或全局卡片样式
                     if (mainKey === 'pageStyles' || mainKey === 'globalCardStyles') {
                         if (mainKey === 'globalCardStyles') this.updateGlobalCardStyleVars();
                         this.renderPageStyles();
                         this.renderPreviewBlocks();
-                        if (this.selection.type === 'global') {
-                            this.syncAllControls();
-                        }
+                        if (this.selection.type === 'global') this.syncAllControls();
                         return;
                     }
 
+                    // 如果更新的是区块或卡片
                     if (mainKey === 'blocks') {
                         if (keyParts.length <= 2) { 
                             this.renderLayerPanel();
@@ -3299,6 +3456,11 @@ Monitor of this License or out of the use or inability to use the
                     }
                 },
                 
+                /**
+                 * @description 向指定区块添加一个新卡片。
+                 * @param {string} blockId - 目标区块的ID。
+                 * @param {boolean} isQuickAdd - 是否是通过图层面板的快捷按钮添加。
+                 */
                 addCard(blockId, isQuickAdd = false) {
                     const block = this.findBlock(blockId);
                     if (!block || block.type !== 'text') return;
@@ -3330,7 +3492,8 @@ Monitor of this License or out of the use or inability to use the
                         this.renderPreviewBlockById(blockId);
                         return;
                     };
-
+                    
+                    // 动态添加新卡片到预览区并播放动画
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = this.createPreviewCardHTML(newCard);
                     const newCardEl = tempDiv.firstChild;
@@ -3352,6 +3515,10 @@ Monitor of this License or out of the use or inability to use the
                     }
                 },
 
+                /**
+                 * @description 触发图片上传流程以添加图片卡片。
+                 * @param {string} blockId - 目标区块的ID。
+                 */
                 addImageCard(blockId) {
                     const blockEl = this.elements.inspectorPanel.querySelector(`.editor-block[data-block-id="${blockId}"]`);
                     if (blockEl) {
@@ -3359,10 +3526,22 @@ Monitor of this License or out of the use or inability to use the
                     }
                 },
 
-                deleteCard(blockId, cardId) {
+                /**
+                 * @description 从指定区块中删除一个卡片。
+                 * @param {string} blockId - 目标区块的ID。
+                 * @param {string} cardId - 目标卡片的ID。
+                 */
+                async deleteCard(blockId, cardId) {
                     const block = this.findBlock(blockId);
                     if (!block) return;
                     
+                    // BUGFIX: 删除卡片前，先清理其可能引用的图片
+                    const cardToDelete = block.cards.find(c => c.id === cardId);
+                    if (cardToDelete) {
+                        await this.deleteImageByUrl(cardToDelete.url);
+                        await this.deleteImageByUrl(cardToDelete.bgImageDataUrl);
+                    }
+
                     const cardEl = this.elements.previewBlocksContainer.querySelector(`[data-card-id="${cardId}"]`);
                     
                     const doDelete = () => {
@@ -3381,7 +3560,8 @@ Monitor of this License or out of the use or inability to use the
 
                         this.showToast('卡片已删除', 'info');
                     };
-
+                    
+                    // 播放删除动画
                     if (cardEl) {
                         const masonry = this.masonryInstances[blockId];
                         if (masonry) {
@@ -3399,6 +3579,9 @@ Monitor of this License or out of the use or inability to use the
                     }
                 },
 
+                /**
+                 * @description 从本地存储 (localStorage 和 IndexedDB) 加载应用状态。
+                 */
                 async loadFromLocal() { 
                     const json = localStorage.getItem('blokkoState'); 
                     if (!json) {
@@ -3408,14 +3591,17 @@ Monitor of this License or out of the use or inability to use the
                     try { 
                         let saved = JSON.parse(json);
                         if (saved && saved.personalInfo) {
+                            // 迁移旧版 (v1.6.0之前) 的 base64 图片数据到 IndexedDB
                             saved = await this.processStateForImageMigration(saved);
 
+                            // 迁移旧版标签数据格式
                             if (typeof saved.personalInfo.tags === 'string') {
                                 saved.personalInfo.tags = saved.personalInfo.tags.split(/[,，、]/).map(t => t.trim()).filter(Boolean)
                                     .map(text => ({ id: this.generateId('t'), icon: null, text }));
                                 this.showToast('旧版配置已加载，标签数据已自动转换。', 'info');
                             }
                             
+                            // 迁移旧版图片区块数据格式
                             let migrated = false;
                             saved.blocks.forEach(block => {
                                 if (block.type === 'image' && block.images && !block.cards) {
@@ -3428,9 +3614,11 @@ Monitor of this License or out of the use or inability to use the
                             });
                             if (migrated) this.showToast('旧版图片区块已自动升级', 'info');
                             
+                            // 合并加载的数据和默认状态，以兼容未来新增的配置项
                             const defaultState = this.getDefaultState();
                             this.state = this.mergeDeep(defaultState, saved);
                             
+                            // 迁移旧版 (localStorage) 字体数据到 IndexedDB
                             if (saved.uploadedFonts) {
                                 for (const font of saved.uploadedFonts) {
                                     if (font.data) {
@@ -3454,6 +3642,12 @@ Monitor of this License or out of the use or inability to use the
                     }
                 },
                 
+                /**
+                 * @description 深层合并两个对象。
+                 * @param {object} target - 目标对象。
+                 * @param {object} source - 源对象。
+                 * @returns {object} - 合并后的新对象。
+                 */
                 mergeDeep(target, source) {
                     const isObject = (obj) => obj && typeof obj === 'object';
                     let output = { ...target };
@@ -3610,6 +3804,7 @@ Monitor of this License or out of the use or inability to use the
                     this.renderMobileEditPencils();
                 },
                 
+                // ... 历史记录 (撤销/重做) 相关函数 ...
                 pushHistory(description = '操作') {
                      if (this.isRestoringState) return; 
                         if (this.historyIndex < this.history.length - 1) { 
@@ -3675,6 +3870,7 @@ Monitor of this License or out of the use or inability to use the
                     }
                 },
 
+                // ... 图片处理相关函数 ...
                 async handleImageUpload(event, target, cardInfo = null){
                     const file = event.target.files[0];
                     if (!file) return;
@@ -3692,6 +3888,7 @@ Monitor of this License or out of the use or inability to use the
 
                         const compressedUrl = await this.compressImage(objectUrl, 0.9, 1200);
                         
+                        // 显示裁剪器
                         if (['avatar', 'pageBg', 'cardBg', 'imageCard'].includes(target)) {
                             this.showCropper(compressedUrl, { type: target, ...cardInfo, originalType: file.type });
                         } else {
@@ -3706,36 +3903,60 @@ Monitor of this License or out of the use or inability to use the
                 },
                 
                 handleCardBgUpload(event, blockId, cardId){
-                    this.handleImageUpload(event, 'cardBg', { blockId, cardId });
+                    const card = this.findBlock(blockId)?.cards.find(c => c.id === cardId);
+                    // 在上传新图前，记录旧图的URL，以便后续清理
+                    this.handleImageUpload(event, 'cardBg', { blockId, cardId, oldImageUrl: card?.bgImageDataUrl });
                 },
+
+                /**
+                 * @description 健壮性优化: 处理批量图片上传，即使部分失败也能继续。
+                 * @param {string} blockId - 目标区块的ID。
+                 * @param {FileList} files - 用户选择的文件列表。
+                 */
                 async handleImageGalleryUpload(blockId, files){
                     const block = this.findBlock(blockId); 
                     if (!block || !files.length) return; 
                     this.showLoading(`正在上传 ${files.length} 张图片...`);
-                    try {
-                        this.pushHistory(`添加 ${files.length} 张图片`); 
-                        const newCards = [];
-                        for(const file of files) {
-                            const objectUrl = URL.createObjectURL(file);
-                            const compressedUrl = await this.compressImage(objectUrl, 0.9, 1200, file.type);
-                            const blob = this.dataURLToBlob(compressedUrl);
-                            const imageId = this.generateId('img');
-                            await this.saveImageToDB({ id: imageId, blob });
-                            newCards.push({ id: this.generateId('ic'), url: `idb://${imageId}`, title: '', description: '' });
+                    
+                    const successCards = [];
+                    const failedFiles = [];
+
+                    // 使用 Promise.allSettled 并行处理所有文件，收集成功和失败的结果
+                    const results = await Promise.allSettled(Array.from(files).map(async file => {
+                        const objectUrl = URL.createObjectURL(file);
+                        const compressedUrl = await this.compressImage(objectUrl, 0.9, 1200, file.type);
+                        const blob = this.dataURLToBlob(compressedUrl);
+                        const imageId = this.generateId('img');
+                        await this.saveImageToDB({ id: imageId, blob });
+                        return { id: this.generateId('ic'), url: `idb://${imageId}`, title: '', description: '' };
+                    }));
+
+                    results.forEach((result, index) => {
+                        if (result.status === 'fulfilled') {
+                            successCards.push(result.value);
+                        } else {
+                            failedFiles.push(files[index].name);
+                            console.error(`处理文件 ${files[index].name} 失败:`, result.reason);
                         }
-                        block.cards.push(...newCards);
+                    });
+
+                    if (successCards.length > 0) {
+                        this.pushHistory(`添加 ${successCards.length} 张图片`);
+                        block.cards.push(...successCards);
                         this.debouncedSaveToLocal();
-                        this.renderInspector(); 
-                        this.renderLayerPanel();
-                        this.renderPreviewBlockById(blockId); 
-                    } catch (err) {
-                        this.showErrorModal('图片上传失败', err.message);
-                    } finally {
-                        this.hideLoading();
-                        const input = this.elements.inspectorPanel.querySelector(`.editor-block[data-block-id="${blockId}"] .image-upload-input`);
-                        if (input) input.value = '';
+                    }
+
+                    this.renderInspector(); 
+                    this.renderLayerPanel();
+                    this.renderPreviewBlockById(blockId); 
+                    this.hideLoading();
+
+                    if (failedFiles.length > 0) {
+                        this.showErrorModal('部分图片上传失败', `以下文件未能成功上传: ${failedFiles.join(', ')}`);
                     }
                 },
+
+                // ... 裁剪器相关函数 ...
                 async cropImage(blockId, cardId){
                     const block = this.findBlock(blockId);
                     const card = block?.cards.find(c => c.id === cardId);
@@ -3747,7 +3968,7 @@ Monitor of this License or out of the use or inability to use the
                                 imageUrl = URL.createObjectURL(record.blob);
                             }
                         }
-                        this.showCropper(imageUrl, { type: 'imageCard', blockId, cardId, originalType: 'image/png' });
+                        this.showCropper(imageUrl, { type: 'imageCard', blockId, cardId, oldImageUrl: card.url, originalType: 'image/png' });
                     }
                 },
                 
@@ -3815,7 +4036,7 @@ Monitor of this License or out of the use or inability to use the
                      if (!this.cropper || !this.currentCropTarget) return;
                         this.showLoading('正在保存图片...');
                         try {
-                            const { type, blockId, cardId, originalType } = this.currentCropTarget;
+                            const { type, blockId, cardId, originalType, oldImageUrl } = this.currentCropTarget;
                             let quality = 0.9;
                             let maxWidth = 1024;
                             if (type === 'pageBg') maxWidth = 1920;
@@ -3833,6 +4054,9 @@ Monitor of this License or out of the use or inability to use the
                                 await this.saveImageToDB({ id: imageId, blob: blob });
                                 const idbUrl = `idb://${imageId}`;
 
+                                // BUGFIX: 在更新引用前，先删除旧的图片数据
+                                await this.deleteImageByUrl(oldImageUrl);
+                                
                                 this.pushHistory('裁剪图片');
                                 if (type === 'avatar') {
                                     this.updateState('personalInfo.avatarDataUrl', idbUrl, false);
@@ -3858,6 +4082,11 @@ Monitor of this License or out of the use or inability to use the
                      if(this.cropper) this.cropper.setAspectRatio(parseFloat(document.querySelector('input[name="crop-ratio"]:checked').value)); 
                 },
                 
+                // ... 富文本编辑器相关函数 ...
+                /**
+                 * @description 显示富文本编辑器模态框。
+                 * @param {HTMLElement} targetElement - 触发编辑的预览区内容元素。
+                 */
                 showRichTextEditor(targetElement) {
                     if (!targetElement) return;
 
@@ -3873,11 +4102,21 @@ Monitor of this License or out of the use or inability to use the
                     
                     const block = this.findBlock(this.currentRichTextTarget.blockId);
                     const card = block.cards.find(c => c.id === this.currentRichTextTarget.cardId);
+                    
+                    // BUGFIX: 修复PC端工具栏重复出现的BUG
+                    const container = this.elements.richTextEditorContainer;
+                    const parent = container.parentElement; // 获取父容器 (modal-container)
 
-                    if (this.richTextEditor) {
-                        this.richTextEditor = null;
-                        this.elements.richTextEditorContainer.innerHTML = '';
+                    // 1. 寻找并移除旧的工具栏
+                    const oldToolbar = parent.querySelector('.ql-toolbar');
+                    if (oldToolbar) {
+                        oldToolbar.remove();
                     }
+
+                    // 2. 清空编辑器容器并重置实例
+                    container.innerHTML = ''; // 使用 innerHTML = '' 更简洁
+                    this.richTextEditor = null;
+                    // --- END OF FIX ---
 
                     const isMobile = window.innerWidth <= 768; 
                     let quillOptions;
@@ -3887,11 +4126,11 @@ Monitor of this License or out of the use or inability to use the
                             theme: 'bubble',
                             modules: {
                                 toolbar: [
-                                    ['bold', 'italic', 'underline', 'strike'],      // 基础样式
-                                    [{ 'color': [] }, { 'background': [] }],      // 颜色选项
-                                    [{ 'header': 1 }, { 'header': 2 }],           // 标题
-                                    [{ 'list': 'ordered'}, { 'list': 'bullet' }], // 列表
-                                    ['link', 'clean']                             // 链接和清除格式
+                                    ['bold', 'italic', 'underline', 'strike'], ['link'],
+                                    [{ 'color': [] }, { 'background': [] }],
+                                    [{ 'header': 1 }, { 'header': 2 }],
+                                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                    ['clean']
                                 ]
                             },
                         };
@@ -3901,8 +4140,7 @@ Monitor of this License or out of the use or inability to use the
                             modules: {
                                 toolbar: [
                                     [{ 'header': [1, 2, 3, false] }],
-                                    ['bold', 'italic', 'underline', 'strike'],
-                                    ['link'],
+                                    ['bold', 'italic', 'underline', 'strike'], ['link'],
                                     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                                     [{ 'color': [] }, { 'background': [] }],
                                     ['clean']
@@ -3911,7 +4149,7 @@ Monitor of this License or out of the use or inability to use the
                         };
                     }
 
-                    this.richTextEditor = new Quill('#rich-text-editor-container', quillOptions);
+                    this.richTextEditor = new Quill(container, quillOptions);
                     
                     this.richTextEditor.root.innerHTML = card.content || '';
                     
@@ -4112,6 +4350,7 @@ Monitor of this License or out of the use or inability to use the
                         this.showToast('预设已应用', 'success');
                 },
                 
+                // ... 文件读写与格式转换工具函数 ...
                 readFileAsDataURL(file){return new Promise((resolve, reject) => {
                         const reader = new FileReader();
                         reader.onload = () => resolve(reader.result);
@@ -4156,6 +4395,7 @@ Monitor of this License or out of the use or inability to use the
                     })
                 },
                 
+                // ... UI 状态切换函数 ...
                 toggleTheme(){
                     const isDark = document.documentElement.classList.toggle('dark-mode'); 
                     localStorage.setItem('blokkoTheme', isDark ? 'dark' : 'light'); 
@@ -4171,6 +4411,7 @@ Monitor of this License or out of the use or inability to use the
                 saveToLocal(){
                      try { 
                             const stateToSave = this.deepClone(this.state);
+                            // 不将字体数据存入 localStorage
                             delete stateToSave.uploadedFonts;
                             localStorage.setItem('blokkoState', JSON.stringify(stateToSave));
                             if (this.isStorageFull) {
@@ -4186,6 +4427,7 @@ Monitor of this License or out of the use or inability to use the
                         } 
                 },
                 
+                // ... 导入/导出相关函数 ...
                 generateFilename(type){
                     const nickname = (this.state.personalInfo.nickname || '').replace(/[^a-z0-9\u4e00-\u9fa5]/gi, '_').substring(0, 15) || 'Blokko';
                     const date = new Date();
@@ -4269,7 +4511,7 @@ Monitor of this License or out of the use or inability to use the
                         await processObject(stateClone);
                         
                         zip.file("config.json", JSON.stringify(stateClone, null, 2));
-                        zip.file("readme.txt", `Blokko 强化导出备份\n版本: 1.6.1\n导出时间: ${new Date().toLocaleString()}\n\n此 .zip 文件包含了您的配置文件 (config.json) 和所有图片资源 (images/ 文件夹)。`);
+                        zip.file("readme.txt", `Blokko 强化导出备份\n版本: 1.6.2\n导出时间: ${new Date().toLocaleString()}\n\n此 .zip 文件包含了您的配置文件 (config.json) 和所有图片资源 (images/ 文件夹)。`);
                         
                         const blob = await zip.generateAsync({ type: "blob" });
                         const filename = this.generateFilename('Enhanced-Backup') + '.zip';
@@ -4362,7 +4604,9 @@ Monitor of this License or out of the use or inability to use the
                         await processObject(importedState);
 
                         this.state = this.mergeDeep(this.getDefaultState(), importedState);
-                        this.saveToLocal();
+                        // BUGFIX: 导入成功后立即保存
+                        localStorage.setItem('blokkoState', JSON.stringify(this.state)); 
+                        
                         this.history = [{ state: this.deepClone(this.state), description: '导入ZIP配置' }];
                         this.historyIndex = 0;
                         this.setSelection({type: 'global'});
@@ -4425,8 +4669,9 @@ Monitor of this License or out of the use or inability to use the
                             if (migrated) this.showToast('旧版图片区块已自动升级', 'info');
 
                             this.state = this.mergeDeep(this.getDefaultState(), importedState);
-                            this.saveToLocal();
-                            
+                            // BUGFIX: 导入成功后立即保存
+                            localStorage.setItem('blokkoState', JSON.stringify(this.state));
+
                             if (importedState.uploadedFonts) {
                                 this.showToast('检测到旧版字体数据，正在尝试迁移...', 'info');
                                 for (const font of importedState.uploadedFonts) {
@@ -4461,6 +4706,7 @@ Monitor of this License or out of the use or inability to use the
                     e.target.value = ''; 
                 },
                 
+                // ... 导出PNG相关函数 ...
                 async bakeOverlaysForExport(clone) {
                     // This function is assumed to be correct
                 },
@@ -4586,6 +4832,7 @@ Monitor of this License or out of the use or inability to use the
                     }
                 },
                 
+                // ... 辅助函数和工具函数 ...
                 updateExportSizePreview(){
                     const el = this.elements.previewWrapper;
                     if (!el || el.clientWidth === 0) return;
@@ -4647,6 +4894,7 @@ Monitor of this License or out of the use or inability to use the
                     });
                 },
                 
+                // ... 弹窗和提示相关函数 ...
                 showDownloadModal(url, filename, title){
                     this.elements.downloadModalTitle.textContent = title; 
                         const content = this.elements.downloadModalContent; 
@@ -4724,7 +4972,6 @@ Monitor of this License or out of the use or inability to use the
                         modal.classList.add('visible');
                     });
                 },
-
                 showLoading(text = '正在处理...'){
                     this.elements.loadingText.textContent = text;
                         this.elements.loadingOverlay.classList.add('visible');
@@ -4742,6 +4989,7 @@ Monitor of this License or out of the use or inability to use the
                         }, 5000);
                 },
                 
+                // ... CSS 变量和样式更新函数 ...
                 updateGlobalCardStyleVars(){
                      const g = this.state.globalCardStyles;
                      const r = document.documentElement.style; 
@@ -4760,6 +5008,7 @@ Monitor of this License or out of the use or inability to use the
                      r.setProperty('--active-card-shadow', 'none');
                 },
                 
+                // ... SortableJS 拖拽排序初始化函数 ...
                 initAllSortables(){
                     this.initLayerSortables();
                     this.initSortablePreviewBlocks();
@@ -4874,6 +5123,7 @@ Monitor of this License or out of the use or inability to use the
                     if (container) { if (this.imageCardSortables[blockId]) this.imageCardSortables[blockId].destroy(); this.imageCardSortables[blockId] = new Sortable(container, { handle: '.card-drag-handle', animation: 150, ghostClass: 'sortable-ghost', onEnd: e => { const block = this.findBlock(blockId); if (block) { this.pushHistory('排序图片'); const [moved] = block.cards.splice(e.oldIndex, 1); block.cards.splice(e.newIndex, 0, moved); this.debouncedSaveToLocal(); this.renderPreviewBlockById(blockId); this.renderLayerPanel(); } } }); }
                 },
 
+                // ... Masonry 瀑布流布局相关函数 ...
                 initMasonryForBlock(blockId) {
                     this.destroyMasonryForBlock(blockId); 
                     const block = this.findBlock(blockId);
@@ -4900,6 +5150,7 @@ Monitor of this License or out of the use or inability to use the
                     }
                 },
                 
+                // ... 移动端与UI布局相关函数 ...
                 togglePanelDrawer(panelId){
                     if (panelId === false) {
                         this.elements.layerPanel.classList.remove('is-open');
@@ -4950,6 +5201,7 @@ Monitor of this License or out of the use or inability to use the
                     Object.values(this.imageCardSortables).forEach(s => { if (s) s.option('disabled', shouldDisable); });
                 },
                 
+                // ... 标签管理器相关函数 ...
                 renderTagManager() {
                     const container = this.elements.inspectorPanel.querySelector('#tag-manager-list');
                     if (!container) return;
@@ -4994,6 +5246,7 @@ Monitor of this License or out of the use or inability to use the
                     if (tagIndex > -1) this.updateState(`personalInfo.tags.${tagIndex}.${key}`, value, pushHistory, historyDescription);
                 },
 
+                // ... 图标/纹理选择器相关函数 ...
                 initIconPicker() {
                     if (this.iconPickerInitialized) return;
                     this.loadIcons();
@@ -5132,6 +5385,7 @@ Monitor of this License or out of the use or inability to use the
                     this.elements.texturePickerModal.classList.remove('visible');
                 },
 
+                // ... 选中状态管理函数 ...
                 setSelection(newSelection) {
                     this.selection = newSelection;
                     this.updateHighlights();
@@ -5155,6 +5409,7 @@ Monitor of this License or out of the use or inability to use the
                     }
                 },
                 
+                // ... ColorThief 智能取色相关函数 ...
                 analyzeColorsFromImage(dataUrl) {
                     const img = new Image();
                     img.crossOrigin = "Anonymous";
@@ -5246,6 +5501,7 @@ Monitor of this License or out of the use or inability to use the
                     this.elements.colorContextMenu.style.display = 'none';
                 },
                 
+                // ... 颜色快捷应用与Tab切换辅助函数 ...
                 switchTab(sectionSelector, desiredTabId) {
                     const section = this.elements.inspectorPanel.querySelector(sectionSelector);
                     if (!section) return;
@@ -5307,7 +5563,8 @@ Monitor of this License or out of the use or inability to use the
                         }
                     }
                 },
-
+                
+                // ... 颜色和字符串工具函数 ...
                 hexToRgba(hex, alpha=1){
                     if(!hex || parseFloat(alpha) === 0) return 'transparent';
                     if (hex.startsWith('rgba')) {
@@ -5346,7 +5603,7 @@ Monitor of this License or out of the use or inability to use the
                                         if (imageRecord && imageRecord.blob) {
                                             img.src = URL.createObjectURL(imageRecord.blob);
                                         }
-                                    } catch(e) { console.error('Failed to load image card from DB', e); }
+                                    } catch(e) { console.error('从数据库加载图片卡片失败:', e); }
                                 } else {
                                     img.src = url;
                                 }
@@ -5372,6 +5629,7 @@ Monitor of this License or out of the use or inability to use the
                 escapeHTML(str){ return (str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]) },
                 sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)) },
 
+                // ... 区块操作函数 ...
                 async addBlock(type, sourceBlock = null) {
                     this.pushHistory(sourceBlock ? '复制区块' : '添加新区块');
                     let newBlock;
@@ -5409,9 +5667,20 @@ Monitor of this License or out of the use or inability to use the
                     if (sourceBlock) this.showToast('样式已复制', 'success');
                 },
                 async deleteBlock(blockId) {
-                    const blockTitle = this.findBlock(blockId)?.title || '';
-                    if (await this.showConfirm('删除区块', `确定要删除区块 "${blockTitle}" 吗？`)) {
-                        this.pushHistory(`删除区块 "${blockTitle}"`);
+                    const block = this.findBlock(blockId);
+                    if (!block) return;
+
+                    if (await this.showConfirm('删除区块', `确定要删除区块 "${block.title}" 吗？`)) {
+                        this.pushHistory(`删除区块 "${block.title}"`);
+                        
+                        // BUGFIX: 删除区块前，清理其包含的所有图片
+                        if (block.cards) {
+                            for (const card of block.cards) {
+                                await this.deleteImageByUrl(card.url);
+                                await this.deleteImageByUrl(card.bgImageDataUrl);
+                            }
+                        }
+
                         this.destroyMasonryForBlock(blockId);
                         this.state.blocks = this.state.blocks.filter(b => b.id !== blockId);
                         this.debouncedSaveToLocal();
@@ -5453,6 +5722,7 @@ Monitor of this License or out of the use or inability to use the
                     }
                 },
                 
+                // ... 调试模式相关函数 ...
                 async activateDebugMode() {
                     if (await this.showConfirm('激活调试模式', '此操作将随机化当前所有设置并替换内容，此过程不可撤销。是否继续？')) {
                         this.showLoading('正在生成随机数据...');
@@ -5518,6 +5788,11 @@ Monitor of this License or out of the use or inability to use the
                     return randomState;
                 },
 
+                // --- IndexedDB 数据库操作 --- //
+                
+                /**
+                 * @description 初始化 IndexedDB 数据库。
+                 */
                 initDB() {
                     return new Promise((resolve, reject) => {
                         const request = indexedDB.open('BlokkoDB', 2);
@@ -5691,6 +5966,42 @@ Monitor of this License or out of the use or inability to use the
                             this.showErrorModal('删除失败', '从数据库删除字体时出错。');
                         }
                     }
+                },
+
+                /**
+                 * @description 根据图片URL从数据库中删除图片。
+                 * @param {string|null} url - 图片的URL, 格式为 'idb://<id>'。
+                 */
+                async deleteImageByUrl(url) {
+                    if (url && url.startsWith('idb://')) {
+                        const imageId = url.substring(6);
+                        try {
+                            await this.deleteImageFromDB(imageId);
+                        } catch (e) {
+                            console.error(`删除图片 ${imageId} 失败:`, e);
+                        }
+                    }
+                },
+
+                /**
+                 * @description 从数据库中删除图片。
+                 * @param {string} id - 图片的ID。
+                 */
+                deleteImageFromDB(id) {
+                    if (!id || !this.db) return Promise.resolve();
+                    return new Promise((resolve, reject) => {
+                        const transaction = this.db.transaction(['images'], 'readwrite');
+                        const store = transaction.objectStore('images');
+                        const request = store.delete(id);
+                        request.onsuccess = () => {
+                            console.log(`图片 ${id} 已从数据库删除。`);
+                            resolve();
+                        };
+                        request.onerror = (e) => {
+                            console.error(`从数据库删除图片 ${id} 失败:`, e.target.error);
+                            reject(e.target.error);
+                        };
+                    });
                 },
                 
                 showStorageFullToast() {
